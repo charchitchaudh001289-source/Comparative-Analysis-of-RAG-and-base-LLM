@@ -1,0 +1,9 @@
+[
+  {
+    "id": "Q001",
+    "category": "Direct_Factual",
+    "question": "What is the default value of the max_retries parameter in init_chat_model?",
+    "ground_truth": "The default value is 6."
+  }
+
+]

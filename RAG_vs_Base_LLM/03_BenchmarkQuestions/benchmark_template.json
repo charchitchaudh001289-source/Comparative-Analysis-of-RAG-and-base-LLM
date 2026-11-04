@@ -1,0 +1,34 @@
+[
+  {
+    "id": "Q001",
+    "category": "direct_factual",
+    "source_doc": "01_models.md",
+    "question": "What is the default value of the max_retries parameter in init_chat_model?",
+    "ground_truth": "6",
+    "evidence_passage": "max_retries (number, default: 6): The maximum number of attempts the system will make to resend a request..."
+  },
+  {
+    "id": "Q002",
+    "category": "multi_fact_reasoning",
+    "source_doc": "01_models.md",
+    "question": "Which HTTP error status codes are automatically retried by LangChain models, and which errors are not retried?",
+    "ground_truth": "Rate limits (429) and server errors (5xx) are retried automatically. Client errors such as 401 (unauthorized) or 404 are not retried.",
+    "evidence_passage": "Network errors, rate limits (429), and server errors (5xx) are retried automatically. Client errors such as 401 (unauthorized) or 404 are not retried."
+  },
+  {
+    "id": "Q003",
+    "category": "multi_step_inference",
+    "source_doc": "09_markdown_header_metadata_splitter.md",
+    "question": "How does using MarkdownHeaderTextSplitter help maintain context during the retrieval phase of a RAG pipeline?",
+    "ground_truth": "It preserves structural header hierarchy by attaching headers as metadata to each chunk, allowing the retriever to preserve context during similarity searches.",
+    "evidence_passage": "Attaches header metadata to chunks to preserve document hierarchy and context during retrieval."
+  },
+  {
+    "id": "Q004",
+    "category": "unanswerable",
+    "source_doc": "none",
+    "question": "What is the default batch size parameter for Neo4jVectorStore in LangChain?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": "None. Third-party Neo4j integrations are excluded from the knowledge base."
+  }
+]
