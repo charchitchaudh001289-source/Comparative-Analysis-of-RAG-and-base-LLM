@@ -2,7 +2,7 @@ import os
 import chromadb
 
 # Absolute paths to ensure clean execution
-KB_DIR = r"C:\Users\Nathan\Videos\AI Project\RAG_vs_Base_LLM\01_Knowledge_Base\cleaned5"
+KB_DIR = r"C:\Users\Nathan\Videos\AI Project\RAG_vs_Base_LLM\01_Knowledge_Base\raw_selected"
 DB_DIR = r"C:\Users\Nathan\Videos\AI Project\RAG_vs_Base_LLM\02_RAG_Pipeline\chroma_db"
 
 def chunk_text(text: str, chunk_size: int = 800, overlap: int = 150) -> list[str]:
