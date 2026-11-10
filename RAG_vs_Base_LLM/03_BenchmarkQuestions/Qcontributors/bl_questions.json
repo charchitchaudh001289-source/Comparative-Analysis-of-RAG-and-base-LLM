@@ -30,6 +30,39 @@
     "question": "You are configuring a TimeWeightedVectorStoreRetriever in production and need to set its decay rate explicitly. The documentation states that this.decayRate is a configurable decimal between 0 and 1, but your configuration manager requires an explicit fallback. What is the default numeric value assigned to decayRate if none is supplied during initialization?",
     "ground_truth": "The provided context does not contain sufficient information to answer this question.",
     "evidence_passage": ""
+  },
+  
+  {
+    "id": "Q005",
+    "category": "Direct_Factual",
+    "source_doc": "quickstart.mdx",
+    "question": "An engineering team is setting up an automated documentation pipeline across their developer workstations using the OpenWiki CLI. While verifying prerequisite runtimes across their development machines, they need to ensure their local JavaScript runtime meets the baseline compatibility specifications. According to the Quickstart documentation, what is the minimum required version of Node.js needed to install and run OpenWiki?",
+    "ground_truth": "OpenWiki requires Node.js 22.22.0 or later.",
+    "evidence_passage": "OpenWiki requires [Node.js 22.22.0 or later](https://nodejs.org)."
+  },
+  {
+    "id": "Q006",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "quickstart.mdx",
+    "question": "A team lead is standardizing the agent context files across a repository that already contains an established CLAUDE.md file for coding assistants. When the team runs the OpenWiki initialization and review workflow, they want to understand how the CLI avoids completely overriding existing assistant instructions while still exposing the generated knowledge. Synthesizing the documented interactions between AGENTS.md and CLAUDE.md, how does OpenWiki integrate its documentation directives into existing project files without deleting pre-existing Claude configurations?",
+    "ground_truth": "OpenWiki creates or refreshes AGENTS.md at the repository root with instructions to consult the wiki, and if CLAUDE.md already exists, it refreshes a managed block within it that imports @AGENTS.md, preserving existing configurations while linking the new documentation directives.",
+    "evidence_passage": "It creates or refreshes `AGENTS.md` at the repository root with a block that instructs coding agents to consult the wiki for codebase context. When `CLAUDE.md` already exists, OpenWiki refreshes a managed block that imports `@AGENTS.md`."
+  },
+  {
+    "id": "Q007",
+    "category": "Multi_Step",
+    "source_doc": "quickstart.mdx",
+    "question": "A developer initiates openwiki --init in a large monorepo checkout, but their laptop battery dies mid-execution, terminating the initial generation process. Later, the developer wishes to update project scope priorities to focus strictly on public APIs, restart the run, and check the resulting documentation graphically in a local web interface. Tracing the documented lifecycle and recovery mechanisms, what sequence of files and commands handles resuming the run, protecting custom instruction briefs from being overwritten, and launching the graphical view?",
+    "ground_truth": "The interrupted run resumes from openwiki/.run.json on the checkout; custom scope instructions are preserved or edited in openwiki/INSTRUCTIONS.md without being overwritten by --init or --update; and the browser-based interactive node graph is launched using openwiki visualize.",
+    "evidence_passage": "Interrupted runs on a persistent checkout resume from `openwiki/.run.json`.\n\nRepository-specific wiki instructions live in `openwiki/INSTRUCTIONS.md`. OpenWiki reads this file for scope and priorities. To change it, edit the file, or ask OpenWiki in chat to change the brief (for example, `openwiki \"Update openwiki/INSTRUCTIONS.md to focus on the public API\"`). Normal `--init` and `--update` runs do not rewrite it.\n\nTo explore the wiki in a browser, run:\n\n```bash\nopenwiki visualize\n```"
+  },
+  {
+    "id": "Q008",
+    "category": "Unanswerable",
+    "source_doc": "quickstart.mdx",
+    "question": "A DevOps engineer is configuring a scheduled CI pipeline to keep repository documentation current using openwiki --update. Under their organizational compliance policy, automated CI tasks must set an explicit maximum token budget and enforce a request timeout in seconds on every CLI execution. According to this Quickstart guide, what specific command-line flag or environment variable configures the network request timeout in seconds for openwiki --update?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
   }
 ]
 
