@@ -1,0 +1,35 @@
+[
+  {
+    "id": "Q001",
+    "category": "Direct_Factual",
+    "source_doc": "time_weighted_retriever.mdx",
+    "question": "You are deploying a semantic search service for an engineering knowledge base and decide to evaluate the TimeWeightedVectorStoreRetriever in LangChain. Your lead engineer wants to disable the temporal decay effect completely during an A/B test without swapping out the retriever class itself. According to the integration documentation, what specific values can this.decayRate be set to in order to render hoursPassed irrelevant and reduce retrieval to a standard vector lookup?",
+    "ground_truth": "Setting a decay rate of exactly 0 or 1 makes hoursPassed irrelevant and makes this retriever equivalent to a standard vector lookup.",
+    "evidence_passage": "Note that setting a decay rate of exactly 0 or 1 makes `hoursPassed` irrelevant and makes this retriever equivalent to a standard vector lookup."
+  },
+  {
+    "id": "Q002",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "time_weighted_retriever.mdx",
+    "question": "An engineer on your team is building an interactive customer support assistant using a TimeWeightedVectorStoreRetriever. They notice that onboarding guides published six months ago are consistently scoring higher and outranking troubleshooting articles created yesterday with identical semantic similarity. How does the retriever calculate recency through the hoursPassed variable, and why would an older document remain \"fresh\" in this ranking system?",
+    "ground_truth": "In the TimeWeightedVectorStoreRetriever, hoursPassed measures the elapsed time since an object was last accessed, rather than when it was originally created. Because frequently accessed objects reset or minimize this duration, older documents that are retrieved often remain \"fresh\" and score higher than newly created documents that have not been accessed.",
+    "evidence_passage": "Notably, `hoursPassed` above refers to the time since the object in the retriever was last accessed, not since it was created. This means that frequently accessed objects remain \"fresh\" and score higher."
+  },
+  {
+    "id": "Q003",
+    "category": "Multi_Step",
+    "source_doc": "time_weighted_retriever.mdx",
+    "question": "A developer is integrating TimeWeightedVectorStoreRetriever into an existing LangChain pipeline. They first instantiate the backing vector store with embedding functions, configure the retriever instance with a custom decay rate, and then attempt to call vectorStore.addDocuments(...) directly with their document batch. Why will this ingestion procedure fail to populate temporal metadata correctly, and what exact step must be changed in the ingestion flow to ensure the time-weighting mechanism functions properly?",
+    "ground_truth": "Documents must not be ingested through the vector store directly because the retriever requires specific metadata to track access history. To ensure proper tracking, the developer must call addDocuments on the TimeWeightedVectorStoreRetriever instance itself rather than on the underlying vector store.",
+    "evidence_passage": "It is important to note that due to required metadata, all documents must be added to the backing vector store using the addDocuments method on the **retriever**, not the vector store itself."
+  },
+  {
+    "id": "Q004",
+    "category": "Unanswerable",
+    "source_doc": "time_weighted_retriever.mdx",
+    "question": "You are configuring a TimeWeightedVectorStoreRetriever in production and need to set its decay rate explicitly. The documentation states that this.decayRate is a configurable decimal between 0 and 1, but your configuration manager requires an explicit fallback. What is the default numeric value assigned to decayRate if none is supplied during initialization?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
+  }
+]
+
