@@ -1,0 +1,202 @@
+[
+  {
+    "id": "Q101",
+    "category": "Direct_Factual",
+    "question": "We are architecting an internal documentation search bot where system throughput, fast response times, and predictable compute costs are primary requirements. According to the architecture comparison table in LangChain's retrieval guide, what are the explicit ratings for 2-Step RAG across developer control, flexibility, and latency? Additionally, what canonical production use cases are cited as best suited for this pattern?",
+    "ground_truth": "Developer Control: High. Flexibility: Low. Latency: Fast. Representative use cases: FAQs and documentation bots.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "| Architecture | Description | Control | Flexibility | Latency | Example Use Case |\n| 2-Step RAG | Retrieval always happens before generation. Simple and predictable |High |Low |Fast | FAQs, documentation bots |"
+    ]
+  },
+  {
+    "id": "Q102",
+    "category": "Direct_Factual",
+    "question": "During a technical design review, an engineering lead asks why our application cannot rely solely on the foundation model's pre-trained parametric knowledge without external augmentation. According to LangChain's conceptual overview on retrieval, what are the two fundamental limitations inherent to Large Language Models, and at what specific moment in the workflow does retrieval address these gaps?",
+    "ground_truth": "The two key limitations are: (1) Finite context (models cannot ingest entire corpora at once) and (2) Static knowledge (their training data is frozen at a point in time). Retrieval addresses these limitations by fetching relevant external knowledge dynamically at query time.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "Large Language Models (LLMs) are powerful, but they have two key limitations: Finite context: they can't ingest entire corpora at once. Static knowledge: their training data is frozen at a point in time. Retrieval addresses these problems by fetching relevant external knowledge at query time."
+    ]
+  },
+  {
+    "id": "Q103",
+    "category": "Direct_Factual",
+    "question": "In the Agentic RAG implementation walkthrough, the documentation defines a tool named fetch_documentation that retrieves external technical content. What specific decorator is applied to declare this Python function as a usable agent tool, and what exact parameter is passed to create_agent to grant the model execution access to it?",
+    "ground_truth": "The function is decorated with the @tool decorator (from langchain.tools). It is registered with the agent by passing the list containing it into the `tools` parameter of create_agent (e.g., `tools=[fetch_documentation]`).",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "@tool\ndef fetch_documentation(url: str) -> str:\n    \"\"\"Fetch and convert documentation from a URL\"\"\"",
+      "agent = create_agent(\n    model=model,\n    tools=tools,\n    system_prompt=system_prompt,\n    name=\"Agentic RAG\",\n)"
+    ]
+  },
+  {
+    "id": "Q104",
+    "category": "Reasoning_Across_Facts",
+    "question": "Our enterprise already maintains extensive proprietary product manuals inside relational SQL tables, CRM databases, and document management systems. Does LangChain require our engineering team to migrate and rebuild this data into a new vector store? Synthesize the two architectural patterns described in the guide for integrating an existing knowledge base without re-indexing from scratch.",
+    "ground_truth": "No, teams do not need to rebuild an existing knowledge base. They can integrate it via two distinct pathways: (1) Connect the existing database as a tool for an autonomous agent in Agentic RAG, or (2) Query the database directly and supply the retrieved records as context to the LLM in a 2-Step RAG pipeline.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "If you already have a knowledge base (for example a SQL database, a document database, a CRM, or an internal documentation system), you do not need to rebuild it. You can: Connect it as a tool for an agent in Agentic RAG. Query it and supply the retrieved content as context to the LLM (2-Step RAG)."
+    ]
+  },
+  {
+    "id": "Q105",
+    "category": "Reasoning_Across_Facts",
+    "question": "A team evaluating SLAs questions why response times in 2-Step RAG are considered predictable while latency in Agentic RAG remains variable. Based on the documentation's latency analysis and execution models, explain the fundamental reason 2-Step RAG achieves predictable latency, what core assumption underpins that predictability, and what external infrastructure dependencies can still cause latency variance in production.",
+    "ground_truth": "2-Step RAG latency is predictable because the execution order is fixed and the maximum number of LLM inference calls is strictly known and capped. This predictability assumes LLM inference time is the dominant factor. However, real-world latency can still vary depending on the performance of external retrieval steps, such as third-party API response times, network delays, or database query execution speeds.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "Latency: Latency is generally more predictable in 2-Step RAG, as the maximum number of LLM calls is known and capped. This predictability assumes that LLM inference time is the dominant factor. However, real-world latency may also be affected by the performance of retrieval steps, such as API response times, network delays, or database queries, which can vary based on the tools and infrastructure in use."
+    ]
+  },
+  {
+    "id": "Q106",
+    "category": "Multi_Step",
+    "question": "We are documenting our ingestion pipeline architecture for team onboarding. Tracing the sequential workflow in LangChain's retrieval pipeline diagram, outline the step-by-step path that unstructured source data (such as Google Drive, Slack, or Notion) follows from ingestion until it is stored in a searchable index. In your explanation, identify the explicit structural purpose of splitting the ingested documents before embedding generation.",
+    "ground_truth": "Sequential path: Sources (Google Drive, Slack, Notion) -> Document Loaders -> Documents -> Split into chunks -> Turn into embeddings -> Vector Store. Purpose of splitting: Large documents are broken down so that chunks are individually retrievable and small enough to fit within an LLM's finite context window.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "S([\"Sources<br>(Google Drive, Slack, Notion, etc.)\"]) --> L[Document Loaders]\nL --> A([Documents])\nA --> B[Split into chunks]\nB --> C[Turn into embeddings]\nC --> D[(Vector Store)]",
+      "Break large docs into smaller chunks that will be retrievable individually and fit within a model's context window."
+    ]
+  },
+  {
+    "id": "Q107",
+    "category": "Multi_Step",
+    "question": "In an Agentic RAG setup, retrieval is governed dynamically by model reasoning rather than a static pre-retrieval pipeline. Tracing the decision branches in the agent flowchart, describe the conditional logic loop the agent follows upon receiving user input, including the decision points determining whether to invoke a search tool, whether to return an answer, and under what condition it loops back to the LLM.",
+    "ground_truth": "Execution loop: (1) The user question is received by the Agent (LLM). (2) Decision 1: 'Need external info?' If No, it transitions directly to generate the final answer. If Yes, it proceeds to 'Search using tool(s)'. (3) Decision 2: 'Enough to answer?' If Yes, it transitions to generate the final answer and returns it to the user. If No, it loops back to the Agent (LLM) reasoning stage to conduct further evaluation or tool calls.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "A[User Input / Question] --> B[\"Agent (LLM)\"]\nB --> C{Need external info?}\nC -- Yes --> D[\"Search using tool(s)\"]\nD --> H{Enough to answer?}\nH -- No --> B\nH -- Yes --> I[Generate final answer]\nC -- No --> I\nI --> J[Return to user]"
+    ]
+  },
+  {
+    "id": "Q108",
+    "category": "Unanswerable",
+    "question": "When scaling the RAG retrieval pipeline to handle continuous user traffic, what specific cache eviction algorithm (such as LRU, LFU, or FIFO) does the internal document loader cache apply by default, and what is its maximum heap memory allocation limit?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "source_docs": [],
+    "evidence_passages": []
+  },
+  {
+    "id": "Q109",
+    "category": "Direct_Factual",
+    "question": "In LangChain's pipeline component specifications, various modules handle ingestion, vector transformation, and storage. What is the formal definition given for a 'Retriever' interface, and what input type does it accept to return relevant Document objects?",
+    "ground_truth": "A retriever is defined as an interface that returns documents given an unstructured query.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "A retriever is an interface that returns documents given an unstructured query."
+    ]
+  },
+  {
+    "id": "Q110",
+    "category": "Direct_Factual",
+    "question": "When evaluating the trade-offs in the RAG architectures summary table, developers need to choose between rigid pipelines and dynamic models. What are the specific ratings for the Hybrid architecture regarding developer control, runtime flexibility, and latency, and what typical use case is presented?",
+    "ground_truth": "Control: Medium . Flexibility: Medium. Latency: Variable. Example use case: Domain-specific Q&A with quality validation.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "| Hybrid | Combines characteristics of both approaches with validation steps |  Medium |  Medium |  Variable | Domain-specific Q&A with quality validation |"
+    ]
+  },
+  {
+    "id": "Q111",
+    "category": "Reasoning_Across_Facts",
+    "question": "A development team is designing an autonomous technical assistant that uses `fetch_documentation` to consult official guides. Based on the implementation code and instructions in `retrieval.md`, how does the agent enforce domain security constraints before executing an HTTP request, and what fallback behavior is specified if a network retrieval failure occurs?",
+    "ground_truth": "Security is enforced by checking if the URL starts with an entry in `ALLOWED_DOMAINS` ('https://docs.langchain.com/'), raising an error string if unauthorized. If a documentation fetch fails due to a network error, the agent is instructed by system prompt to inform the user and proceed using its best expert understanding.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "ALLOWED_DOMAINS = [\"https://docs.langchain.com/\"]\n\n@tool\ndef fetch_documentation(url: str) -> str:\n    if not any(url.startswith(domain) for domain in ALLOWED_DOMAINS):\n        return (\n            \"Error: URL not allowed. \"\n            f\"Must start with one of: {', '.join(ALLOWED_DOMAINS)}\"\n        )",
+      "4. If a documentation fetch fails, tell the user and proceed with your best expert understanding."
+    ]
+  },
+  {
+    "id": "Q112",
+    "category": "Unanswerable",
+    "question": "When constructing the knowledge base vector store using the retrieval architecture pipeline, what default mathematical distance metric (such as cosine similarity, squared Euclidean distance, or dot product) is applied by the underlying index, and what similarity threshold is set to filter noise?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "source_docs": [],
+    "evidence_passages": []
+  },
+  {
+    "id": "Q113",
+    "category": "Direct_Factual",
+    "question": "When configuring a text splitter in LangChain for generic prose, developers often rely on RecursiveCharacterTextSplitter to maintain semantic cohesion. According to the integration guide, what is the exact default list of separators used by this splitter, and in what order does it attempt to split the input text?",
+    "ground_truth": "The default separator list is [\"\\n\\n\", \"\\n\", \" \", \"\"], splitting in order of double newlines, single newlines, spaces, and empty strings.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "The default list is [\"\\n\\n\", \"\\n\", \" \", \"\"]. This has the effect of trying to keep all paragraphs (and then sentences, and then words) together as long as possible"
+    ]
+  },
+  {
+    "id": "Q114",
+    "category": "Direct_Factual",
+    "question": "Our engineering team needs to choose between generating raw Python strings or structured objects when preprocessing documents for a downstream vector indexing pipeline. According to the RecursiveCharacterTextSplitter documentation, which specific method should be called to obtain raw string chunks directly, and which method must be called to create LangChain Document objects?",
+    "ground_truth": "To obtain string content directly, call `.split_text`. To create LangChain Document objects, call `.create_documents`.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "To obtain the string content directly, use .split_text.\n\nTo create LangChain @[Document] objects (e.g., for use in downstream tasks), use .create_documents."
+    ]
+  },
+  {
+    "id": "Q115",
+    "category": "Direct_Factual",
+    "question": "When instantiating RecursiveCharacterTextSplitter, developers can customize separator boundaries and text evaluation rules using various constructor arguments. According to the parameter list in the guide, what is the purpose of the `is_separator_regex` parameter, and what is the function of the `length_function` argument?",
+    "ground_truth": "`is_separator_regex` determines whether the separator list should be interpreted as regular expressions, while `length_function` specifies the function used to determine chunk size (measuring chunk length).",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "- length_function: Function determining the chunk size.\n- is_separator_regex: Whether the separator list (defaulting to [\"\\n\\n\", \"\\n\", \" \", \"\"]) should be interpreted as regex."
+    ]
+  },
+  {
+    "id": "Q116",
+    "category": "Reasoning_Across_Facts",
+    "question": "During an architecture review of our ingestion pipeline, a developer asks why RecursiveCharacterTextSplitter is recommended over simple fixed-character splitting and how chunk overlap addresses downstream retrieval quality. Synthesizing the guide's explanation of chunking mechanics and parameter definitions, how does the default separator hierarchy preserve semantic context, and what explicit issue does `chunk_overlap` mitigate?",
+    "ground_truth": "The default separator hierarchy ([\"\\n\\n\", \"\\n\", \" \", \"\"]) preserves semantics by keeping larger related text units (paragraphs, then sentences, then words) intact as long as possible before falling back to smaller units. `chunk_overlap` specifically mitigates the loss of information and context when boundary splits divide related information between adjacent chunks.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "This has the effect of trying to keep all paragraphs (and then sentences, and then words) together as long as possible, as those would generically seem to be the strongest semantically related pieces of text.",
+      "- chunk_overlap: Target overlap between chunks. Overlapping chunks helps to mitigate loss of information when context is divided between chunks."
+    ]
+  },
+  {
+    "id": "Q117",
+    "category": "Reasoning_Across_Facts",
+    "question": "When processing East Asian text or multilingual documents with punctuation variations, standard whitespace separators often fail to split passages effectively. Based on the custom separator example provided in the documentation, how does the user extend the default separator list to support CJK (Chinese, Japanese, Korean) and fullwidth punctuation, and what specific punctuation characters are introduced?",
+    "ground_truth": "The user overrides the `separators` argument, appending standard sentence punctuation (\".\", \",\"), zero-width space (\"\\u200b\"), fullwidth comma (\"\\uff0c\"), ideographic comma (\"\\u3001\"), fullwidth full stop (\"\\uff0e\"), and ideographic full stop (\"\\u3002\") before the final empty string fallback.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "separators=[\n        \"\\n\\n\",\n        \"\\n\",\n        \" \",\n        \".\",\n        \",\",\n        \"\\u200b\",  # Zero-width space\n        \"\\uff0c\",  # Fullwidth comma\n        \"\\u3001\",  # Ideographic comma\n        \"\\uff0e\",  # Fullwidth full stop\n        \"\\u3002\",  # Ideographic full stop\n        \"\",\n    ]"
+    ]
+  },
+  {
+    "id": "Q118",
+    "category": "Multi_Step",
+    "question": "A developer needs to configure a minimal end-to-end Python script that loads an external file, segments it into small chunks using character length, and prints the first two segmented Document objects. Tracing the standard workflow demonstrated in the guide, what are the sequential code steps required, including the specific imports, the four parameters configured in the constructor, and the method used to generate the output texts?",
+    "ground_truth": "1. Import `RecursiveCharacterTextSplitter` from `langchain_text_splitters`. 2. Read the text file using `open()`. 3. Instantiate `RecursiveCharacterTextSplitter` configuring `chunk_size=100`, `chunk_overlap=20`, `length_function=len`, and `is_separator_regex=False`. 4. Execute `create_documents([text])` on the instance to produce the list of Document objects.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "from langchain_text_splitters import RecursiveCharacterTextSplitter\n\n# Load example document\nwith open(\"state_of_the_union.txt\") as f:\n    state_of_the_union = f.read()\n\ntext_splitter = RecursiveCharacterTextSplitter(\n    # Set a really small chunk size, just to show.\n    chunk_size=100,\n    chunk_overlap=20,\n    length_function=len,\n    is_separator_regex=False,\n)\ntexts = text_splitter.create_documents([state_of_the_union])"
+    ]
+  },
+  {
+    "id": "Q119",
+    "category": "Multi_Step",
+    "question": "In RecursiveCharacterTextSplitter, text segmentation does not happen in a single arbitrary pass; it follows a sequential recursive fallback strategy. Tracing the splitting procedure described in the guide, walk through the step-by-step logic the algorithm executes when attempting to partition an oversized document into chunks that satisfy the maximum chunk size.",
+    "ground_truth": "1. The splitter inspects the ordered list of separator characters (starting with double newlines). 2. It attempts to split the text on the first separator. 3. If resulting segments remain larger than the allowed chunk size, it sequentially moves to the next separator in the list (single newlines, then spaces, then individual characters). 4. It repeats this process recursively until all segments fall within the target chunk size limit.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "It is parameterized by a list of characters. It tries to split on them in order until the chunks are small enough.",
+      "1. How the text is split: by list of characters.\n2. How the chunk size is measured: by number of characters."
+    ]
+  },
+  {
+    "id": "Q120",
+    "category": "Unanswerable",
+    "question": "A team of horticultural researchers is compiling standard operating procedures for commercial greenhouse propagation. According to the technical guidelines provided in the system documentation, what specific photoperiod schedule (hours of light vs. darkness) and ambient relative humidity percentage are required to prevent leaf scorch in propagated lavender cuttings?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "source_docs": [],
+    "evidence_passages": []
+  }
+
+]
