@@ -1,0 +1,302 @@
+[
+  {
+    "id": "Q051",
+    "category": "direct_factual",
+    "question": "I am configuring a standalone chat model with LangChain's init_chat_model function and I want to make my application resilient to temporary failures such as network timeouts or rate limits. According to the documentation, what is the default value of the max_retries parameter, and what kind of waiting strategy is used between the retry attempts that the system makes?",
+    "ground_truth": "The default value of max_retries is 6, and retries use exponential backoff with jitter."
+  },
+  {
+    "id": "Q052",
+    "category": "direct_factual",
+    "question": "When my application calls a chat model through LangChain and the provider returns an error, the library decides automatically whether the request should be sent again. Which categories of failures does the max_retries setting retry automatically, and which kinds of client errors, such as an unauthorized or not found response, are deliberately not retried by the system?",
+    "ground_truth": "Network errors, rate limits (429) and server errors (5xx) are retried automatically. Client errors such as 401 (unauthorized) or 404 are not retried."
+  },
+  {
+    "id": "Q053",
+    "category": "direct_factual",
+    "question": "The LangChain models documentation explains that models can be used in more than one way, and that the same model interface works in both contexts so developers can start simple and scale up later. What are the two ways in which models can be utilized in LangChain, and how does each of those two usage patterns differ from the other?",
+    "ground_truth": "Models can be used with agents, where the model is specified dynamically when creating an agent, or standalone, where the model is called directly outside the agent loop for tasks such as text generation, classification or extraction."
+  },
+  {
+    "id": "Q054",
+    "category": "direct_factual",
+    "question": "I am processing a large list of inputs with a LangChain chat model, and by default the batch method only gives me the final output for the whole batch after everything completes. Which alternative method lets me receive the output for each individual input as soon as it finishes generating, and what should I expect about the ordering of results?",
+    "ground_truth": "The batch_as_completed() method yields the output for each individual input as it finishes. Results may arrive out of order."
+  },
+  {
+    "id": "Q055",
+    "category": "direct_factual",
+    "question": "In the LangChain documentation about messages, a message is described as the fundamental unit of context for models, carrying both content and the metadata needed to represent the state of a conversation. What are the three main parts that a LangChain message object is said to contain, and what does each of them represent?",
+    "ground_truth": "A message contains a role (identifies the message type such as system or user), content (the actual content such as text, images, audio or documents), and metadata (optional fields such as response information, message IDs and token usage)."
+  },
+  {
+    "id": "Q056",
+    "category": "direct_factual",
+    "question": "When a model makes a tool call and my code executes the tool, I have to send the result back to the model in a ToolMessage so the conversation can continue properly. According to the messages documentation, which identifier on the ToolMessage must be set so that it correctly links the result to the original request the model made?",
+    "ground_truth": "The tool_call_id must be set and it must match the ID of the original tool call made by the model."
+  },
+  {
+    "id": "Q057",
+    "category": "direct_factual",
+    "question": "The knowledge base tutorial in LangChain introduces a Document abstraction that represents a unit of text together with associated metadata, which is used when building a semantic search engine over a PDF. What are the three attributes that a LangChain Document object has, and which of the three is described as optional?",
+    "ground_truth": "A Document has page_content (a string with the content), metadata (a dict of arbitrary metadata) and id (an optional string identifier). The id is the optional one."
+  },
+  {
+    "id": "Q058",
+    "category": "direct_factual",
+    "question": "In the semantic search tutorial, the RecursiveCharacterTextSplitter is created with chunk_size, chunk_overlap and one extra option that makes every resulting split remember where it started inside the original document. What chunk size and overlap values does the tutorial use, and what is the name of that extra option? Please answer using only the information found in the documentation.",
+    "ground_truth": "The tutorial uses chunk_size=1000 and chunk_overlap=200, and the extra option is add_start_index=True, which stores a start_index metadata field with the character offset in the original document."
+  },
+  {
+    "id": "Q059",
+    "category": "direct_factual",
+    "question": "The RecursiveCharacterTextSplitter is described in LangChain as the recommended splitter for generic text, and it tries a list of separators in order until the chunks become small enough. What is the default list of separator characters it uses, and how is the size of each chunk measured by this splitter?",
+    "ground_truth": "The default separators are [\"\\n\\n\", \"\\n\", \" \", \"\"], and chunk size is measured by the number of characters."
+  },
+  {
+    "id": "Q060",
+    "category": "direct_factual",
+    "question": "The CharacterTextSplitter is described as the simplest approach to text splitting in LangChain, because it divides text using one specified character sequence rather than a list. What is the default separator that it uses to split the text, and how does the splitter measure the length of each chunk it produces?",
+    "ground_truth": "The default separator is \"\\n\\n\", and chunk length is measured by the number of characters."
+  },
+  {
+    "id": "Q061",
+    "category": "direct_factual",
+    "question": "The Time-Weighted Retriever in LangChain combines semantic similarity with recency when scoring documents. The scoring formula uses a value called hoursPassed, and the documentation specifically notes what this value is measured from. Since when is hoursPassed measured, and why does this mean frequently accessed documents stay fresh and keep scoring higher?",
+    "ground_truth": "hoursPassed is measured from the time the object in the retriever was last accessed, not from when it was created, so frequently accessed objects remain fresh and score higher."
+  },
+  {
+    "id": "Q062",
+    "category": "direct_factual",
+    "question": "When using the MarkdownHeaderTextSplitter in LangChain with a list of headers to split on, the output chunks normally do not contain the header lines themselves in their content. What is the default behavior of the splitter regarding header text in the chunk content, and which parameter can be set to change that behavior?",
+    "ground_truth": "By default the splitter strips the headers it splits on from the chunk content. Setting strip_headers=False keeps them in the content."
+  },
+  {
+    "id": "Q063",
+    "category": "direct_factual",
+    "question": "The Retrieval page in the LangChain documentation opens by explaining why retrieval is needed, since large language models have two key limitations that retrieval is intended to address at query time. What are those two limitations of large language models, and what does retrieval do about them according to the page?",
+    "ground_truth": "LLMs have finite context (they cannot ingest entire corpora at once) and static knowledge (training data is frozen at a point in time). Retrieval fetches relevant external knowledge at query time, which is the foundation of RAG."
+  },
+  {
+    "id": "Q064",
+    "category": "direct_factual",
+    "question": "The context engineering guide says that an agent is usually unreliable because the language model call inside it took the wrong action, and that this can happen for exactly two reasons. What are those two reasons, and which of the two does the guide say is the more common cause of unreliable agents?",
+    "ground_truth": "The two reasons are that the underlying LLM is not capable enough, or that the right context was not passed to the LLM. The second reason, missing or wrong context, is the more common cause."
+  },
+  {
+    "id": "Q065",
+    "category": "direct_factual",
+    "question": "The OpenWiki quickstart guide describes installing a command line tool that writes and maintains a Markdown wiki for a codebase so that coding agents have durable context. What minimum version of Node.js does it require, and what exact npm command does it give for installing the tool globally on your machine?",
+    "ground_truth": "It requires Node.js 22.22.0 or later, and the install command is npm install -g openwiki."
+  },
+  {
+    "id": "Q066",
+    "category": "multi_fact",
+    "question": "LangChain's retrieval documentation describes three RAG architectures that differ in how much control they give the developer, how flexible they are, and how predictable their latency is. Name the three architectures and summarize how 2-Step RAG compares with Agentic RAG in terms of control, flexibility and latency for a team choosing between them.",
+    "ground_truth": "The architectures are 2-Step RAG, Agentic RAG and Hybrid. 2-Step RAG has high control, low flexibility and fast, predictable latency, while Agentic RAG has low control, high flexibility and variable latency."
+  },
+  {
+    "id": "Q067",
+    "category": "multi_fact",
+    "question": "In LangChain's agent context engineering guide, context is divided into three types, each describing what a developer controls and whether the context is transient or persistent. List the three context types, say what each one controls, and state which of them are transient and which are persistent according to the table in the guide.",
+    "ground_truth": "Model Context controls what goes into model calls (instructions, message history, tools, response format) and is transient. Tool Context controls what tools can access and produce and is persistent. Life-cycle Context controls what happens between model and tool calls (summarization, guardrails, logging) and is persistent."
+  },
+  {
+    "id": "Q068",
+    "category": "multi_fact",
+    "question": "The context engineering guide lists three data sources that an agent can read from and write to during its run, and each one has a different scope and an alternative name. Name the three sources, give the other name used for each, and explain whether each one is scoped to a single conversation or persists across conversations.",
+    "ground_truth": "Runtime Context (static configuration) is conversation-scoped. State (short-term memory) is conversation-scoped. Store (long-term memory) is cross-conversation."
+  },
+  {
+    "id": "Q069",
+    "category": "multi_fact",
+    "question": "LangChain's models documentation lists exception types that major integration packages raise for common model failures, and each one carries an is_retryable attribute that retry middleware respects by default. Explain which of the errors for authentication, rate limits, timeouts and context overflow are retryable and which are not, giving the exception names where possible.",
+    "ground_truth": "ModelRateLimitError and ModelTimeoutError are retryable (as are ModelAPIError and ModelConnectionError). ModelAuthenticationError and ContextOverflowError are not retryable (nor are ModelPermissionDeniedError, ModelInvalidRequestError and ModelNotFoundError)."
+  },
+  {
+    "id": "Q070",
+    "category": "multi_fact",
+    "question": "The LangChain models documentation says that prompt caching can be engaged at three different levels to reduce latency and cost when the same tokens are processed repeatedly. Describe each of those three levels, and give the example providers that the documentation names for the implicit provider caching level in particular.",
+    "ground_truth": "The three levels are implicit provider caching (automatic savings with no configuration, e.g. OpenAI and Gemini), provider-level explicit controls (manually indicating cache points), and LangChain middleware (optimizing caching of stable system prompt and tool content for agents)."
+  },
+  {
+    "id": "Q071",
+    "category": "multi_fact",
+    "question": "The vector store section of the LangChain semantic search tutorial says that, once documents are added, the store can be queried in several different ways. List the different ways the documentation says a query can be made, including whether it is synchronous or asynchronous, the form of the query, whether scores are returned, and the search strategy.",
+    "ground_truth": "Queries can be synchronous or asynchronous, by string query or by vector, with or without similarity scores, and by similarity or by maximum marginal relevance (to balance similarity with diversity)."
+  },
+  {
+    "id": "Q072",
+    "category": "multi_fact",
+    "question": "In the Markdown header splitting guide, a small example splits a document containing a Header 1 called Foo, Header 2 sections called Bar and Baz, and some lines of text beneath them. Describe how the resulting chunks are grouped and what metadata each of the chunks receives, including the text under Bar and under Baz.",
+    "ground_truth": "Content under the same headers is grouped together. The text 'Hi this is Jim' and 'Hi this is Joe' becomes one chunk with metadata Header 1: Foo and Header 2: Bar, and 'Hi this is Molly' becomes a chunk with metadata Header 1: Foo and Header 2: Baz."
+  },
+  {
+    "id": "Q073",
+    "category": "multi_fact",
+    "question": "LangChain's CharacterTextSplitter and RecursiveCharacterTextSplitter both split text and both measure chunk size in characters, but they differ in how they choose where to cut. Compare the two splitters by describing how each one selects its separators, and name the shared methods they offer for getting either strings or Document objects.",
+    "ground_truth": "CharacterTextSplitter splits on a single given separator (default \"\\n\\n\"), whereas RecursiveCharacterTextSplitter tries a list of separators in order (\"\\n\\n\", \"\\n\", \" \", \"\") until chunks are small enough. Both offer .split_text for plain strings and .create_documents for Document objects."
+  },
+  {
+    "id": "Q074",
+    "category": "multi_fact",
+    "question": "The Time-Weighted Retriever documentation gives a configurable decay rate between zero and one, and explains how different values change the behavior of the retriever. Explain what a lower decay rate versus a higher decay rate does to document scoring, and what happens when the decay rate is set to exactly zero or exactly one.",
+    "ground_truth": "A lower decay rate means documents are remembered longer, while a higher decay rate weights recently accessed documents more strongly. At exactly 0 or 1, hoursPassed becomes irrelevant and the retriever behaves like a standard vector lookup."
+  },
+  {
+    "id": "Q075",
+    "category": "multi_fact",
+    "question": "The OpenWiki quickstart says that running the init command for the first time starts an interactive onboarding flow, and that configuration is stored in a file on the user's machine. What items does the first interactive run prompt the user for, and where does OpenWiki save the configuration and secrets that were entered?",
+    "ground_truth": "It prompts for an inference provider and model, the provider API key (or equivalent credentials), an optional LangSmith API key for tracing, and LangSmith projects to enrich the wiki from runtime traces. Configuration and secrets are saved to ~/.openwiki/.env."
+  },
+  {
+    "id": "Q076",
+    "category": "multi_fact",
+    "question": "In the messages documentation a model response can include token usage metadata, and the example output shows several fields describing how many tokens were used by the call. List the main token count fields shown in the usage_metadata example, and give the values that were reported for input tokens, output tokens and total tokens.",
+    "ground_truth": "The fields are input_tokens (8), output_tokens (304) and total_tokens (312), with extra details such as input_token_details (audio, cache_read) and output_token_details (audio, reasoning: 256)."
+  },
+  {
+    "id": "Q077",
+    "category": "multi_fact",
+    "question": "The LangChain retrieval page explains that a typical retrieval pipeline is made of modular building blocks that can be swapped without rewriting the application's logic. Name the building blocks that the page describes, and for each of them give a short explanation of the role it plays in the pipeline.",
+    "ground_truth": "Document loaders ingest data from external sources into standardized Document objects; text splitters break large documents into smaller retrievable chunks that fit the context window; embedding models turn text into vectors so similar meanings are close together; vector stores are specialized databases for storing and searching embeddings; retrievers are interfaces that return documents for an unstructured query."
+  },
+  {
+    "id": "Q078",
+    "category": "multi_reasoning",
+    "question": "A developer is running a long job that calls a chat model through LangChain on a flaky network, and requests sometimes fail with rate limit errors and sometimes with an invalid API key error. Using the documentation about max_retries, explain which of these two failures the library would keep retrying and which would fail immediately, and why.",
+    "ground_truth": "Rate limit errors (429) are retried automatically with exponential backoff and jitter up to max_retries (default 6), while an invalid API key is a client error (401, ModelAuthenticationError) that is not retried, so it fails immediately."
+  },
+  {
+    "id": "Q079",
+    "category": "multi_reasoning",
+    "question": "A team building a documentation chatbot needs predictable cost and latency, and every question must always be answered using retrieved documents. Based on the LangChain retrieval page, explain which RAG architecture fits this requirement best, and describe why the Agentic RAG approach would be a worse match for that requirement.",
+    "ground_truth": "2-Step RAG fits best because retrieval always runs before generation, giving high control, fast and predictable latency (the number of LLM calls is capped), and it suits FAQs and documentation bots. Agentic RAG lets the agent decide when and how to retrieve, giving low control and variable latency."
+  },
+  {
+    "id": "Q080",
+    "category": "multi_reasoning",
+    "question": "How does using MarkdownHeaderTextSplitter help maintain context during the retrieval phase of a RAG pipeline? Explain what information is attached to each chunk, why chunks that are grouped under shared headers keep related text together, and how this benefits a retriever that is searching for relevant passages. Please answer using only the information found in the documentation.",
+    "ground_truth": "It splits on document headers and attaches the header hierarchy as metadata to each chunk, so text stays grouped with its section and the retriever keeps structural context during similarity search."
+  },
+  {
+    "id": "Q081",
+    "category": "multi_reasoning",
+    "question": "A developer notices that the chunks from MarkdownHeaderTextSplitter can be very large, and wants to limit the chunk size while still keeping the header metadata. Using the documentation, explain how the developer could combine the header splitter with another splitter, and say which splitter the documentation uses for that purpose.",
+    "ground_truth": "First split by headers with MarkdownHeaderTextSplitter, then apply another splitter such as RecursiveCharacterTextSplitter to each markdown group to control chunk size; the header metadata stays attached to the resulting chunks."
+  },
+  {
+    "id": "Q082",
+    "category": "multi_reasoning",
+    "question": "A developer wants to build a simple agentic RAG assistant in LangChain that can read web pages, but is worried about the agent fetching arbitrary and unsafe URLs. Using the retrieval page's examples, explain what the agent needs in order to perform retrieval and how the example restricts which URLs it may fetch.",
+    "ground_truth": "The agent only needs one or more tools that can fetch external knowledge, such as a fetch_url or fetch_documentation tool passed to create_agent. The example restricts access with an ALLOWED_DOMAINS list and returns an error if a URL does not start with an allowed domain."
+  },
+  {
+    "id": "Q083",
+    "category": "multi_reasoning",
+    "question": "Suppose a developer stores documents in a TimeWeightedVectorStoreRetriever but adds them directly to the backing vector store instead of through the retriever. Using the documentation, explain what the correct way to add documents is, and why adding them directly to the vector store would cause a problem with scoring. Please answer using only the information found in the documentation.",
+    "ground_truth": "Documents must be added with the addDocuments method on the retriever, not the vector store, because the retriever needs required metadata (such as last-accessed information) to compute recency-based scores."
+  },
+  {
+    "id": "Q084",
+    "category": "multi_reasoning",
+    "question": "A developer wants an agent to switch between a cheap model for simple questions and an expensive model for harder ones at runtime, and also wants structured output from whichever model gets chosen. Using the models documentation, explain how to implement dynamic model selection and what restriction exists regarding pre-bound models.",
+    "ground_truth": "Create middleware with the @wrap_model_call decorator that modifies the model in the request based on state and context. Pre-bound models (those where bind_tools was already called) are not supported with structured output, so the models passed to the middleware must not be pre-bound."
+  },
+  {
+    "id": "Q085",
+    "category": "multi_reasoning",
+    "question": "A developer is working through the semantic search tutorial and has a PDF loaded as a list of Document objects, one per page. Describe in order the steps the tutorial takes to turn those pages into something searchable, including splitting, indexing and finally wrapping the store so it can be plugged into a RAG workflow.",
+    "ground_truth": "Load the PDF into Document objects, split them with RecursiveCharacterTextSplitter (chunk_size 1000, overlap 200, add_start_index=True), generate embeddings and add the splits to a vector store with add_documents, query by similarity, and then wrap the store as a retriever for use in RAG."
+  },
+  {
+    "id": "Q086",
+    "category": "multi_reasoning",
+    "question": "An engineer says that an agent keeps failing even though the chosen language model is very capable. Using the context engineering guide, explain what the guide would suggest is the most likely cause of the failure, what context engineering means, and why the guide calls it so important. Please answer using only the information found in the documentation.",
+    "ground_truth": "The most likely cause is that the right context was not passed to the LLM. Context engineering is providing the right information and tools in the right format so the LLM can accomplish a task, and the guide calls it the number one job of AI engineers and the main blocker to reliable agents."
+  },
+  {
+    "id": "Q087",
+    "category": "multi_reasoning",
+    "question": "A developer wants to understand how LangChain middleware relates to context engineering in agents. Using the guide, explain what the typical agent loop looks like, where middleware can hook in, and what two kinds of things middleware lets a developer do while the agent is running. Please answer using only the information found in the documentation.",
+    "ground_truth": "The agent loop has two steps, a model call and tool execution, repeating until the LLM decides to finish. Middleware hooks into any step of the agent lifecycle and lets developers update context and jump to a different step in the lifecycle."
+  },
+  {
+    "id": "Q088",
+    "category": "multi_reasoning",
+    "question": "A developer wants a coding agent to automatically learn about a repository's architecture instead of rediscovering it every time. Using the OpenWiki quickstart, explain which command generates the repository wiki, which file is created at the repository root to instruct agents to use the wiki, and how documentation is refreshed after code changes.",
+    "ground_truth": "Run openwiki --init from the repository root to generate the wiki in the openwiki/ folder. OpenWiki creates or refreshes AGENTS.md at the repository root instructing agents to consult the wiki, and openwiki --update refreshes the documentation after code changes."
+  },
+  {
+    "id": "Q089",
+    "category": "multi_reasoning",
+    "question": "An application passes the same long system prompt and tool definitions to a model on every request and the developer wants lower cost and latency. Using the models documentation, explain what prompt caching is for, which mechanism applies automatically with no configuration, and where the developer could verify that cache was actually used.",
+    "ground_truth": "Prompt caching reduces latency and cost on repeat processing of the same tokens. Implicit provider caching (for example OpenAI and Gemini) works automatically with no configuration, and cache usage is reflected in the usage metadata of the model response."
+  },
+  {
+    "id": "Q090",
+    "category": "multi_reasoning",
+    "question": "A developer wants to know why LangChain describes RAG as going one step beyond plain retrieval. Using the retrieval page, explain what retrieval alone gives an LLM, how RAG extends it, and what the page says happens in the full pipeline from a user query to the final answer. Please answer using only the information found in the documentation.",
+    "ground_truth": "Retrieval gives an LLM relevant context at runtime; RAG integrates retrieval with generation to produce grounded, context-aware answers. In the pipeline, the user query is embedded, the vector store and retriever return relevant chunks, and the LLM uses that retrieved information to produce the answer."
+  },
+  {
+    "id": "Q091",
+    "category": "unanswerable",
+    "question": "I am planning a long weekend trip to Italy next spring with my family, and we love old buildings and ancient history. Can you tell me which year the Colosseum in Rome was officially completed, which emperor opened it with a hundred days of games, and roughly how many spectators it could hold?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q092",
+    "category": "unanswerable",
+    "question": "My daughter is learning about the solar system at school and keeps asking me difficult questions that I cannot answer. Could you explain which planet in our solar system has the most moons, approximately how many moons it has been confirmed to have, and which planet is the hottest even though it is not the closest to the sun?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q093",
+    "category": "unanswerable",
+    "question": "I want to bake a loaf of sourdough bread at home for the first time this weekend, and I have never worked with a starter before. How long should I feed the starter before it is ready to use, what ratio of flour to water is typical, and what temperature should my oven be set to?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q094",
+    "category": "unanswerable",
+    "question": "I have recently started watching professional football and I am confused by some of the rules of the game. Can you explain how the offside rule works, how many players are allowed on the pitch for each team, and which country won the very first men's World Cup held in the year 1930?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q095",
+    "category": "unanswerable",
+    "question": "I am writing a short school essay about famous painters and I need some background facts for it, please. Who painted the Mona Lisa, in which city is the painting currently displayed, roughly during which period of history was it created, and what painting technique is it especially known for?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q096",
+    "category": "unanswerable",
+    "question": "My grandfather has been telling me stories about the ocean, and now I am curious about marine life in general. What is the largest animal that has ever lived on Earth, how long can it grow, how much does it weigh, and what does it mainly eat in order to survive?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q097",
+    "category": "unanswerable",
+    "question": "I have been trying to improve my fitness and I want to start running regularly, but I do not know where to begin. How many kilometres is a standard marathon, what is a sensible weekly schedule for a beginner, and how should I warm up properly before each run to avoid injuries?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q098",
+    "category": "unanswerable",
+    "question": "I am visiting Japan for the first time and I want to be respectful of the local culture during my stay. What is the traditional etiquette for bowing when greeting someone, why should I remove my shoes when entering a home, and what is the proper way to use chopsticks during a meal?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q099",
+    "category": "unanswerable",
+    "question": "For a trivia night with my friends I need to prepare some geography questions in advance. What is the longest river in the world, which continent has the most countries, what is the capital city of Australia, and which desert is considered to be the largest hot desert on the planet?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q100",
+    "category": "unanswerable",
+    "question": "My houseplants keep dying even though I water them every single day, and I would like to understand what I am doing wrong with them. How often should a typical succulent be watered, how much sunlight does it need, and what are the common signs that a plant has been overwatered?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  }
+]
