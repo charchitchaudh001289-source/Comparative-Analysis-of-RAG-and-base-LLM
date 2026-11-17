@@ -192,6 +192,38 @@
     "question": "You are migrating a legacy Markdown ingestion pipeline to use ExperimentalMarkdownSyntaxTextSplitter so that whitespace and newlines are preserved. You need to pass a custom dictionary of regex patterns to override how code blocks and horizontal rules are parsed by this experimental class. According to the documentation, what parameter name does ExperimentalMarkdownSyntaxTextSplitter accept for custom regex syntax rules?",
     "ground_truth": "The provided context does not contain sufficient information to answer this question.",
     "evidence_passage": ""
+  },
+  {
+    "id": "Q025",
+    "category": "Unanswerable",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "An engineer is initializing RecursiveCharacterTextSplitter without passing any arguments—i.e., RecursiveCharacterTextSplitter()—before calling split_documents(md_header_splits). According to the provided documentation, what are the default numeric values for chunk_size and chunk_overlap when they are omitted during initialization?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
+  },
+  {
+    "id": "Q026",
+    "category": "Unanswerable",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "Your team's Markdown documentation uses Setext-style underlined headers (using '===' for H1 and '---' for H2) instead of ATX-style hash headers ('#' and '##'). According to the documentation, how should headers_to_split_on be configured in MarkdownHeaderTextSplitter to parse Setext-style underlined headers?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
+  },
+  {
+    "id": "Q027",
+    "category": "Unanswerable",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "When using RecursiveCharacterTextSplitter to constrain chunk sizes on the output of MarkdownHeaderTextSplitter, you want to measure chunk length by token count using a tiktoken encoder rather than character count. According to the provided documentation, what method or parameter is used to configure a token-based length function on RecursiveCharacterTextSplitter?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
+  },
+  {
+    "id": "Q028",
+    "category": "Unanswerable",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "A developer is processing Markdown files that include YAML frontmatter blocks (delimited by '---' at the top of the file, such as title and description fields). According to the documentation, how does MarkdownHeaderTextSplitter handle YAML frontmatter blocks by default, and what parameter controls whether frontmatter keys are merged into the Document metadata?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
   }
 ]
 
