@@ -59,9 +59,9 @@
     "id": "Q158",
     "category": "Multi_Step",
     "source_doc": "models.mdx",
-    "question": "Imagine you are starting a new Python application that needs to ask a chat model a question. Explain the steps for choosing a model provider, setting up the model using the initialization helper, preparing the question or messages, calling the model, and reading the result. What must be ready before the application can make a successful model request? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
-    "ground_truth": "Choose a provider, initialize a chat model using init_chat_model (Python) or initChatModel (JavaScript), then invoke it with the prompt or messages.",
-    "evidence_passage": "### Initialize a model\n:::python\nThe easiest way to get started with a standalone model in LangChain is to use @[`init_chat_model`] to initialize one from a chat model provider of your choice (examples below):"
+    "question": "A chatbot project has three jobs: answering a single question, showing a long answer little by little, and testing many prompts. Explain step by step how you would decide which model method to use for each job. Describe how the inputs are sent, how the results are received, and how the application should handle each kind of response. Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Identify whether the task needs a single complete result, incremental chunks, or multiple inputs, then choose invoke, stream, or batch respectively and process the returned results.",
+    "evidence_passage": "### Key methods\n<Card title=\"Invoke\" href=\"#invoke\" icon=\"send\" arrow=\"true\" horizontal>\n    The model takes messages as input and outputs messages after generating a complete response.\n</Card>\n<Card title=\"Stream\" href=\"#stream\" icon=\"broadcast\" arrow=\"true\" horizontal>\n    Invoke the model, but stream the output as it is generated in real-time.\n</Card>\n<Card title=\"Batch\" href=\"#batch\" icon=\"grip-vertical\" arrow=\"true\" horizontal>\n    Send multiple requests to a model in a batch for more efficient processing.\n</Card>"
   },
   {
     "id": "Q159",
@@ -158,5 +158,245 @@
     "question": "A developer sends one question to a chat model and wants to receive one complete response after the model finishes. Which main LangChain method is used for this kind of model call? Give the exact method name. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
     "ground_truth": "invoke.",
     "evidence_passage": "### Invoke\nThe most straightforward way to call a model is to use @[`invoke()`][BaseChatModel.invoke] with a single message or a list of messages."
+  },
+  {
+    "id": "Q171",
+    "category": "Direct_Factual",
+    "source_doc": "messages.mdx",
+    "question": "A user types a question into a chatbot, and the application needs to represent that user's input as a message. What is the name of the LangChain message type that represents user input? Give just the message type. Find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
+    "ground_truth": "HumanMessage.",
+    "evidence_passage": "A @[`HumanMessage`] represents user input and interactions. They can contain text, images, audio, files, and any other amount of multimodal [content](#message-content)."
+  },
+  {
+    "id": "Q172",
+    "category": "Direct_Factual",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot finishes answering a user's question, and the application needs to store the answer as a message. What is the name of the LangChain message type used for the model's response? Give just the message type. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
+    "ground_truth": "AIMessage.",
+    "evidence_passage": "An @[`AIMessage`] represents the output of a model invocation. They can include multimodal data, tool calls, and provider-specific metadata that you can later access."
+  },
+  {
+    "id": "Q173",
+    "category": "Direct_Factual",
+    "source_doc": "messages.mdx",
+    "question": "A developer wants to check how many input and output tokens were used when a chat model answered a question. Which field of an AIMessage can contain the token counts? Please give the exact field name. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
+    "ground_truth": "usage_metadata.",
+    "evidence_passage": "An @[`AIMessage`] can hold token counts and other usage metadata in its @[`usage_metadata`][UsageMetadata] field:"
+  },
+  {
+    "id": "Q174",
+    "category": "Direct_Factual",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot asks a tool to do something and later receives the tool's result. The application needs to connect that result to the original tool request. Which ToolMessage field stores the ID of the tool call that the result belongs to? Give the field name. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
+    "ground_truth": "tool_call_id.",
+    "evidence_passage": "<Accordion title=\"Attributes\">\n    <ParamField path=\"content\" type=\"string\" required>\n        The stringified output of the tool call.\n    </ParamField>\n    <ParamField path=\"tool_call_id\" type=\"string\" required>\n        The ID of the tool call that this message is responding to. Must match the ID of the tool call in the @[`AIMessage`].\n    </ParamField>\n    <ParamField path=\"name\" type=\"string\" required>\n        The name of the tool that was called.\n    </ParamField>\n    <ParamField path=\"artifact\" type=\"dict\">\n        Additional data not sent to the model but can be accessed programmatically.\n    </ParamField>\n</Accordion>"
+  },
+  {
+    "id": "Q175",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "messages.mdx",
+    "question": "You are making two chatbots. The first answers one simple question at a time, while the second remembers earlier messages, follows special instructions, and may receive pictures or files. Explain when a plain text prompt is enough and when a list of messages is better. What are the main differences, and why would you choose one method over the other? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Use text prompts for simple standalone requests without history; use message prompts for multi-turn conversations, system instructions, or multimodal content.",
+    "evidence_passage": "**Use text prompts when:**\n* You have a single, standalone request\n* You don't need conversation history\n* You want minimal code complexity"
+  },
+  {
+    "id": "Q176",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot stores the words a user sends, information about who sent them, and extra details about the model's response. Explain the difference between a message's role, content, and metadata. What kind of information belongs in each part, and how do these parts help the application understand and manage a conversation? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Content is the payload such as text or images; role identifies the sender/type; metadata carries optional identifiers, response details, or token usage.",
+    "evidence_passage": "Messages are objects that contain:"
+  },
+  {
+    "id": "Q177",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "messages.mdx",
+    "question": "Two chat model providers return similar answers, but the information inside their messages is arranged differently. Explain the difference between provider-specific content blocks and LangChain's standard content blocks. How does using a common format help developers work with different providers while still keeping access to the original message content? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Provider-native blocks preserve provider-specific structure; standardized content_blocks present a consistent type-safe view across providers.",
+    "evidence_passage": "LangChain provides a standard representation for message content that works across providers."
+  },
+  {
+    "id": "Q178",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "messages.mdx",
+    "question": "A developer already has an application that reads the content field of messages. Later, they want to use standard content blocks to make messages easier to work with across different model providers. Explain how the newer content blocks relate to the older content field. Why is it useful that the older way of reading message content still works? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "The content_blocks interface standardizes interpretation while retaining the existing content field for backward compatibility.",
+    "evidence_passage": "<Info>\n    Content blocks were introduced as a new property on messages in LangChain v1 to standardize content formats across providers while maintaining backward compatibility with existing code."
+  },
+  {
+    "id": "Q179",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "A user asks a chatbot one question, gets an answer, and then asks a follow-up question that depends on the first answer. Explain step by step how the application can keep the earlier messages, add the new question, and send the conversation back to the model. Why does the order of the messages matter? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Keep earlier HumanMessage and AIMessage turns in an ordered list, append each new user message, invoke the model with the accumulated history, and append its response.",
+    "evidence_passage": "[Chat models](/oss/langchain/models) accept a sequence of message objects as input and return an @[`AIMessage`] as output. Interactions are often stateless, so that a simple conversational loop involves invoking a model with a growing list of messages."
+  },
+  {
+    "id": "Q180",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot needs information from a weather tool before it can answer a user's question. Explain the full process, starting when the model asks to use the tool and ending when the model answers using the tool's result. Include how the tool result is stored, how it is matched to the original request, and what messages are sent to the model afterward. Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Create or receive an AIMessage with a tool call, execute the tool, construct a ToolMessage with the result and matching tool_call_id, and invoke the model with the complete message sequence.",
+    "evidence_passage": "# After a model makes a tool call\n# (Here, we demonstrate manually creating the messages for brevity)\nai_message = AIMessage(\n    content=[],\n    tool_calls=[{\n        \"name\": \"get_weather\",\n        \"args\": {\"location\": \"San Francisco\"},\n        \"id\": \"call_123\"\n    }]\n)"
+  },
+  {
+    "id": "Q181",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "You want a chatbot to show its answer little by little while it is being generated instead of waiting until the whole answer is ready. Explain the steps for using streaming, reading each new piece of text, showing it to the user, and joining the pieces into one complete message. What is different from getting one finished response? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Iterate over model.stream, read each chunk's text as it arrives, and combine chunks into a full message (addition in Python or concat in JavaScript).",
+    "evidence_passage": "During streaming, you'll receive @[`AIMessageChunk`] objects that can be combined into a full message object:"
+  },
+  {
+    "id": "Q182",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "A user wants a chatbot to describe a picture and has either a link to the picture or its encoded image data. Explain step by step how to build a user message containing both the written request and the image. What information is needed for each way of providing the image, and what should be checked before sending it to a model? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Build a user message with a text block and an image block; supply an image URL or base64 data with a MIME type, and verify the chosen provider supports the format.",
+    "evidence_passage": ":::python\n<CodeGroup>\n    ```python Image input\n    # From URL\n    message = {\n        \"role\": \"user\",\n        \"content\": [\n            {\"type\": \"text\", \"text\": \"Describe the content of this image.\"},\n            {\"type\": \"image\", \"url\": \"https://example.com/path/to/image.jpg\"},\n        ]\n    }"
+  },
+  {
+    "id": "Q183",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot needs to save a conversation so the user can leave and come back later. Explain the steps for turning message objects into data that can be stored, saving that data, and turning it back into message objects when the user returns. What safety problem should the developer think about when loading saved data? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Serialize message instances to plain objects, store them, and deserialize trusted saved data into message instances when restoring the conversation; avoid loading untrusted data.",
+    "evidence_passage": "You can serialize messages to plain objects for storage and deserialize back to message instances. This is useful for persisting conversation history and resuming sessions."
+  },
+  {
+    "id": "Q184",
+    "category": "Unanswerable",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot asks a weather tool for information about San Francisco and receives a weather result. What was the exact amount of money charged, in US dollars, for processing that particular tool result? Please give the exact cost rather than a general price estimate. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q185",
+    "category": "Unanswerable",
+    "source_doc": "messages.mdx",
+    "question": "An example shows a picture being supplied to a chatbot using an image URL. On what exact calendar date was that example image first uploaded to its original hosting server? Please provide the day, month, and year of the upload. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q186",
+    "category": "Direct_Factual",
+    "source_doc": "models.mdx",
+    "question": "A chatbot should show the beginning of an answer before the model has finished generating the rest. Which main LangChain method lets the application receive the response in pieces as they are produced? Give the method name. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
+    "ground_truth": "stream.",
+    "evidence_passage": "### Stream\nMost models can stream their output content while it is being generated. By displaying output progressively, streaming significantly improves user experience, particularly for longer responses."
+  },
+  {
+    "id": "Q187",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A developer is choosing a model for an assistant that must follow instructions, answer difficult questions, and sometimes use outside tools. Explain how the model's abilities can affect how well the assistant works. Which different abilities should the developer think about, and why might a model that is good at ordinary text generation still be unsuitable for some agent tasks? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Agent reliability depends on the chosen model's ability to follow instructions, reason, handle context, and support capabilities such as tool calling or structured output.",
+    "evidence_passage": "The quality and capabilities of the model you choose directly impact your agent's baseline reliability and performance. Different models excel at different tasks - some are better at following complex instructions, others at structured reasoning, and some support larger context windows for handling more information."
+  },
+  {
+    "id": "Q188",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A team is building a chatbot that must answer one question, show long answers as they are generated, and process many test questions. Compare the invoke, stream, and batch methods. Explain what each method is designed to do, how its results are received, and which method you would choose for each of these three situations. Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "invoke returns one completed response; stream yields incremental chunks; batch handles multiple inputs efficiently.",
+    "evidence_passage": "### Key methods\n<Card title=\"Invoke\" href=\"#invoke\" icon=\"send\" arrow=\"true\" horizontal>\n    The model takes messages as input and outputs messages after generating a complete response.\n</Card>\n<Card title=\"Stream\" href=\"#stream\" icon=\"broadcast\" arrow=\"true\" horizontal>\n    Invoke the model, but stream the output as it is generated in real-time.\n</Card>\n<Card title=\"Batch\" href=\"#batch\" icon=\"grip-vertical\" arrow=\"true\" horizontal>\n    Send multiple requests to a model in a batch for more efficient processing.\n</Card>"
+  },
+  {
+    "id": "Q189",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A developer wants to change from one chat model provider to another without rewriting the whole application. Explain how a shared model interface makes that easier. Why must the developer still check the settings and features supported by the new model, and what problems could happen if they assume every provider works in exactly the same way? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "The standard interface simplifies switching providers, but individual providers and models support different capabilities and parameters.",
+    "evidence_passage": "LangChain's standard model interfaces give you access to many different provider integrations, which makes it easy to experiment with and switch between models to find the best fit for your use case."
+  },
+  {
+    "id": "Q190",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A chatbot needs to get current information from a database and then return a result that another program can read as structured data. Explain the difference between tool calling and structured output. What does each feature help the model do, how are they used for different purposes, and why might one application need both? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Tool calling requests external operations and uses their results; structured output constrains the response to a defined schema or format.",
+    "evidence_passage": "In addition to text generation, many models support:"
+  },
+  {
+    "id": "Q191",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A developer is choosing a model for an app that accepts pictures, audio, and long conversations. Explain how model capabilities and limits affect that choice. What can model profiles tell the developer, why should they check whether the model supports each kind of input, and why is it risky to assume that all models accept the same content? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Model profiles describe capabilities and limits; multimodal support varies by model and provider, so the developer must verify accepted media and constraints.",
+    "evidence_passage": "### Model profiles\n<Info>\n    Model profiles require `langchain>=1.1`.\n</Info>"
+  },
+  {
+    "id": "Q192",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A research team is testing two chat models using many questions. They want to compare token use and avoid sending too many requests at once. Explain how token usage information helps the team understand model use, how rate limiting affects the testing process, and why both matter when trying to make a fair and reliable comparison. Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Token usage helps measure model consumption across calls; rate limiting controls request frequency to respect provider limits and avoid failures.",
+    "evidence_passage": "### Token usage\nA number of model providers return token usage information as part of the invocation response. When available, this information will be included on the @[`AIMessage`] objects produced by the corresponding model. For more details, see the [messages](/oss/langchain/messages) guide."
+  },
+  {
+    "id": "Q193",
+    "category": "Multi_Step",
+    "source_doc": "models.mdx",
+    "question": "A chatbot needs to call an outside tool to get information that is not already in the conversation. Explain the steps for making the tool available to the model, sending the user's request, checking whether the model asked to use the tool, running the requested operation, and giving the result back so the chatbot can finish its answer. Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Define a tool, bind it to a tool-capable model, invoke the model, inspect the generated tool calls, execute the requested operation, and pass its result back in the conversation.",
+    "evidence_passage": "## Tool calling\nModels can request to call tools that perform tasks such as fetching data from a database, searching the web, or running code. Tools are pairings of:"
+  },
+  {
+    "id": "Q194",
+    "category": "Multi_Step",
+    "source_doc": "models.mdx",
+    "question": "A program asks a chatbot to pull specific pieces of information from a paragraph, and the program needs the answer in a predictable structure rather than normal sentences. Explain the steps for deciding what fields the answer should contain, setting up structured output, calling the model, and using the returned data. Why does the expected structure matter? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Define the desired response structure, configure the model's structured-output interface with the schema, invoke the model, and consume the structured result.",
+    "evidence_passage": "## Structured output\nModels can be requested to provide their response in a format matching a given schema. This is useful for ensuring the output can be easily parsed and used in subsequent processing. LangChain supports multiple schema types and methods for enforcing structured output."
+  },
+  {
+    "id": "Q195",
+    "category": "Multi_Step",
+    "source_doc": "models.mdx",
+    "question": "A chatbot sometimes gets connection errors, timeouts, or a message saying the request is too large. Explain step by step how the application should identify the kind of problem, decide whether trying again makes sense, use retry settings for temporary failures, and control how quickly it sends requests. Why should every kind of failure not be treated the same way? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Identify the failure type, distinguish transient connection or timeout errors from non-retryable context overflow, configure appropriate retries and rate limiting, and handle failures.",
+    "evidence_passage": ":::python\n### Model exceptions"
+  },
+  {
+    "id": "Q196",
+    "category": "Multi_Step",
+    "source_doc": "models.mdx",
+    "question": "A chatbot can use a smaller model for easy conversations and a stronger model for harder ones. Explain the steps for preparing the available models, deciding what information will be used to choose between them, selecting a model while the application is running, and sending the request to that model. Give an example of a simple signal the application could use. Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Define the candidate models, implement a dynamic selection policy such as one based on message count, and route the current request to the selected model.",
+    "evidence_passage": "### Dynamic model selection\nDynamic models are selected at <Tooltip tip=\"The execution environment of your agent, containing immutable configuration and contextual data that persists throughout the agent's execution (e.g., user IDs, session details, or application-specific configuration).\">runtime</Tooltip> based on the current <Tooltip tip=\"The data that flows through your agent's execution, including messages, custom fields, and any information that needs to be tracked and potentially modified during processing (e.g., user preferences or tool usage stats).\">state</Tooltip> and context. This enables sophisticated routing logic and cost optimization."
+  },
+  {
+    "id": "Q197",
+    "category": "Unanswerable",
+    "source_doc": "models.mdx",
+    "question": "A researcher wants to compare the environmental impact of all the chat models discussed in a model integration examples. What exact amount of electrical energy did each model's GPU consume during the tests, measured in kilowatt-hours? Please give the measured value for every model rather than estimating it. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q198",
+    "category": "Unanswerable",
+    "source_doc": "models.mdx",
+    "question": "A researcher wants to know the exact number of hours the authors spent testing the chat model examples before publishing them. How many hours did they spend on these tests in total? Please give the measured total rather than an estimate. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q199",
+    "category": "Unanswerable",
+    "source_doc": "models.mdx",
+    "question": "A finance team wants to calculate the exact amount of money the example authors paid for every model call they made. What were the live input-token and output-token prices charged to those authors during all of their example runs? Give the exact historical prices and charges, not current public estimates. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q200",
+    "category": "Unanswerable",
+    "source_doc": "models.mdx",
+    "question": "A student wants to compare every model mentioned in the examples using the original authors' private test results. What exact numerical accuracy score did each model achieve on that private benchmark? Please give each model's score and explain which one had the highest measured accuracy. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
   }
 ]
