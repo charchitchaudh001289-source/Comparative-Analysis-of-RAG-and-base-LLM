@@ -64,7 +64,7 @@
     "ground_truth": "The provided context does not contain sufficient information to answer this question.",
     "evidence_passage": ""
   },
-  
+
   {
     "id": "Q009",
     "category": "Direct_Factual",
@@ -88,6 +88,110 @@
     "question": "Your team is building a Markdown processor that requires strict preservation of original document formatting, including exact white spaces and new lines, which the standard MarkdownHeaderTextSplitter strips out by default. According to the documentation note, which alternative text splitter class should you check out to preserve original Markdown formatting?",
     "ground_truth": "To preserve the original formatting of Markdown documents, you should use ExperimentalMarkdownSyntaxTextSplitter.",
     "evidence_passage": "**The default `MarkdownHeaderTextSplitter` strips white spaces and new lines. To preserve the original formatting of your Markdown documents, check out [`ExperimentalMarkdownSyntaxTextSplitter`](https://reference.langchain.com/python/langchain-text-splitters/markdown/ExperimentalMarkdownSyntaxTextSplitter).**"
+  },
+  {
+    "id": "Q012",
+    "category": "Direct_Factual",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "While configuring a line-by-line citation system for Markdown files, a developer wants MarkdownHeaderTextSplitter to stop aggregating lines under common headers and instead emit every individual line as its own Document object while still attaching the hierarchy of headers to each object's metadata. What exact parameter and value must be specified when initializing MarkdownHeaderTextSplitter to achieve this?",
+    "ground_truth": "You must specify return_each_line=True when initializing MarkdownHeaderTextSplitter.",
+    "evidence_passage": "By default, `MarkdownHeaderTextSplitter` aggregates lines based on the headers specified in `headers_to_split_on`. We can disable this by specifying `return_each_line`:\n\n```python\nmarkdown_splitter = MarkdownHeaderTextSplitter(\n    headers_to_split_on,\n    return_each_line=True,\n)\n```"
+  },
+  {
+    "id": "Q013",
+    "category": "Direct_Factual",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "In the documentation's sample text illustrating how to constrain chunk size on a passage about the history of Markdown, who is credited with creating the Markdown language in 2004, and which two individuals are named as part of the group that launched a standardization effort in 2012?",
+    "ground_truth": "John Gruber created Markdown in 2004, and Jeff Atwood and John MacFarlane were part of the group that launched the standardization effort in 2012.",
+    "evidence_passage": "John Gruber created Markdown in 2004 as a markup language that is appealing to human readers in its source code form.[9] ... From 2012, a group of people, including Jeff Atwood and John MacFarlane, launched what Atwood characterised as a standardisation effort."
+  },
+  {
+    "id": "Q014",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "A developer splits a Markdown file using MarkdownHeaderTextSplitter configured with headers_to_split_on = [(\"#\", \"Header 1\"), (\"##\", \"Header 2\")] and strip_headers=False. The document contains a level-2 section '## Rise and divergence' followed later by a level-4 sub-heading '#### Standardization'. When this output is passed into RecursiveCharacterTextSplitter, how is the '#### Standardization' heading treated in terms of both page_content and metadata in the resulting Document chunk?",
+    "ground_truth": "Because '####' is not included in headers_to_split_on, '#### Standardization' is not extracted as a new metadata key; instead, the literal text '#### Standardization' remains inside the chunk's page_content while the chunk inherits the metadata of its parent sections: {'Header 1': 'Intro', 'Header 2': 'Rise and divergence'}.",
+    "evidence_passage": "```python\nheaders_to_split_on = [\n    (\"#\", \"Header 1\"),\n    (\"##\", \"Header 2\"),\n]\n```\n\n```text\nDocument(metadata={'Header 1': 'Intro', 'Header 2': 'Rise and divergence'}, page_content='#### Standardization  \\nFrom 2012, a group of people, including Jeff Atwood and John MacFarlane, launched what Atwood characterised as a standardisation effort.')\n```"
+  },
+  {
+    "id": "Q015",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "An engineer is comparing three configurations of MarkdownHeaderTextSplitter on the document '# Foo\\n\\n    ## Bar\\n\\nHi this is Jim\\n\\nHi this is Joe\\n\\n ### Boo \\n\\n Hi this is Lance \\n\\n ## Baz\\n\\n Hi this is Molly': (1) default settings, (2) strip_headers=False, and (3) return_each_line=True. How does the number of resulting Document objects and the content of the chunks under '## Bar' (before '### Boo') differ across these three configurations?",
+    "ground_truth": "Under default settings and strip_headers=False, 3 Document objects are returned in total, with 'Hi this is Jim' and 'Hi this is Joe' aggregated into a single Document (where strip_headers=False also prepends '# Foo  \\n## Bar  \\n' to the page_content). Under return_each_line=True, 4 Document objects are returned in total because 'Hi this is Jim' and 'Hi this is Joe' are split into two separate Document objects that both share the metadata {'Header 1': 'Foo', 'Header 2': 'Bar'}.",
+    "evidence_passage": "```text\n[Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}, page_content='Hi this is Jim  \\nHi this is Joe'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}, page_content='Hi this is Lance'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Baz'}, page_content='Hi this is Molly')]\n```\n\n```text\n[Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}, page_content='# Foo  \\n## Bar  \\nHi this is Jim  \\nHi this is Joe'), ...\n```\n\n```text\n[Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}, page_content='Hi this is Jim'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}, page_content='Hi this is Joe'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}, page_content='Hi this is Lance'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Baz'}, page_content='Hi this is Molly')]\n```"
+  },
+  {
+    "id": "Q016",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "You are debugging a RAG pipeline where MarkdownHeaderTextSplitter is followed by RecursiveCharacterTextSplitter(chunk_size=250, chunk_overlap=30). Your QA lead notices that there is zero overlapping text between the last chunk of the '# H1' section and the first chunk of the '## H2' section, and also notices that short sections have no overlap at all. Based on the troubleshooting guidelines, why is chunk_overlap not appearing in these two cases?",
+    "ground_truth": "Chunk overlap only appears when a single section exceeds chunk_size and is split into multiple chunks, and overlap never crosses section or document boundaries (such as from # H1 to ## H2).",
+    "evidence_passage": "- Overlap appears only when a **single section** exceeds `chunk_size` and is split into multiple chunks.\n- Overlap **does not cross** section/document boundaries (e.g., `# H1` → `## H2`)."
+  },
+  {
+    "id": "Q017",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "In the example that combines MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on, strip_headers=False) with RecursiveCharacterTextSplitter(chunk_size=250, chunk_overlap=30) on the Markdown history document, the '## History' section is split into two separate Document objects. How do the metadata and the inclusion of the '# Intro  \\n## History' header lines differ between the first and second Document chunks generated for that section?",
+    "ground_truth": "Both Document chunks retain the exact same metadata dictionary ({'Header 1': 'Intro', 'Header 2': 'History'}), but only the first chunk includes the header lines '# Intro  \\n## History  \\n' in its page_content, while the second chunk contains only the remaining body text ('Markdown is widely used in blogging...').",
+    "evidence_passage": "```text\n[Document(metadata={'Header 1': 'Intro', 'Header 2': 'History'}, page_content='# Intro  \\n## History  \\nMarkdown[9] is a lightweight markup language for creating formatted text using a plain-text editor. John Gruber created Markdown in 2004 as a markup language that is appealing to human readers in its source code form.[9]'),\n Document(metadata={'Header 1': 'Intro', 'Header 2': 'History'}, page_content='Markdown is widely used in blogging, instant messaging, online forums, collaborative software, documentation pages, and readme files.'),\n```"
+  },
+  {
+    "id": "Q018",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "A developer runs MarkdownHeaderTextSplitter with strip_headers=False and then passes the resulting documents into a character-level text splitter to enforce a strict chunk_size. They notice that in several sections, the header line itself is getting separated from the body text and emitted as a tiny standalone first chunk. According to the troubleshooting section, why does this occur and what configuration change resolves it?",
+    "ground_truth": "Because strip_headers is set to False, the header line is kept in the chunk's text and can be split off into a tiny first chunk when constraining chunk size; setting strip_headers to True removes the header line from the body content so it cannot become a standalone chunk.",
+    "evidence_passage": "- If the header becomes a tiny first chunk, consider setting `strip_headers` to `True` so the header line doesn't become a standalone chunk."
+  },
+  {
+    "id": "Q019",
+    "category": "Multi_Step",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "You need to build a two-stage Markdown chunking pipeline that first groups text by level-1 ('#') and level-2 ('##') headers while keeping the headers in the text, and then constrains each group to a maximum size of 250 characters with a 30-character overlap while preserving per-section header metadata. Tracing the documented workflow, what exact sequence of splitter classes, initialization parameters, and splitting methods must be called?",
+    "ground_truth": "First, initialize MarkdownHeaderTextSplitter with headers_to_split_on=[(\"#\", \"Header 1\"), (\"##\", \"Header 2\")] and strip_headers=False, and call its split_text(markdown_document) method. Next, initialize RecursiveCharacterTextSplitter with chunk_size=250 and chunk_overlap=30, and call its split_documents(md_header_splits) method on the output of the first splitter.",
+    "evidence_passage": "```python\nheaders_to_split_on = [\n    (\"#\", \"Header 1\"),\n    (\"##\", \"Header 2\"),\n]\n\n# MD splits\nmarkdown_splitter = MarkdownHeaderTextSplitter(\n    headers_to_split_on=headers_to_split_on, strip_headers=False\n)\nmd_header_splits = markdown_splitter.split_text(markdown_document)\n\n# Char-level splits\nfrom langchain_text_splitters import RecursiveCharacterTextSplitter\n\nchunk_size = 250\nchunk_overlap = 30\ntext_splitter = RecursiveCharacterTextSplitter(\n    chunk_size=chunk_size, chunk_overlap=chunk_overlap\n)\n\n# Split\nsplits = text_splitter.split_documents(md_header_splits)\n```"
+  },
+  {
+    "id": "Q020",
+    "category": "Multi_Step",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "A data engineer splits a Markdown string using markdown_splitter.split_text(markdown_document) and then loops over the resulting Document objects, passing each object's page_content string into text_splitter.split_text(...) on a RecursiveCharacterTextSplitter. Why does this approach break the intended metadata and overlap behavior, and what exact method call should replace split_text in the second stage?",
+    "ground_truth": "Calling split_text instead of split_documents fails to preserve per-section header metadata on the resulting chunks and prevents proper handling of section documents. The engineer must pass the list of Document objects directly to split_documents(docs) so that overlap is applied within each section and per-section metadata (headers) is preserved on the chunks.",
+    "evidence_passage": "- After header-based splitting (e.g., `MarkdownHeaderTextSplitter`), use **`split_documents(docs)`** (not `split_text`) so that overlap is applied **within each section** and per-section metadata (headers) is preserved on chunks."
+  },
+  {
+    "id": "Q021",
+    "category": "Multi_Step",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "Consider the nested Markdown string: '# Foo\\n\\n    ## Bar\\n\\nHi this is Jim\\n\\nHi this is Joe\\n\\n ### Boo \\n\\n Hi this is Lance \\n\\n ## Baz\\n\\n Hi this is Molly'. When MarkdownHeaderTextSplitter processes this string with headers_to_split_on set to track '#', '##', and '###' as 'Header 1', 'Header 2', and 'Header 3', how does the metadata dictionary evolve across the three resulting Document chunks from start to finish?",
+    "ground_truth": "In the first chunk ('Hi this is Jim  \\nHi this is Joe'), the metadata is {'Header 1': 'Foo', 'Header 2': 'Bar'}. In the second chunk ('Hi this is Lance'), the nested level-3 header is added, updating the metadata to {'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}. In the third chunk ('Hi this is Molly'), encountering the new level-2 header '## Baz' replaces 'Header 2' and drops 'Header 3', resulting in {'Header 1': 'Foo', 'Header 2': 'Baz'}.",
+    "evidence_passage": "```text\n[Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}, page_content='Hi this is Jim  \\nHi this is Joe'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}, page_content='Hi this is Lance'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Baz'}, page_content='Hi this is Molly')]\n```"
+  },
+  {
+    "id": "Q022",
+    "category": "Multi_Step",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "You are processing a Markdown file that contains long, continuous strings of unformatted text without any newlines or spaces inside several header sections. You split the document by headers using MarkdownHeaderTextSplitter and then pass the output to a character-level splitter via split_documents(docs), but notice that the long continuous strings are neither splitting nor applying chunk_overlap. What adjustment must be made to the character-level splitter's configuration to fix this?",
+    "ground_truth": "You must keep a fallback empty string (\"\") in the separators parameter of the splitter so that it can still split the continuous text and apply overlap when newlines and spaces are absent.",
+    "evidence_passage": "- If your text lacks newlines/spaces, keep a fallback `\"\"` in `separators` so the splitter can still split and apply overlap."
+  },
+  {
+    "id": "Q023",
+    "category": "Multi_Step",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "According to the conceptual overview and Pinecone notes in the documentation, what is the end-to-end rationale for using MarkdownHeaderTextSplitter prior to embedding and vector storage in a chat or Q&A application?",
+    "ground_truth": "When a full paragraph or document is embedded, the embedding process considers both the overall context and the relationships between sentences and phrases to create a more comprehensive vector representation. Because chunking aims to keep text with common context together, splitting a Markdown file by its header groups honors the document's structure and groups content sharing a common header context together before embedding.",
+    "evidence_passage": "When a full paragraph or document is embedded, the embedding process considers both the overall context and the relationships between the sentences and phrases within the text. This can result in a more comprehensive vector representation that captures the broader meaning and themes of the text.\n\nAs mentioned, chunking often aims to keep text with common context together. With this in mind, we might want to specifically honor the structure of the document itself. For example, a markdown file is organized by headers. Creating chunks within specific header groups is an intuitive idea. To address this challenge, we can use [MarkdownHeaderTextSplitter](https://reference.langchain.com/python/langchain-text-splitters/markdown/MarkdownHeaderTextSplitter)."
+  },
+  {
+    "id": "Q024",
+    "category": "Unanswerable",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "You are migrating a legacy Markdown ingestion pipeline to use ExperimentalMarkdownSyntaxTextSplitter so that whitespace and newlines are preserved. You need to pass a custom dictionary of regex patterns to override how code blocks and horizontal rules are parsed by this experimental class. According to the documentation, what parameter name does ExperimentalMarkdownSyntaxTextSplitter accept for custom regex syntax rules?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
   }
 ]
 
