@@ -63,6 +63,31 @@
     "question": "A DevOps engineer is configuring a scheduled CI pipeline to keep repository documentation current using openwiki --update. Under their organizational compliance policy, automated CI tasks must set an explicit maximum token budget and enforce a request timeout in seconds on every CLI execution. According to this Quickstart guide, what specific command-line flag or environment variable configures the network request timeout in seconds for openwiki --update?",
     "ground_truth": "The provided context does not contain sufficient information to answer this question.",
     "evidence_passage": ""
+  },
+  
+  {
+    "id": "Q009",
+    "category": "Direct_Factual",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "You are building a document ingestion pipeline in Python and need to install the standalone LangChain package that provides the MarkdownHeaderTextSplitter class. According to the basic usage documentation, what exact package name is installed via pip, and what is the exact Python data type of the individual elements returned when calling split_text?",
+    "ground_truth": "The package installed via pip is langchain-text-splitters, and the elements returned by split_text are of type langchain_core.documents.base.Document.",
+    "evidence_passage": "```python\npip install -qU langchain-text-splitters\n```\n\n```python\ntype(md_header_splits[0])\n```\n\n```text\nlangchain_core.documents.base.Document\n```"
+  },
+  {
+    "id": "Q010",
+    "category": "Direct_Factual",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "An engineer on your team is testing MarkdownHeaderTextSplitter on technical documentation and notices that all the Markdown header lines specified in headers_to_split_on have been removed from the page_content of the resulting chunks. What is the default behavior of MarkdownHeaderTextSplitter regarding headers, and what specific parameter and boolean value must be passed during initialization to retain them in the chunk content?",
+    "ground_truth": "By default, MarkdownHeaderTextSplitter strips headers being split on from the output chunk's content. This can be disabled by setting strip_headers = False.",
+    "evidence_passage": "By default, `MarkdownHeaderTextSplitter` strips headers being split on from the output chunk's content. This can be disabled by setting `strip_headers = False`."
+  },
+  {
+    "id": "Q011",
+    "category": "Direct_Factual",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "Your team is building a Markdown processor that requires strict preservation of original document formatting, including exact white spaces and new lines, which the standard MarkdownHeaderTextSplitter strips out by default. According to the documentation note, which alternative text splitter class should you check out to preserve original Markdown formatting?",
+    "ground_truth": "To preserve the original formatting of Markdown documents, you should use ExperimentalMarkdownSyntaxTextSplitter.",
+    "evidence_passage": "**The default `MarkdownHeaderTextSplitter` strips white spaces and new lines. To preserve the original formatting of your Markdown documents, check out [`ExperimentalMarkdownSyntaxTextSplitter`](https://reference.langchain.com/python/langchain-text-splitters/markdown/ExperimentalMarkdownSyntaxTextSplitter).**"
   }
 ]
 
