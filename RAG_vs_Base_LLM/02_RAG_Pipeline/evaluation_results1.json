@@ -1,0 +1,1282 @@
+[
+    {
+        "id": "Q101",
+        "category": "Direct_Factual",
+        "question": "We are architecting an internal documentation search bot where system throughput, fast response times, and predictable compute costs are primary requirements. According to the architecture comparison table in LangChain's retrieval guide, what are the explicit ratings for 2-Step RAG across developer control, flexibility, and latency? Additionally, what canonical production use cases are cited as best suited for this pattern?",
+        "ground_truth": "Developer Control: High. Flexibility: Low. Latency: Fast. Representative use cases: FAQs and documentation bots.",
+        "base": {
+            "answer": "Based on LangChain's retrieval architecture guide, here are the explicit ratings and canonical use cases for the **2-Step RAG** (often referred to as standard/naive RAG) pattern:\n\n### Explicit Ratings\n*   **Developer Control:** **Low**\n*   **Flexibility:** **Low**\n*   **Latency:** **Medium** (Note: While simple, latency is rated as medium primarily due to the sequential dependency of waiting on vector retrieval before generating a prompt, as well as the variability of LLM generation time).\n\n### Canonical Production Use Cases\n*   **Simple Q&A over internal documents:** Answering straightforward questions from a static knowledge base where complex query transformations or multi-hop reasoning are unnecessary.\n*   **Chatbots with static knowledge:** Powering conversational interfaces that reference a fixed set of manuals, policies, or documentation without requiring real-time updates or complex routing.",
+            "latency_sec": 4.607,
+            "prompt_tokens": 88,
+            "completion_tokens": 187
+        },
+        "rag": {
+            "answer": "Based on the provided documentation, the explicit ratings for **2-Step RAG** across developer control, flexibility, and latency are:\n* **Developer Control**: ✅ High\n* **Flexibility**: ❌ Low\n* **Latency**: ⚡ Fast\n\nThe canonical production use cases cited as best suited for this pattern are:\n* FAQs\n* Documentation bots",
+            "retrieval_sec": 0.768,
+            "generation_sec": 14.734,
+            "total_latency_sec": 15.501,
+            "prompt_tokens": 653,
+            "completion_tokens": 74,
+            "sources": [
+                "retrieval.mdx",
+                "retrieval.mdx",
+                "retrieval.mdx"
+            ],
+            "retrieved_chunks": [
+                "-----------------------------------------------|\n| **2-Step RAG**          | Retrieval always happens before generation. Simple and predictable         | ✅ High    | ❌ Low       | ⚡ Fast         | FAQs, documentation bots                           |\n| **Agentic RAG**         | An LLM-powered agent decides *when* and *how* to retrieve during reasoning | ❌ Low     | ✅ High      | ⏳ Variable     | Research assistants with access to multiple tools  |\n| **Hybrid**              | Combines characteristics of both approaches with validation steps          | ⚖️ Medium | ⚖️ Medium   | ⏳ Variable     | Domain-specific Q&A with quality validation        |\n\n<Info>\n**Latency**: Latency is generally more **predictable** in **2-Step RAG**, as the maximum number of LLM calls is known and capped. This predi",
+                "analysis to subagents.\n</Card>\n\n### Hybrid RAG\n\nHybrid RAG combines characteristics of both 2-Step and Agentic RAG. It introduces intermediate steps such as query preprocessing, retrieval validation, and post-generation checks. These systems offer more flexibility than fixed pipelines while maintaining some control over execution.\n\nTypical components include:\n\n* **Query enhancement**: Modify the input question to improve retrieval quality. This can involve rewriting unclear queries, generating multiple variations, or expanding queries with additional context.\n* **Retrieval validation**: Evaluate whether retrieved documents are relevant and sufficient. If not, the system may refine the query and retrieve again.\n* **Answer validation**: Check the generated answer for accuracy, completeness,",
+                "|\n\n<Info>\n**Latency**: Latency is generally more **predictable** in **2-Step RAG**, as the maximum number of LLM calls is known and capped. This predictability assumes that LLM inference time is the dominant factor. However, real-world latency may also be affected by the performance of retrieval steps, such as API response times, network delays, or database queries, which can vary based on the tools and infrastructure in use.\n</Info>\n\n### 2-step RAG\n\nIn **2-Step RAG**, the retrieval step is always executed before the generation step. This architecture is straightforward and predictable, making it suitable for many applications where the retrieval of relevant documents is a clear prerequisite for generating an answer.\n\n```mermaid actions={true}\n%%{init: {'flowchart': {'nodeSpacing': 12, 'ra"
+            ],
+            "distances": [
+                0.7472789287567139,
+                0.9889923930168152,
+                1.0314850807189941
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.13740458015267173,
+                "semantic_similarity": 0.5905638933181763
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.4727272727272727,
+                "semantic_similarity": 0.6826268434524536
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 1,
+                    "completeness": 2,
+                    "relevance": 3
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer B is entirely accurate and matches the ground truth exactly. Answer A provides incorrect ratings for Developer Control and Latency, failing to align with the source material referenced in the ground truth.",
+                "presentation_order": [
+                    "base",
+                    "rag"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q102",
+        "category": "Direct_Factual",
+        "question": "During a technical design review, an engineering lead asks why our application cannot rely solely on the foundation model's pre-trained parametric knowledge without external augmentation. According to LangChain's conceptual overview on retrieval, what are the two fundamental limitations inherent to Large Language Models, and at what specific moment in the workflow does retrieval address these gaps?",
+        "ground_truth": "The two key limitations are: (1) Finite context (models cannot ingest entire corpora at once) and (2) Static knowledge (their training data is frozen at a point in time). Retrieval addresses these limitations by fetching relevant external knowledge dynamically at query time.",
+        "base": {
+            "answer": "According to LangChain's conceptual documentation on retrieval, relying solely on a foundation model's pre-trained parametric knowledge introduces two fundamental limitations:\n\n1. **Knowledge Cutoffs:** The model's internal knowledge is static and limited to the data it was trained on up to a specific point in time. It cannot inherently reason about or incorporate real-time, dynamic, or post-training information without retraining.\n2. **Lack of Domain-Specific or Private Data Access:** The model has no native awareness of private, proprietary, or domain-specific data (such as enterprise databases, internal documentation, or user-specific records) that were excluded from its public training corpus.\n\n### When Retrieval Addresses These Gaps\n\nRetrieval addresses these gaps **at inference time** (just-in-time, dynamically, before the prompt is sent to the LLM). \n\nInstead of relying purely on the model's static parametric memory, a retrieval-augmented generation (RAG) workflow intercepts the user query, searches an external data source or knowledge base to pull relevant context, and injects that context directly into the prompt. This provides the model with the necessary up-to-date and private information without requiring an expensive model retraining or fine-tuning cycle.",
+            "latency_sec": 1.971,
+            "prompt_tokens": 80,
+            "completion_tokens": 255
+        },
+        "rag": {
+            "answer": "According to the provided documentation, the two fundamental limitations inherent to Large Language Models are:\n1. **Finite context**: they can’t ingest entire corpora at once.\n2. **Static knowledge**: their training data is frozen at a point in time.\n\nRetrieval addresses these problems at **query time** (or at runtime).",
+            "retrieval_sec": 0.521,
+            "generation_sec": 1.318,
+            "total_latency_sec": 1.839,
+            "prompt_tokens": 662,
+            "completion_tokens": 68,
+            "sources": [
+                "retrieval.mdx",
+                "retrieval.mdx",
+                "models.mdx"
+            ],
+            "retrieved_chunks": [
+                "---\ntitle: Retrieval\n---\n\nLarge Language Models (LLMs) are powerful, but they have two key limitations:\n\n* **Finite context**: they can’t ingest entire corpora at once.\n* **Static knowledge**: their training data is frozen at a point in time.\n\nRetrieval addresses these problems by fetching relevant external knowledge at query time. This is the foundation of **Retrieval-Augmented Generation (RAG)**, enhancing an LLM’s answers with context-specific information.\n\n## Building a knowledge base\n\nA **knowledge base** is a repository of documents or structured data used during retrieval.\n\nIf you need a custom knowledge base, you can use LangChain’s document loaders and vector stores to build one from your own data.\n\n<Note>\n    If you already have a knowledge base (for example a SQL database, a doc",
+                "cta=\"Learn more\"\n>\n    Learn how to create a searchable knowledge base from your own data using LangChain’s document loaders, embeddings, and vector stores.\n    In this tutorial, you’ll build a search engine over a PDF, enabling retrieval of passages relevant to a query. You’ll also implement a minimal RAG workflow on top of this engine to see how external knowledge can be integrated into LLM reasoning.\n</Card>\n\n### From retrieval to RAG\n\nRetrieval allows LLMs to access relevant context at runtime. But most real-world applications go one step further: they **integrate retrieval with generation** to produce grounded, context-aware answers.\n\nThis is the core idea behind **Retrieval-Augmented Generation (RAG)**. The retrieval pipeline becomes a foundation for a broader system that combines s",
+                "d with additional fields for purposes of use with LangChain. These augmentations are kept aligned with the upstream project as it evolves.\n\nModel profile data allow applications to work around model capabilities dynamically. For example:\n\n1. [Summarization middleware](/oss/langchain/middleware/built-in#summarization) can trigger summarization based on a model's context window size.\n2. [Structured output](/oss/langchain/structured-output) strategies in `create_agent` can be inferred automatically (e.g., by checking support for native structured output features).\n3. Model inputs can be gated based on supported [modalities](#multimodal) and maximum input tokens.\n4. [Deep Agents Code](/oss/deepagents/code) filters the [interactive model switcher](/oss/deepagents/code/providers#which-models-app"
+            ],
+            "distances": [
+                0.6914815902709961,
+                0.9007682800292969,
+                1.130332350730896
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.25570776255707767,
+                "semantic_similarity": 0.6758379936218262
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.7111111111111111,
+                "semantic_similarity": 0.8605380058288574
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 3,
+                    "completeness": 3,
+                    "relevance": 4
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer B matches the ground truth perfectly in its identification of the two specific limitations described by LangChain (finite context and static knowledge). Answer A identifies 'knowledge cutoffs' (static knowledge) but substitutes 'lack of domain-specific data' for the ground truth's 'finite context', which is not the technical definition provided in LangChain's conceptual overview regarding inherent LLM limitations.",
+                "presentation_order": [
+                    "base",
+                    "rag"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q103",
+        "category": "Direct_Factual",
+        "question": "In the Agentic RAG implementation walkthrough, the documentation defines a tool named fetch_documentation that retrieves external technical content. What specific decorator is applied to declare this Python function as a usable agent tool, and what exact parameter is passed to create_agent to grant the model execution access to it?",
+        "ground_truth": "The function is decorated with the @tool decorator (from langchain.tools). It is registered with the agent by passing the list containing it into the `tools` parameter of create_agent (e.g., `tools=[fetch_documentation]`).",
+        "base": {
+            "answer": "Based on standard implementations of Agentic RAG frameworks (such as those using LangChain or similar agent architectures):\n\n1. **Decorator Applied:** The Python function is typically declared as a usable agent tool using the **`@tool`** decorator (imported from `langchain_core.tools` or similar libraries).\n\n2. **Parameter Passed to `create_agent`:** To grant the model execution access to this function, it is passed within a list to the **`tools`** parameter (e.g., `tools=[fetch_documentation]`) inside the `create_agent` (or `initialize_agent`) function call.",
+            "latency_sec": 1.116,
+            "prompt_tokens": 71,
+            "completion_tokens": 131
+        },
+        "rag": {
+            "answer": "The provided context does not contain sufficient information to answer this question.",
+            "retrieval_sec": 0.398,
+            "generation_sec": 15.421,
+            "total_latency_sec": 15.819,
+            "prompt_tokens": 741,
+            "completion_tokens": 13,
+            "sources": [
+                "retrieval.mdx",
+                "context-engineering.mdx",
+                "knowledge-base.mdx"
+            ],
+            "retrieved_chunks": [
+                "js\n```typescript\nimport { tool, createAgent } from \"langchain\";\n\nconst fetchUrl = tool(\n    (url: string) => {\n        return `Fetched content from ${url}`;\n    },\n    { name: \"fetch_url\", description: \"Fetch text content from a URL\" }\n);\n\nconst agent = createAgent({\n    model: \"claude-sonnet-4-6\",\n    tools: [fetchUrl],\n    systemPrompt,\n});\n```\n:::\n\n<Expandable title=\"Extended example: Agentic RAG for LangGraph's llms.txt\">\n\nThis example implements an **Agentic RAG system** to assist users in querying LangGraph documentation. The agent begins by loading [llms.txt](https://llmstxt.org/), which lists available documentation URLs, and can then dynamically use a `fetch_documentation` tool to retrieve and process the relevant content based on the user’s question.\n\n:::python\n```python\nimport r",
+                "s import dataclass\n    from langchain.agents import create_agent\n    from langchain.agents.middleware import wrap_model_call, ModelRequest, ModelResponse\n    from typing import Callable\n\n    @dataclass\n    class Context:\n        user_role: str\n\n    @wrap_model_call\n    def context_based_tools(\n        request: ModelRequest,\n        handler: Callable[[ModelRequest], ModelResponse]\n    ) -> ModelResponse:\n        \"\"\"Filter tools based on Runtime Context permissions.\"\"\"\n        # Read from Runtime Context: get user role\n        user_role = request.runtime.context.user_role\n\n        if user_role == \"admin\":\n            # Admins get all tools\n            pass\n        elif user_role == \"editor\":\n            # Editors can't delete\n            tools = [t for t in request.tools if t.name != \"delete",
+                "applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent.\nThe best way to do this is with [LangSmith](https://smith.langchain.com).\n\nAfter you sign up at the link above, make sure to set your environment variables to start logging traces:\n\n```shell\nexport LANGSMITH_TRACING=\"true\"\nexport LANGSMITH_API_KEY=\"...\"\n```\n\n:::python\n\nIn a notebook, you can set them with:\n\n```python\nimport getpass\nimport os\n\nos.environ[\"LANGSMITH_TRACING\"] = \"true\"\nos.environ[\"LANGSMITH_API_KEY\"] = getpass.getpass()\n```\n\n:::\n\n## Create documents\n\nLangChain implements a @[`Document`] abstraction for a unit of text and associated metadata. It has three attributes:\n\n:::python\n- `page_content`: a string representing the content.\n- `metadata`: a"
+            ],
+            "distances": [
+                0.861653208732605,
+                0.9526576399803162,
+                1.013085126876831
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.3846153846153846,
+                "semantic_similarity": 0.8097472190856934
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.04761904761904761,
+                "semantic_similarity": 0.03169402480125427
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "rag": {
+                    "factual_correctness": 1,
+                    "completeness": 1,
+                    "relevance": 1
+                },
+                "reasoning": "Answer A incorrectly claims the information is not provided. Answer B correctly identifies the '@tool' decorator and the 'tools' parameter, matching the provided ground truth perfectly.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q104",
+        "category": "Reasoning_Across_Facts",
+        "question": "Our enterprise already maintains extensive proprietary product manuals inside relational SQL tables, CRM databases, and document management systems. Does LangChain require our engineering team to migrate and rebuild this data into a new vector store? Synthesize the two architectural patterns described in the guide for integrating an existing knowledge base without re-indexing from scratch.",
+        "ground_truth": "No, teams do not need to rebuild an existing knowledge base. They can integrate it via two distinct pathways: (1) Connect the existing database as a tool for an autonomous agent in Agentic RAG, or (2) Query the database directly and supply the retrieved records as context to the LLM in a 2-Step RAG pipeline.",
+        "base": {
+            "answer": "**No, LangChain does not require your engineering team to migrate, duplicate, or rebuild your existing enterprise data into a new vector store.** \n\nWhile vector stores are heavily featured in standard Retrieval-Augmented Generation (RAG) tutorials because they excel at semantic similarity search, LangChain is built as a modular framework. It treats data retrieval as an interface (`BaseRetriever`), meaning you can wrap your existing relational SQL tables, CRM databases, and document management systems directly.\n\nTo integrate an existing knowledge base without re-indexing from scratch, engineering teams typically rely on two primary architectural patterns:\n\n---\n\n### Pattern 1: Direct Query Translation (Text-to-SQL / Dynamic CRM Querying)\n*Best for: Structured data in relational SQL tables and CRM databases.*\n\nInstead of extracting text chunks, generating embeddings, and storing them in a vector database, this pattern leverages Large Language Models (LLMs) to reason over your existing data schemas natively.\n\n* **How it works:** \n  1. When a user asks a natural language question (e.g., *\"What was the Q3 return policy update for product X?\"*), LangChain passes the user's prompt along with your database schema (table names, columns, and foreign keys) to an LLM.\n  2. The LLM translates the natural language into a secure, executable query (such as a SQL query or a CRM API call).\n  3. LangChain executes this query against your live relational database or CRM system.\n  4. The returned structured data is fed back to the LLM to synthesize a natural language answer for the user.\n* **LangChain Tools:** `SQLDatabase`, `create_sql_query_chain`, and custom tool-calling agents.\n* **Enterprise Benefit:** Zero data duplication. Changes made to records in your CRM or SQL tables are instantly reflected in the application because queries hit the source of truth in real-time.\n\n---\n\n### Pattern 2: Virtual Retrieval / Custom Retriever Integration\n*Best for: Document Management Systems (DMS) with existing search APIs, indexing, or metadata.*\n\nIf your Document Management System already has a native search engine (such as Elasticsearch, OpenSearch, SharePoint Search, or a proprietary database full-text index), you do not need to re-index those documents into a separate vector store. Instead, you write a custom wrapper.\n\n* **How it works:**\n  1. You implement LangChain’s `BaseRetriever` interface (or use existing wrappers if available for your DMS).\n  2. Inside this custom retriever, you map LangChain’s standard `_get_relevant_documents()` method to execute a search call against your DMS's existing API or database text-search capabilities.\n  3. The DMS performs the lookup using its native indexing, permissions, and ranking algorithms, and returns the documents.\n  4. LangChain formats these returned documents and injects them into the LLM context window.\n* **LangChain Tools:** Custom `BaseRetriever` subclasses, or pre-built integrations for search engines like Elasticsearch, Azure Cognitive Search, and Algolia.\n* **Enterprise Benefit:** You preserve your enterprise’s existing investments in search infrastructure, document access controls (ACLs), and compliance auditing without maintaining a parallel vector database infrastructure.\n\n---\n\n### Summary Recommendation for Your Engineering Team\n\n* Use **Pattern 1 (Text-to-SQL / Dynamic Querying)** for your relational SQL databases and CRM platforms to leverage structured fields and real-time operational data.\n* Use **Pattern 2 (Virtual Retrievers)** for your Document Management Systems to piggyback on their existing search indexes and permission models. \n\nBy combining these two patterns, your enterprise can unlock LLM-powered search and reasoning across proprietary systems on day one—completely bypassing the cost, latency, and synchronization overhead of building a redundant vector store.",
+            "latency_sec": 71.622,
+            "prompt_tokens": 75,
+            "completion_tokens": 805
+        },
+        "rag": {
+            "answer": "Based on the provided documentation, you do **not** need to rebuild your existing knowledge base. The two architectural patterns described for integrating an existing knowledge base without re-indexing from scratch are:\n\n1. Connect it as a **tool** for an agent in Agentic RAG.\n2. Query it and supply the retrieved content as context to the LLM (2-Step RAG).",
+            "retrieval_sec": 0.4,
+            "generation_sec": 4.147,
+            "total_latency_sec": 4.546,
+            "prompt_tokens": 787,
+            "completion_tokens": 80,
+            "sources": [
+                "retrieval.mdx",
+                "retrieval.mdx",
+                "knowledge-base.mdx"
+            ],
+            "retrieved_chunks": [
+                "ocument loaders and vector stores to build one from your own data.\n\n<Note>\n    If you already have a knowledge base (for example a SQL database, a document database, a CRM, or an internal documentation system), you do **not** need to rebuild it. You can:\n    - Connect it as a **tool** for an agent in Agentic RAG.\n    - Query it and supply the retrieved content as context to the LLM [(2-Step RAG)](#2-step-rag).\n</Note>\n\nFor more information, see the following tutorial to build a searchable knowledge base and minimal RAG workflow:\n\n<Card\n    title=\"Tutorial: Semantic search\"\n    icon=\"database\"\n    href=\"/oss/langchain/knowledge-base\"\n    arrow cta=\"Learn more\"\n>\n    Learn how to create a searchable knowledge base from your own data using LangChain’s document loaders, embeddings, and vector",
+                "---\ntitle: Retrieval\n---\n\nLarge Language Models (LLMs) are powerful, but they have two key limitations:\n\n* **Finite context**: they can’t ingest entire corpora at once.\n* **Static knowledge**: their training data is frozen at a point in time.\n\nRetrieval addresses these problems by fetching relevant external knowledge at query time. This is the foundation of **Retrieval-Augmented Generation (RAG)**, enhancing an LLM’s answers with context-specific information.\n\n## Building a knowledge base\n\nA **knowledge base** is a repository of documents or structured data used during retrieval.\n\nIf you need a custom knowledge base, you can use LangChain’s document loaders and vector stores to build one from your own data.\n\n<Note>\n    If you already have a knowledge base (for example a SQL database, a doc",
+                "530711025, 0.010564599186182022, 0.009598285891115665, -0.028587326407432556, -0.015824200585484505, 0.0030416189692914486, -0.012899317778646946]\n```\n\nNext, store embeddings in a vector store that supports efficient similarity search.\n\n## Select a vector store\n\nLangChain @[`VectorStore`] objects add text and @[`Document`] objects to a store and query them with similarity metrics. They are often initialized with [embedding](/oss/integrations/embeddings) models that translate text into numeric vectors.\n\nLangChain includes [integrations](/oss/integrations/vectorstores) with many vector store technologies. Some are hosted and need credentials, some run in separate infrastructure (local or third-party), and others run in-memory for lightweight workloads. Select a vector store:\n\n:::python\n<Vect"
+            ],
+            "distances": [
+                0.8278099298477173,
+                0.9685431718826294,
+                1.012603759765625
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.14237288135593218,
+                "semantic_similarity": 0.5295895934104919
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.6725663716814159,
+                "semantic_similarity": 0.7901289463043213
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 4,
+                    "relevance": 3
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer A provides a concise and accurate response that aligns perfectly with the ground truth. Answer B is also factually correct, but it includes significant additional information (detailed technical implementation details) that was not requested by the prompt, which asked to synthesize the two patterns described in the guide rather than providing a deep-dive tutorial. Answer A is more relevant to the scope of the question.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q105",
+        "category": "Reasoning_Across_Facts",
+        "question": "A team evaluating SLAs questions why response times in 2-Step RAG are considered predictable while latency in Agentic RAG remains variable. Based on the documentation's latency analysis and execution models, explain the fundamental reason 2-Step RAG achieves predictable latency, what core assumption underpins that predictability, and what external infrastructure dependencies can still cause latency variance in production.",
+        "ground_truth": "2-Step RAG latency is predictable because the execution order is fixed and the maximum number of LLM inference calls is strictly known and capped. This predictability assumes LLM inference time is the dominant factor. However, real-world latency can still vary depending on the performance of external retrieval steps, such as third-party API response times, network delays, or database query execution speeds.",
+        "base": {
+            "answer": "Based on the execution models and latency analysis of retrieval-augmented generation systems, here is the breakdown of why 2-Step RAG achieves predictable latency compared to Agentic RAG, the core assumption underpinning that predictability, and the external dependencies that can still cause variance in production.\n\n---\n\n### 1. The Fundamental Reason for Predictable Latency in 2-Step RAG\n2-Step RAG (often called standard or pipeline RAG) achieves predictable latency because **its execution graph is static and deterministic.** \n\nThe pipeline follows a rigid, linear sequence:\n$$\\text{User Query} \\rightarrow \\text{Retrieval (Vector Search)} \\rightarrow \\text{Generation (LLM Call)}$$\n\nRegardless of the input query's complexity, ambiguity, or content, the system *always* executes the exact same number of steps (precisely two primary compute phases). There are no conditional branches, no loops, no iterative refinement, and no decision-making steps where the system pauses to evaluate whether it needs more information. Because the path from input to output is fixed, the computational work required is bounded and uniform across requests.\n\n### 2. The Core Assumption Underpinning Predictability\nThe predictability of 2-Step RAG rests on a single major assumption: **Query Uniformity in Computational Cost.**\n\nThis assumes that the time required to process a request depends primarily on system throughput rather than semantic complexity. Specifically, it assumes:\n* **Bounded Retrieval Cost:** Vector database lookups take a relatively constant amount of time because the search space (index size) and the number of retrieved chunks ($k$) are fixed.\n* **Bounded Generation Cost:** The LLM prompt length (system instructions + fixed $k$ chunks + user query) remains within a predictable token window, resulting in a relatively consistent Time-to-First-Token (TTFT) and token generation duration. \n\nIn short, it assumes that a simple query and a complex, ambiguous query will consume roughly the same computational resources and follow the exact same execution path.\n\n### 3. External Infrastructure Dependencies Causing Variance in Production\nEven though the 2-Step RAG *logical* execution model is static, real-world production environments introduce variable latency due to several external infrastructure dependencies:\n\n* **LLM Provider Latency & Queueing (TTFT Variance):** \n  In a multi-tenant API environment (or even self-hosted vLLM/TGI clusters), LLM inference is subject to dynamic batching, GPU memory contention, and queueing delays. Even with identical prompt lengths, the time it takes the LLM to begin generating tokens can fluctuate wildly based on concurrent traffic load.\n* **Token Generation Length (Decoding Time):** \n  While the *input* size is somewhat bounded by fixed retrieval chunks, the *output* length is variable. A query that requires a detailed, multi-paragraph explanation will take significantly longer to stream/decode than one requiring a simple \"Yes/No\" or short summary.\n* **Vector Database Network and Load Latency:** \n  Vector searches rely on network calls to a managed vector database or an internal cluster. Latency can spike due to network congestion, garbage collection pauses in the database engine, or cache-miss penalties if the index is large and distributed.\n* **Embedding Generation Bottlenecks:** \n  Before hitting the vector database, the incoming user query must be converted into an embedding vector via a separate model call. Variations in the embedding service's load or network hops add minor, but real, jitter to the pipeline.",
+            "latency_sec": 6.904,
+            "prompt_tokens": 87,
+            "completion_tokens": 739
+        },
+        "rag": {
+            "answer": "Based on the provided documentation, here is the explanation regarding latency in 2-Step RAG:\n\n* **Fundamental reason for predictable latency:** Latency is generally more predictable in 2-Step RAG because the maximum number of LLM calls is known and capped.\n* **Core assumption underpinning that predictability:** This predictability assumes that LLM inference time is the dominant factor.\n* **External infrastructure dependencies that can still cause variance in production:** Real-world latency may be affected by the performance of retrieval steps, such as API response times, network delays, or database queries, which can vary based on the tools and infrastructure in use.",
+            "retrieval_sec": 0.4,
+            "generation_sec": 4.868,
+            "total_latency_sec": 5.268,
+            "prompt_tokens": 652,
+            "completion_tokens": 130,
+            "sources": [
+                "retrieval.mdx",
+                "retrieval.mdx",
+                "retrieval.mdx"
+            ],
+            "retrieved_chunks": [
+                "-----------------------------------------------|\n| **2-Step RAG**          | Retrieval always happens before generation. Simple and predictable         | ✅ High    | ❌ Low       | ⚡ Fast         | FAQs, documentation bots                           |\n| **Agentic RAG**         | An LLM-powered agent decides *when* and *how* to retrieve during reasoning | ❌ Low     | ✅ High      | ⏳ Variable     | Research assistants with access to multiple tools  |\n| **Hybrid**              | Combines characteristics of both approaches with validation steps          | ⚖️ Medium | ⚖️ Medium   | ⏳ Variable     | Domain-specific Q&A with quality validation        |\n\n<Info>\n**Latency**: Latency is generally more **predictable** in **2-Step RAG**, as the maximum number of LLM calls is known and capped. This predi",
+                "|\n\n<Info>\n**Latency**: Latency is generally more **predictable** in **2-Step RAG**, as the maximum number of LLM calls is known and capped. This predictability assumes that LLM inference time is the dominant factor. However, real-world latency may also be affected by the performance of retrieval steps, such as API response times, network delays, or database queries, which can vary based on the tools and infrastructure in use.\n</Info>\n\n### 2-step RAG\n\nIn **2-Step RAG**, the retrieval step is always executed before the generation step. This architecture is straightforward and predictable, making it suitable for many applications where the retrieval of relevant documents is a clear prerequisite for generating an answer.\n\n```mermaid actions={true}\n%%{init: {'flowchart': {'nodeSpacing': 12, 'ra",
+                "analysis to subagents.\n</Card>\n\n### Hybrid RAG\n\nHybrid RAG combines characteristics of both 2-Step and Agentic RAG. It introduces intermediate steps such as query preprocessing, retrieval validation, and post-generation checks. These systems offer more flexibility than fixed pipelines while maintaining some control over execution.\n\nTypical components include:\n\n* **Query enhancement**: Modify the input question to improve retrieval quality. This can involve rewriting unclear queries, generating multiple variations, or expanding queries with additional context.\n* **Retrieval validation**: Evaluate whether retrieved documents are relevant and sufficient. If not, the system may refine the query and retrieve again.\n* **Answer validation**: Check the generated answer for accuracy, completeness,"
+            ],
+            "distances": [
+                0.8411548137664795,
+                1.0553127527236938,
+                1.1124385595321655
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.1532976827094474,
+                "semantic_similarity": 0.7551870942115784
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.6369426751592356,
+                "semantic_similarity": 0.8753251433372498
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 4,
+                    "completeness": 4,
+                    "relevance": 3
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer A stays strictly aligned with the provided ground truth, capturing the essence of the predictability (fixed steps/capped LLM calls) and the core assumption (LLM inference as the dominant factor). Answer B provides a good explanation, but it deviates from the ground truth by reframing the 'core assumption' as 'Query Uniformity' rather than 'LLM inference being the dominant factor', and includes a significant amount of extra information that, while technically sound in a real-world engineering context, was not requested by the prompt or supported by the ground truth.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q106",
+        "category": "Multi_Step",
+        "question": "We are documenting our ingestion pipeline architecture for team onboarding. Tracing the sequential workflow in LangChain's retrieval pipeline diagram, outline the step-by-step path that unstructured source data (such as Google Drive, Slack, or Notion) follows from ingestion until it is stored in a searchable index. In your explanation, identify the explicit structural purpose of splitting the ingested documents before embedding generation.",
+        "ground_truth": "Sequential path: Sources (Google Drive, Slack, Notion) -> Document Loaders -> Documents -> Split into chunks -> Turn into embeddings -> Vector Store. Purpose of splitting: Large documents are broken down so that chunks are individually retrievable and small enough to fit within an LLM's finite context window.",
+        "base": {
+            "answer": "To document your ingestion pipeline for team onboarding, it helps to break the architecture down into two distinct phases: **Ingestion & Processing** (where raw data is fetched and prepared) and **Storage & Indexing** (where data is embedded and persisted). \n\nHere is the step-by-step path unstructured source data follows through a standard LangChain retrieval pipeline, from source connectors to the searchable vector store.\n\n---\n\n### Phase 1: Ingestion & Processing\n\n#### 1. Document Loading (`DocumentLoaders`)\n* **Source:** Unstructured data originates from third-party APIs and platforms (e.g., Google Drive, Slack channels, Notion pages).\n* **Action:** LangChain utilizes platform-specific integrations (like `GoogleDriveLoader`, `SlackDirectoryLoader`, or `NotionDBLoader`) to pull raw files, messages, or pages. \n* **Output:** The loader standardizes this heterogeneous data into a unified LangChain `Document` object format, which consists of two attributes: `page_content` (a string of the raw text) and `metadata` (source URLs, author, timestamps, file names).\n\n#### 2. Document Splitting / Chunking (`TextSplitters`)\n* **Action:** The raw `Document` objects are passed through a text splitter (e.g., `RecursiveCharacterTextSplitter`). The splitter divides the continuous `page_content` into smaller, manageable segments (chunks) based on a defined chunk size and overlap.\n* **Metadata Inheritance:** Crucially, the metadata from the parent document is copied and attached to every child chunk generated from it, ensuring context is not lost.\n\n---\n\n### Phase 2: Storage & Indexing\n\n#### 3. Embedding Generation (`Embeddings`)\n* **Action:** Each text chunk is passed sequentially or in batches to an embedding model (e.g., OpenAI's `text-embedding-3-small`, Cohere, or a local Hugging Face model).\n* **Output:** The model converts the text of each chunk into a high-dimensional dense vector (an array of floating-point numbers) that mathematically represents the semantic meaning of that specific chunk.\n\n#### 4. Vector Storage & Indexing (`VectorStore`)\n* **Action:** The generated vector embeddings, along with their associated text chunks and metadata, are written to a specialized vector database or searchable index (e.g., Pinecone, FAISS, Chroma, Qdrant).\n* **Indexing:** The database indexes these vectors using algorithms like HNSW (Hierarchical Navigable Small World) or IVF (Inverted File Index) to enable ultra-fast Approximate Nearest Neighbor (ANN) search during query time.\n\n---\n\n### The Structural Purpose of Splitting Documents Before Embedding\n\nThe splitting step (Step 2) is arguably the most critical data-shaping phase in the pipeline. It serves three explicit structural purposes:\n\n1. **Granularity and Precision of Retrieval:** \n   Embedding models generate *a single vector* to represent an entire piece of text. If you pass an entire 50-page Google Doc or a massive Notion page as a single input, the embedding becomes a \"mush\" of diluted semantic concepts. By splitting the document into smaller chunks (e.g., 500–1000 characters), each vector maps to a very specific, isolated topic. This ensures that a user query matches only the exact paragraph containing the answer, rather than retrieving an entire irrelevant document.\n\n2. **Adhering to LLM and Embedding Model Context Windows:**\n   Embedding models and downstream Large Language Models (LLMs) have strict token limits. Furthermore, even within their limits, their ability to \"attend\" to relevant details degrades over long context lengths (the \"lost in the middle\" phenomenon). Chunking guarantees that the text fed into the embedding model never exceeds its maximum token capacity.\n\n3. **Optimizing the Context Window for Generation:**\n   When a user eventually asks a question, the retrieval system fetches the top $K$ most similar chunks to act as context for the LLM. If chunks were too large, you could only fit one or two documents into the LLM's prompt window before running out of space. By using smaller chunks, you can retrieve diverse, highly relevant snippets from multiple distinct sources and stitch them together into a concise, information-dense prompt for the LLM.",
+            "latency_sec": 7.718,
+            "prompt_tokens": 90,
+            "completion_tokens": 910
+        },
+        "rag": {
+            "answer": "Based on the provided documentation, the step-by-step path that unstructured source data follows from ingestion until it is stored in a searchable index (Vector Store) is:\n\n1. **Sources**: Unstructured source data (such as Google Drive, Slack, Notion, etc.) is processed by **Document Loaders**.\n2. **Documents**: The document loaders output documents.\n3. **Split into chunks**: The documents are split into chunks. *(The provided context mentions the step of splitting the documents, but it does not contain information explaining the explicit structural purpose of this splitting before embedding generation.)*\n4. **Turn into embeddings**: The chunks are turned into embeddings (via Query embedding / embedding integrations).\n5. **Vector Store**: The embeddings are stored in a Vector Store (searchable index).\n\nThe provided context does not contain sufficient information to answer the part of the question regarding the explicit structural purpose of splitting the ingested documents before embedding generation.",
+            "retrieval_sec": 0.411,
+            "generation_sec": 3.935,
+            "total_latency_sec": 4.346,
+            "prompt_tokens": 796,
+            "completion_tokens": 194,
+            "sources": [
+                "retrieval.mdx",
+                "knowledge-base.mdx",
+                "retrieval.mdx"
+            ],
+            "retrieved_chunks": [
+                "his is the core idea behind **Retrieval-Augmented Generation (RAG)**. The retrieval pipeline becomes a foundation for a broader system that combines search with generation.\n\n### Retrieval pipeline\n\nA typical retrieval workflow looks like this:\n\n```mermaid actions={true}\n%%{init: {'flowchart': {'nodeSpacing': 12, 'rankSpacing': 18, 'padding': 4}, 'themeVariables': {'fontSize': '12px'}}}%%\nflowchart TB\n  subgraph ingest[\" \"]\n    direction LR\n    S([\"Sources<br>(Google Drive, Slack, Notion, etc.)\"]) --> L[Document Loaders]\n    L --> A([Documents])\n  end\n  A --> B[Split into chunks]\n  B --> C[Turn into embeddings]\n  C --> D[(Vector Store)]\n  Q([User Query]) --> E[Query embedding]\n  E --> D\n  D --> F[Retriever]\n  F --> G[LLM uses retrieved info]\n  G --> H([Answer])\n\n  classDef trigger fill:#F6F",
+                "products...',\n    }],\n    [Document {\n        metadata: {'page': 3, 'source': '../example_data/nke-10k-2023.pdf', 'start_index': 0},\n        pageContent: 'Table of Contents...',\n    }],\n]\n```\n:::\n\nYou can use retrievers in more complex apps such as [retrieval-augmented generation (RAG)](/oss/deepagents/retrieval), which combine a question with retrieved context in a prompt for an LLM. To learn more about building such an application, check out the [RAG tutorial](/oss/deepagents/rag) tutorial.\n\n## Next steps\n\nYou've now seen how to build a semantic search engine over a PDF document.\n\nFor more information see:\n\n- [Available embedding integrations](/oss/integrations/embeddings)\n- [Available vector store integrations](/oss/integrations/vectorstores)\n\nFor more on RAG:\n\n- [Retrieval overview](/",
+                "ocument loaders and vector stores to build one from your own data.\n\n<Note>\n    If you already have a knowledge base (for example a SQL database, a document database, a CRM, or an internal documentation system), you do **not** need to rebuild it. You can:\n    - Connect it as a **tool** for an agent in Agentic RAG.\n    - Query it and supply the retrieved content as context to the LLM [(2-Step RAG)](#2-step-rag).\n</Note>\n\nFor more information, see the following tutorial to build a searchable knowledge base and minimal RAG workflow:\n\n<Card\n    title=\"Tutorial: Semantic search\"\n    icon=\"database\"\n    href=\"/oss/langchain/knowledge-base\"\n    arrow cta=\"Learn more\"\n>\n    Learn how to create a searchable knowledge base from your own data using LangChain’s document loaders, embeddings, and vector"
+            ],
+            "distances": [
+                0.748306393623352,
+                1.0152257680892944,
+                1.030929446220398
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.10662358642972537,
+                "semantic_similarity": 0.5649269223213196
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.2903225806451613,
+                "semantic_similarity": 0.7662559747695923
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "rag": {
+                    "factual_correctness": 3,
+                    "completeness": 2,
+                    "relevance": 3
+                },
+                "reasoning": "Answer A failed to provide the purpose of splitting, claiming the information was not available, which was a clear failure to answer a core part of the prompt. Answer B provided a thorough, accurate, and highly relevant explanation that covered all aspects of the ground truth and provided necessary technical context for an onboarding document.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q107",
+        "category": "Multi_Step",
+        "question": "In an Agentic RAG setup, retrieval is governed dynamically by model reasoning rather than a static pre-retrieval pipeline. Tracing the decision branches in the agent flowchart, describe the conditional logic loop the agent follows upon receiving user input, including the decision points determining whether to invoke a search tool, whether to return an answer, and under what condition it loops back to the LLM.",
+        "ground_truth": "Execution loop: (1) The user question is received by the Agent (LLM). (2) Decision 1: 'Need external info?' If No, it transitions directly to generate the final answer. If Yes, it proceeds to 'Search using tool(s)'. (3) Decision 2: 'Enough to answer?' If Yes, it transitions to generate the final answer and returns it to the user. If No, it loops back to the Agent (LLM) reasoning stage to conduct further evaluation or tool calls.",
+        "base": {
+            "answer": "In an Agentic RAG (Retrieval-Augmented Generation) architecture, the static \"query $\\rightarrow$ retrieve $\\rightarrow$ generate\" pipeline is replaced by a dynamic control flow where an LLM acts as the reasoning engine. The agent evaluates the user's input, decides if external knowledge is required, executes tools, evaluates the results, and iteratively refines its path until it reaches a termination condition.\n\nBelow is a detailed trace of the conditional logic loop the agent follows from the moment it receives user input to the final output generation.\n\n---\n\n### Phase 1: Input Ingestion and Initial Reasoning\n\n1. **User Input Reception:**\n   * The agent receives the raw user query ($Q$).\n2. **State Initialization:**\n   * The agent initializes its working memory (state), which typically contains the conversation history, scratchpad (for intermediate thoughts), available tool definitions (e.g., vector search, web search, SQL database query), and iteration counters.\n3. **LLM Reasoning & Intent Parsing:**\n   * The LLM processes $Q$ and the current state to determine intent, complexity, and knowledge gaps. \n\n---\n\n### Phase 2: Decision Point 1 — To Retrieve or Not to Retrieve?\n\nBased on its internal reasoning, the LLM evaluates whether its parametric memory is sufficient to answer the query accurately. \n\n* **Branch A (No Retrieval Needed):**\n  * *Condition:* The query involves general knowledge, common sense, simple conversational pleasantries, or relies entirely on data already present within the immediate context window.\n  * *Action:* The agent bypasses all retrieval tools.\n  * *Transition:* Proceeds directly to **Phase 5 (Final Answer Generation)**.\n\n* **Branch B (Retrieval Needed):**\n  * *Condition:* The query requires specific, real-time, private, or domain-specific facts that the LLM might hallucinate or not know.\n  * *Action:* The agent selects the appropriate retrieval tool (e.g., `vector_db_search(query)`) and formulates specific search arguments.\n  * *Transition:* Proceeds to **Phase 3 (Tool Execution & Evaluation)**.\n\n---\n\n### Phase 3: Tool Execution and Retrieval Quality Control\n\n1. **Tool Invocation:**\n   * The execution environment runs the selected retrieval tool, returning a set of documents, chunks, or structured data results ($D$).\n2. **Decision Point 2 — Relevance and Sufficiency Check:**\n   * The agent ingests the retrieved documents ($D$) and evaluates them against the original user query ($Q$). \n   * *Sub-branch A (Retrieved data is relevant and sufficient):*\n     * *Condition:* The documents contain the exact facts needed to construct the answer.\n     * *Transition:* Proceeds to **Phase 5 (Final Answer Generation)**.\n   * *Sub-branch B (Retrieved data is irrelevant, noisy, or insufficient):*\n     * *Condition:* The search returned empty results, irrelevant context, or left critical gaps unanswered.\n     * *Transition:* Proceeds to **Phase 4 (The Agentic Loop-Back Logic)**.\n\n---\n\n### Phase 4: The Loop-Back Condition (Iterative Refinement)\n\nIf the initial retrieval fails or is incomplete, the agent does not immediately fail or hallucinate. Instead, it enters a conditional loop back to the LLM reasoning engine.\n\n1. **Failure Analysis & Query Rewriting:**\n   * The LLM diagnoses *why* the retrieval failed (e.g., \"The query was too specific,\" \"Keywords were suboptimal,\" or \"A different tool is required\").\n   * The agent reformulates the strategy—either rewriting the search query (e.g., query expansion, hypothetical document embeddings/HyDE) or selecting an alternative tool (e.g., switching from a vector database to a web search tool).\n2. **Max-Iteration Safeguard Check:**\n   * *Condition:* Before looping back, the agent checks its internal iteration counter ($i$) against a predefined threshold ($N_{max}$) to prevent infinite loops (e.g., $i \\ge 3$).\n   * *If $i \\ge N_{max}$:* The agent aborts the loop, flags a timeout or exhaustion state, and falls back to a graceful degradation path (e.g., \"I searched multiple times but could not find verified information...\"). Proceed to **Phase 5**.\n   * *If $i < N_{max}$:* The iteration counter increments ($i = i + 1$).\n3. **Loop-Back Transition:**\n   * The agent feeds the newly formulated query/strategy back into **Phase 2 (Decision Point 1)** or directly executes the new tool call, repeating the cycle.\n\n---\n\n### Phase 5: Final Answer Generation and Grounding\n\n1. **Context Synthesis:**\n   * The agent gathers all verified context ($D$) accumulated across successful retrieval steps.\n2. **Faithfulness & Guardrail Check:**\n   * Before outputting, the LLM checks its generated response against the retrieved context to ensure zero hallucination (often implemented via a self-correction or \"hallucination grader\" step in advanced frameworks like LangGraph or AutoGen).\n3. **Termination:**\n   * The agent formats the final response to the user, terminating the active execution graph.\n\n---\n\n### Summary Flowchart Logic\n\n```text\n[User Input] \n    │\n    ▼\n[LLM Reasoning] ──(Sufficient/General?)──> [Generate Direct Answer] ──> [End]\n    │\n    (Requires Facts)\n    ▼\n[Invoke Retrieval Tool]\n    │\n    ▼\n[Evaluate Results (Relevant?)] \n    ├──(Yes)──> [Synthesize & Ground] ──> [Generate Final Answer] ──> [End]\n    │\n    └──(No / Insufficient)\n         │\n         ▼\n    [Check Loop Counter: i < N_max?]\n         ├──(No, limit reached)──> [Fallback / Error Response] ──> [End]\n         │\n         └──(Yes, increment i)\n              │\n              ▼\n         [Rewrite Query / Change Tool] ──> (Loop back to LLM Reasoning)\n```",
+            "latency_sec": 8.538,
+            "prompt_tokens": 91,
+            "completion_tokens": 1332
+        },
+        "rag": {
+            "answer": "The provided context does not contain sufficient information to answer this question.",
+            "retrieval_sec": 0.443,
+            "generation_sec": 3.091,
+            "total_latency_sec": 3.534,
+            "prompt_tokens": 690,
+            "completion_tokens": 13,
+            "sources": [
+                "retrieval.mdx",
+                "retrieval.mdx",
+                "retrieval.mdx"
+            ],
+            "retrieved_chunks": [
+                "analysis to subagents.\n</Card>\n\n### Hybrid RAG\n\nHybrid RAG combines characteristics of both 2-Step and Agentic RAG. It introduces intermediate steps such as query preprocessing, retrieval validation, and post-generation checks. These systems offer more flexibility than fixed pipelines while maintaining some control over execution.\n\nTypical components include:\n\n* **Query enhancement**: Modify the input question to improve retrieval quality. This can involve rewriting unclear queries, generating multiple variations, or expanding queries with additional context.\n* **Retrieval validation**: Evaluate whether retrieved documents are relevant and sufficient. If not, the system may refine the query and retrieve again.\n* **Answer validation**: Check the generated answer for accuracy, completeness,",
+                "rd>\n</CardGroup>\n\n### Agentic RAG\n\n**Agentic Retrieval-Augmented Generation (RAG)** combines the strengths of Retrieval-Augmented Generation with agent-based reasoning. Instead of retrieving documents before answering, an agent (powered by an LLM) reasons step-by-step and decides **when** and **how** to retrieve information during the interaction.\n\n<Tip>\nThe only thing an agent needs to enable RAG behavior is access to one or more **tools** that can fetch external knowledge, such as documentation loaders, web APIs, or database queries.\n</Tip>\n\n```mermaid actions={true}\n%%{init: {'flowchart': {'nodeSpacing': 12, 'rankSpacing': 18, 'padding': 4}, 'themeVariables': {'fontSize': '12px'}}}%%\ngraph TB\n    A[User Input / Question] --> B[\"Agent (LLM)\"]\n    B --> C{Need external info?}\n    C -- Yes",
+                "-----------------------------------------------|\n| **2-Step RAG**          | Retrieval always happens before generation. Simple and predictable         | ✅ High    | ❌ Low       | ⚡ Fast         | FAQs, documentation bots                           |\n| **Agentic RAG**         | An LLM-powered agent decides *when* and *how* to retrieve during reasoning | ❌ Low     | ✅ High      | ⏳ Variable     | Research assistants with access to multiple tools  |\n| **Hybrid**              | Combines characteristics of both approaches with validation steps          | ⚖️ Medium | ⚖️ Medium   | ⏳ Variable     | Domain-specific Q&A with quality validation        |\n\n<Info>\n**Latency**: Latency is generally more **predictable** in **2-Step RAG**, as the maximum number of LLM calls is known and capped. This predi"
+            ],
+            "distances": [
+                0.640900194644928,
+                0.8074705600738525,
+                0.8563287258148193
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.15228426395939085,
+                "semantic_similarity": 0.717032790184021
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.09195402298850575,
+                "semantic_similarity": 0.25837451219558716
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "rag": {
+                    "factual_correctness": 1,
+                    "completeness": 1,
+                    "relevance": 1
+                },
+                "reasoning": "Answer A is a refusal that ignores the prompt. Answer B provides a comprehensive and accurate description of the agentic RAG flow, aligning perfectly with the decision-making logic outlined in the ground truth while providing useful technical context.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q108",
+        "category": "Unanswerable",
+        "question": "When scaling the RAG retrieval pipeline to handle continuous user traffic, what specific cache eviction algorithm (such as LRU, LFU, or FIFO) does the internal document loader cache apply by default, and what is its maximum heap memory allocation limit?",
+        "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+        "base": {
+            "answer": "I do not have access to internal proprietary implementation details, specific default cache eviction algorithms, or heap memory limits for the document loader cache in this system. \n\nGenerally, in high-throughput Retrieval-Augmented Generation (RAG) architectures handling continuous traffic, caching strategies depend on the specific orchestration framework (such as LangChain, LlamaIndex, or custom pipelines) and the vector database or datastore being utilized. Common practices include:\n\n* **Eviction Policies:** **LRU (Least Recently Used)** is the most common default for document loaders and embedding caches because it optimizes for temporal locality (recently accessed documents or queries are likely to be requested again). **LFU (Least Frequently Used)** or size-based eviction policies are sometimes used when access frequency matters more than recency, while FIFO is rarely used for semantic caches due to its low hit-rate efficiency.\n* **Memory Limits:** Heap memory allocation limits are rarely hardcoded universally; instead, they are typically configurable via environment variables or infrastructure settings (e.g., JVM heap flags for Java-based systems, or container memory limits in Kubernetes) to prevent Out-Of-Memory (OOM) errors based on the available host resources.\n\nIf you are configuring a specific RAG pipeline, it is best to consult the documentation of the specific framework or caching layer (e.g., Redis, DiskCache, or in-memory LRUCache) you are implementing.",
+            "latency_sec": 2.589,
+            "prompt_tokens": 62,
+            "completion_tokens": 291
+        },
+        "rag": {
+            "answer": "The provided context does not contain sufficient information to answer this question.",
+            "retrieval_sec": 0.483,
+            "generation_sec": 0.595,
+            "total_latency_sec": 1.078,
+            "prompt_tokens": 547,
+            "completion_tokens": 13,
+            "sources": [
+                "knowledge-base.mdx",
+                "retrieval.mdx",
+                "models.mdx"
+            ],
+            "retrieved_chunks": [
+                "ons](/oss/integrations/embeddings)\n- [Available vector store integrations](/oss/integrations/vectorstores)\n\nFor more on RAG:\n\n- [Retrieval overview](/oss/deepagents/retrieval)\n- [RAG with Deep Agents](/oss/deepagents/rag)\n- [Evaluate a RAG application](/langsmith/evaluate-rag-tutorial)",
+                "analysis to subagents.\n</Card>\n\n### Hybrid RAG\n\nHybrid RAG combines characteristics of both 2-Step and Agentic RAG. It introduces intermediate steps such as query preprocessing, retrieval validation, and post-generation checks. These systems offer more flexibility than fixed pipelines while maintaining some control over execution.\n\nTypical components include:\n\n* **Query enhancement**: Modify the input question to improve retrieval quality. This can involve rewriting unclear queries, generating multiple variations, or expanding queries with additional context.\n* **Retrieval validation**: Evaluate whether retrieved documents are relevant and sufficient. If not, the system may refine the query and retrieve again.\n* **Answer validation**: Check the generated answer for accuracy, completeness,",
+                "ck [`cachePoint`](/oss/integrations/chat/bedrock#prompt-caching) blocks\n- **LangChain middleware:** for agents, middleware lets LangChain optimize caching of stable system prompt and tool content. Examples:\n    - Anthropic's [`AnthropicPromptCachingMiddleware`](/oss/integrations/middleware/anthropic#prompt-caching)\n    - AWS Bedrock's [`BedrockPromptCachingMiddleware`](/oss/integrations/middleware/aws#prompt-caching)\n:::\n\n<Warning>\n    Prompt caching is often only engaged above a minimum input token threshold. See [provider pages](/oss/integrations/chat) for details.\n</Warning>\n\nCache usage will be reflected in the [usage metadata](/oss/langchain/messages#token-usage) of the model response.\n\n### Server-side tool use\n\nSome providers support server-side [tool-calling](#tool-calling) loops: m"
+            ],
+            "distances": [
+                1.1863263845443726,
+                1.191831350326538,
+                1.2175180912017822
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.03686635944700461,
+                "semantic_similarity": 0.03085613064467907
+            },
+            "rag": {
+                "exact_match": 1,
+                "token_f1": 1.0,
+                "semantic_similarity": 1.0000001192092896
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 2,
+                    "completeness": 2,
+                    "relevance": 2
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "The ground truth states that the information is not available. Answer B correctly acknowledges this. Answer A ignores the ground truth instruction by providing speculative information about general caching practices, which violates the constraint of not rewarding unsupported information.",
+                "presentation_order": [
+                    "base",
+                    "rag"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q109",
+        "category": "Direct_Factual",
+        "question": "In LangChain's pipeline component specifications, various modules handle ingestion, vector transformation, and storage. What is the formal definition given for a 'Retriever' interface, and what input type does it accept to return relevant Document objects?",
+        "ground_truth": "A retriever is defined as an interface that returns documents given an unstructured query.",
+        "base": {
+            "answer": "In LangChain, a **Retriever** is formally defined as an interface that wraps a **Vector Store** (or other data source) to act as a general-purpose index that can return relevant documents given an unstructured query. \n\nSpecifically, the formal definition of the Retriever interface (often represented by the `BaseRetriever` class) is:\n\n> An interface that returns documents given an unstructured query.\n\n### Input Type\nA Retriever accepts a **string (`str`)** as its input query (though some implementations also support passing a pre-constructed query object or chat history, the primary accepted input type for the standard `.invoke()` or `.get_relevant_documents()` method is a `str`).\n\n### Output Type\nIt returns a list of **`Document` objects** (`List[Document]`).",
+            "latency_sec": 1.682,
+            "prompt_tokens": 59,
+            "completion_tokens": 166
+        },
+        "rag": {
+            "answer": "The provided context does not contain sufficient information to answer this question.",
+            "retrieval_sec": 0.411,
+            "generation_sec": 7.619,
+            "total_latency_sec": 8.031,
+            "prompt_tokens": 707,
+            "completion_tokens": 13,
+            "sources": [
+                "models.mdx",
+                "models.mdx",
+                "messages.mdx"
+            ],
+            "retrieved_chunks": [
+                "build complete tool calls:\n\n        ```typescript Accumulate tool calls\n        let full: AIMessageChunk | null = null\n        const stream = await modelWithTools.stream(\"What's the weather in Boston?\")\n        for await (const chunk of stream) {\n            full = full ? full.concat(chunk) : chunk\n            console.log(full.contentBlocks)\n        }\n        ```\n\n        :::\n    </Accordion>\n</AccordionGroup>\n\n---\n\n## Structured output\n\nModels can be requested to provide their response in a format matching a given schema. This is useful for ensuring the output can be easily parsed and used in subsequent processing. LangChain supports multiple schema types and methods for enforcing structured output.\n\n<Tip>\n    To learn about structured output, see [Structured output](/oss/langchain/struc",
+                "(https://github.com/langchain-ai/langchain/tree/master/libs/partners/anthropic) in the [LangChain monorepo](https://github.com/langchain-ai/langchain):\n\n    ```bash\n    uv run --with langchain-model-profiles --provider anthropic --data-dir langchain_anthropic/data\n    ```\n</Accordion>\n\n:::\n\n:::js\nLangChain chat models can expose a dictionary of supported features and capabilities through a `profile` property:\n\n```typescript\nmodel.profile;\n// {\n//   maxInputTokens: 400000,\n//   imageInputs: true,\n//   reasoningOutput: true,\n//   toolCalling: true,\n//   ...\n// }\n```\n\nRefer to the full set of fields in the [API reference](https://reference.langchain.com/javascript/langchain-core/language_models/profile/ModelProfile).\n\nMuch of the model profile data is powered by the [models.dev](https://githu",
+                "agents](/oss/langchain/agents) with LangChain.\n    </Accordion>\n</Note>\n\n---\n\n## Message content\n\nYou can think of a message's content as the payload of data that gets sent to the model. Messages have a `content` attribute that is loosely-typed, supporting strings and lists of untyped objects (e.g., dictionaries). This allows support for provider-native structures directly in LangChain chat models, such as [multimodal](#multimodal) content and other data.\n\nSeparately, LangChain provides dedicated content types for text, reasoning, citations, multi-modal data, server-side tool calls, and other message content. See [content blocks](#standard-content-blocks) below.\n\nLangChain chat models accept message content in the `content` attribute.\n\nThis may contain either:\n\n1. A string\n2. A list of con"
+            ],
+            "distances": [
+                1.0611780881881714,
+                1.081384301185608,
+                1.0959007740020752
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.22950819672131148,
+                "semantic_similarity": 0.7118494510650635
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.0,
+                "semantic_similarity": 0.08812615275382996
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "rag": {
+                    "factual_correctness": 1,
+                    "completeness": 1,
+                    "relevance": 1
+                },
+                "reasoning": "Answer A failed to provide the information readily available in the LangChain documentation. Answer B correctly identified the formal definition as requested in the ground truth and accurately identified the input type (string) and output type (Document objects) required by the question.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q110",
+        "category": "Direct_Factual",
+        "question": "When evaluating the trade-offs in the RAG architectures summary table, developers need to choose between rigid pipelines and dynamic models. What are the specific ratings for the Hybrid architecture regarding developer control, runtime flexibility, and latency, and what typical use case is presented?",
+        "ground_truth": "Control: Medium . Flexibility: Medium. Latency: Variable. Example use case: Domain-specific Q&A with quality validation.",
+        "base": {
+            "answer": "Based on standard RAG (Retrieval-Augmented Generation) architecture comparison frameworks, here are the specific ratings and use case for the **Hybrid** architecture:\n\n*   **Developer Control:** Medium / Moderate (It balances structured logic with adaptable components).\n*   **Runtime Flexibility:** High (It can dynamically route queries and adapt the retrieval strategy based on the input context).\n*   **Latency:** Medium to High (Due to the overhead of combining multiple retrieval and generation steps or models).\n*   **Typical Use Case:** Enterprise applications requiring both deterministic knowledge retrieval (like precise database lookups) and creative, context-aware synthesis (like complex conversational assistants or multi-source summarization). \n\n*(Note: Exact ratings can slightly vary depending on the specific whitepaper or documentation source you are referencing, but the Hybrid approach is universally positioned as the middle-ground bridge between strictly rigid pipelines and fully autonomous dynamic agents.)*",
+            "latency_sec": 1.576,
+            "prompt_tokens": 64,
+            "completion_tokens": 188
+        },
+        "rag": {
+            "answer": "Based on the provided documentation, for the Hybrid architecture:\n* **Control:** ⚖️ Medium\n* **Flexibility:** ⚖️ Medium\n* **Latency:** ⏳ Variable\n* **Example Use Case:** Domain-specific Q&A with quality validation",
+            "retrieval_sec": 0.427,
+            "generation_sec": 4.427,
+            "total_latency_sec": 4.854,
+            "prompt_tokens": 583,
+            "completion_tokens": 54,
+            "sources": [
+                "retrieval.mdx",
+                "retrieval.mdx",
+                "retrieval.mdx"
+            ],
+            "retrieved_chunks": [
+                "analysis to subagents.\n</Card>\n\n### Hybrid RAG\n\nHybrid RAG combines characteristics of both 2-Step and Agentic RAG. It introduces intermediate steps such as query preprocessing, retrieval validation, and post-generation checks. These systems offer more flexibility than fixed pipelines while maintaining some control over execution.\n\nTypical components include:\n\n* **Query enhancement**: Modify the input question to improve retrieval quality. This can involve rewriting unclear queries, generating multiple variations, or expanding queries with additional context.\n* **Retrieval validation**: Evaluate whether retrieved documents are relevant and sufficient. If not, the system may refine the query and retrieve again.\n* **Answer validation**: Check the generated answer for accuracy, completeness,",
+                "arrow\n        cta=\"Learn more\"\n    >\n        A retriever is an interface that returns documents given an unstructured query.\n    </Card>\n</Columns>\n\n## RAG architectures\n\nRAG can be implemented in multiple ways, depending on your system's needs. We outline each type in the sections below.\n\n| Architecture            | Description                                                                | Control   | Flexibility | Latency        | Example Use Case                                   |\n|-------------------------|----------------------------------------------------------------------------|-----------|-------------|----------------|----------------------------------------------------|\n| **2-Step RAG**          | Retrieval always happens before generation. Simple and predictable",
+                "-----------------------------------------------|\n| **2-Step RAG**          | Retrieval always happens before generation. Simple and predictable         | ✅ High    | ❌ Low       | ⚡ Fast         | FAQs, documentation bots                           |\n| **Agentic RAG**         | An LLM-powered agent decides *when* and *how* to retrieve during reasoning | ❌ Low     | ✅ High      | ⏳ Variable     | Research assistants with access to multiple tools  |\n| **Hybrid**              | Combines characteristics of both approaches with validation steps          | ⚖️ Medium | ⚖️ Medium   | ⏳ Variable     | Domain-specific Q&A with quality validation        |\n\n<Info>\n**Latency**: Latency is generally more **predictable** in **2-Step RAG**, as the maximum number of LLM calls is known and capped. This predi"
+            ],
+            "distances": [
+                1.0475881099700928,
+                1.0661917924880981,
+                1.178712248802185
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.11188811188811189,
+                "semantic_similarity": 0.40958288311958313
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.7567567567567568,
+                "semantic_similarity": 0.7786900997161865
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 2,
+                    "completeness": 3,
+                    "relevance": 3
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer A matches the ground truth exactly. Answer B provides incorrect ratings for flexibility and latency according to the provided ground truth and adds unnecessary information that diverges from the source requirements.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q111",
+        "category": "Reasoning_Across_Facts",
+        "question": "A development team is designing an autonomous technical assistant that uses `fetch_documentation` to consult official guides. Based on the implementation code and instructions in `retrieval.md`, how does the agent enforce domain security constraints before executing an HTTP request, and what fallback behavior is specified if a network retrieval failure occurs?",
+        "ground_truth": "Security is enforced by checking if the URL starts with an entry in `ALLOWED_DOMAINS` ('https://docs.langchain.com/'), raising an error string if unauthorized. If a documentation fetch fails due to a network error, the agent is instructed by system prompt to inform the user and proceed using its best expert understanding.",
+        "base": {
+            "answer": "It looks like you didn't include the implementation code or the contents of `retrieval.md` in your prompt! \n\nPlease paste the relevant code and documentation text here, and I will gladly analyze them to explain the agent's domain security constraints and fallback behaviors for you.",
+            "latency_sec": 0.968,
+            "prompt_tokens": 75,
+            "completion_tokens": 59
+        },
+        "rag": {
+            "answer": "Based on the provided documentation, the agent enforces domain security constraints within the `fetch_documentation` tool by checking if the URL starts with one of the allowed domains:\n\n```python\n    if not any(url.startswith(domain) for domain in ALLOWED_DOMAINS):\n        return (\n            \"Error: URL not allowed. \"\n            f\"Must start with one of: {', '.join(ALLOWED_DOMAINS)}\"\n        )\n```\n*(Where `ALLOWED_DOMAINS` is defined as `[\"https://docs.langchain.com/\"]`).*\n\nRegarding the fallback behavior if a documentation fetch fails, the instructions specify: \"If a documentation fetch fails, tell the user and proceed with your best expert understanding.\"",
+            "retrieval_sec": 0.518,
+            "generation_sec": 0.959,
+            "total_latency_sec": 1.477,
+            "prompt_tokens": 726,
+            "completion_tokens": 158,
+            "sources": [
+                "retrieval.mdx",
+                "retrieval.mdx",
+                "retrieval.mdx"
+            ],
+            "retrieved_chunks": [
+                "documentation, summarize clearly and include relevant context from the content.\n3. Do not use any URLs outside of the allowed domain.\n4. If a documentation fetch fails, tell the user and proceed with your best expert understanding.\n\nYou can access official documentation from the following approved sources:\n\n${llmsTxtContent}\n\nYou MUST consult the documentation to get up to date documentation\nbefore answering a user's question about LangGraph.\n\nYour answers should be clear, concise, and technically accurate.\n`;\n\nconst tools = [fetchDocumentation];\n\nconst agent = createAgent({\n  model: \"claude-sonnet-4-6\"\n  tools,  // [!code highlight]\n  systemPrompt,  // [!code highlight]\n  name: \"Agentic RAG\",\n});\n\nconst response = await agent.invoke({\n  messages: [\n    new HumanMessage(\n      \"Write a sh",
+                "dynamically use a `fetch_documentation` tool to retrieve and process the relevant content based on the user’s question.\n\n:::python\n```python\nimport requests\nfrom langchain.agents import create_agent\nfrom langchain.messages import HumanMessage\nfrom langchain.tools import tool\nfrom markdownify import markdownify\n\n\nALLOWED_DOMAINS = [\"https://docs.langchain.com/\"]\nLLMS_TXT = 'https://docs.langchain.com/llms.txt'\n\n\n@tool\ndef fetch_documentation(url: str) -> str:  # [!code highlight]\n    \"\"\"Fetch and convert documentation from a URL\"\"\"\n    if not any(url.startswith(domain) for domain in ALLOWED_DOMAINS):\n        return (\n            \"Error: URL not allowed. \"\n            f\"Must start with one of: {', '.join(ALLOWED_DOMAINS)}\"\n        )\n    response = requests.get(url, timeout=10.0)\n    respons",
+                "-----------------------------------------------|\n| **2-Step RAG**          | Retrieval always happens before generation. Simple and predictable         | ✅ High    | ❌ Low       | ⚡ Fast         | FAQs, documentation bots                           |\n| **Agentic RAG**         | An LLM-powered agent decides *when* and *how* to retrieve during reasoning | ❌ Low     | ✅ High      | ⏳ Variable     | Research assistants with access to multiple tools  |\n| **Hybrid**              | Combines characteristics of both approaches with validation steps          | ⚖️ Medium | ⚖️ Medium   | ⏳ Variable     | Domain-specific Q&A with quality validation        |\n\n<Info>\n**Latency**: Latency is generally more **predictable** in **2-Step RAG**, as the maximum number of LLM calls is known and capped. This predi"
+            ],
+            "distances": [
+                1.081193447113037,
+                1.1052675247192383,
+                1.1182901859283447
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.1935483870967742,
+                "semantic_similarity": 0.4079439043998718
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.453125,
+                "semantic_similarity": 0.7886748909950256
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 1,
+                    "completeness": 1,
+                    "relevance": 1
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer A failed to provide any information, claiming the prompt was missing context even though the ground truth provided the necessary details. Answer B correctly identified the security logic and the fallback behavior described in the ground truth.",
+                "presentation_order": [
+                    "base",
+                    "rag"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q112",
+        "category": "Unanswerable",
+        "question": "When constructing the knowledge base vector store using the retrieval architecture pipeline, what default mathematical distance metric (such as cosine similarity, squared Euclidean distance, or dot product) is applied by the underlying index, and what similarity threshold is set to filter noise?",
+        "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+        "base": {
+            "answer": "Because the specific default mathematical distance metric and similarity threshold depend entirely on the **specific vector database, library, or framework** you are using in your retrieval architecture pipeline (e.g., LangChain, LlamaIndex, Pinecone, Milvus, Chroma, or FAISS), there is no single universal default. \n\nHowever, looking at modern standard implementations in popular Retrieval-Augmented Generation (RAG) pipelines, here is how defaults are typically configured:\n\n### 1. Default Mathematical Distance Metric\nThe overwhelming industry default for text-based vector embeddings is **Cosine Similarity** (or Cosine Distance). \n* **Why:** Text embedding models (like OpenAI's `text-embedding-3-small` or open-source Hugging Face models) are typically trained and normalized to output unit vectors. When vectors are normalized, Cosine Similarity, Dot Product, and (to an extent) Euclidean Distance yield mathematically equivalent ranking results, but Cosine Similarity is preferred because it is invariant to vector magnitude.\n* **Exceptions:** \n  * Some systems (like FAISS in certain configurations) default to **L2 (Euclidean Distance)** or **Inner Product (Dot Product)** for raw performance speed, requiring developers to explicitly normalize vectors if they want true cosine behavior.\n\n### 2. Default Similarity Threshold for Filtering Noise\nUnlike the distance metric, **there is usually *no* default similarity threshold (i.e., the threshold is set to `None` or `0.0`)** in most foundational vector stores and orchestration frameworks out of the box. \n* **Why:** Setting a hard similarity threshold globally is dangerous because the optimal cutoff score is strictly dependent on the specific embedding model used, the domain of the data, and how the chunking was performed. A threshold that works well for OpenAI embeddings might completely filter out all results if applied to a local Sentence-Transformers model.\n* **How it is handled instead:** Instead of a strict mathematical threshold in the vector store, pipelines often rely on:\n  * **Top-$K$ retrieval:** Returning a fixed number of top results (e.g., `k=4` or `k=10`) regardless of their absolute distance score.\n  * **Post-processing/Re-ranking:** Using a Cross-Encoder (like Cohere Re-rank or BGE-Reranker) *after* the initial vector retrieval to score and filter out irrelevant \"noise\" dynamically.\n\n***\n\n*If you are asking about a specific framework (e.g., LangChain with Chroma, LlamaIndex with Pinecone), please specify, and I can provide the exact default configuration for that stack!*",
+            "latency_sec": 32.092,
+            "prompt_tokens": 61,
+            "completion_tokens": 549
+        },
+        "rag": {
+            "answer": "The provided context does not contain sufficient information to answer this question.",
+            "retrieval_sec": 0.373,
+            "generation_sec": 1.52,
+            "total_latency_sec": 1.893,
+            "prompt_tokens": 797,
+            "completion_tokens": 13,
+            "sources": [
+                "knowledge-base.mdx",
+                "knowledge-base.mdx",
+                "knowledge-base.mdx"
+            ],
+            "retrieved_chunks": [
+                "530711025, 0.010564599186182022, 0.009598285891115665, -0.028587326407432556, -0.015824200585484505, 0.0030416189692914486, -0.012899317778646946]\n```\n\nNext, store embeddings in a vector store that supports efficient similarity search.\n\n## Select a vector store\n\nLangChain @[`VectorStore`] objects add text and @[`Document`] objects to a store and query them with similarity metrics. They are often initialized with [embedding](/oss/integrations/embeddings) models that translate text into numeric vectors.\n\nLangChain includes [integrations](/oss/integrations/vectorstores) with many vector store technologies. Some are hosted and need credentials, some run in separate infrastructure (local or third-party), and others run in-memory for lightweight workloads. Select a vector store:\n\n:::python\n<Vect",
+                "ry and by vector\n- With and without similarity scores\n- By similarity and @[maximum marginal relevance][VectorStore.maxMarginalRelevanceSearch] (to balance similarity with diversity)\n\n:::\n\nThese methods generally return a list of @[`Document`] objects.\n\n### Search by string\n\nEmbeddings map text to dense vectors so similar meanings are geometrically close. This means you can Retrieve relevant passages by passing a natural-language question:\n\n:::python\n```python\nresults = vector_store.similarity_search(\n    \"How many distribution centers does Nike have in the US?\"\n)\n\nprint(results[0])\n```\n```python wrap\npage_content='direct to consumer operations sell products through the following number of retail stores in the United States:\nU.S. RETAIL STORES NUMBER\nNIKE Brand factory stores 213\nNIKE Bran",
+                "_index': 0}\n```\n:::\n\n### Return scores\n\nYou can return similarity scores with the documents. Score meaning varies by provider. In this case, the score is a distance metric that varies inversely with similarity:\n\n:::python\n```python\n# Note that providers implement different scores; the score here\n# is a distance metric that varies inversely with similarity.\n\nresults = vector_store.similarity_search_with_score(\"What was Nike's revenue in 2023?\")\ndoc, score = results[0]\nprint(f\"Score: {score}\\n\")\nprint(doc)\n```\n```python wrap\nScore: 0.23699893057346344\n\npage_content='Table of Contents\nFISCAL 2023 NIKE BRAND REVENUE HIGHLIGHTS\nThe following tables present NIKE Brand revenues disaggregated by reportable operating segment, distribution channel and major product line:\nFISCAL 2023 COMPARED TO FISC"
+            ],
+            "distances": [
+                0.9666141271591187,
+                1.1370165348052979,
+                1.157288908958435
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.011111111111111112,
+                "semantic_similarity": -0.0321224145591259
+            },
+            "rag": {
+                "exact_match": 1,
+                "token_f1": 1.0,
+                "semantic_similarity": 1.0000001192092896
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 3,
+                    "completeness": 3,
+                    "relevance": 2
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "The ground truth states that the provided context does not contain the answer. Answer A provides external knowledge that is not present in the context, effectively hallucinating an answer to a question that the ground truth explicitly marks as unanswerable from the context. Answer B correctly identifies that the information is missing.",
+                "presentation_order": [
+                    "base",
+                    "rag"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q113",
+        "category": "Direct_Factual",
+        "question": "When configuring a text splitter in LangChain for generic prose, developers often rely on RecursiveCharacterTextSplitter to maintain semantic cohesion. According to the integration guide, what is the exact default list of separators used by this splitter, and in what order does it attempt to split the input text?",
+        "ground_truth": "The default separator list is [\"\\n\\n\", \"\\n\", \" \", \"\"], splitting in order of double newlines, single newlines, spaces, and empty strings.",
+        "base": {
+            "answer": "According to the LangChain integration guide and source code, the exact default list of separators used by `RecursiveCharacterTextSplitter`—in the order it attempts to split the text—is:\n\n1. `\"\\n\\n\"` (Double newline / Paragraphs)\n2. `\"\\n\"` (Single newline / Lines)\n3. `\" \"` (Spaces)\n4. `\"\"` (Empty string / Characters)\n\n**How it works:**\nThe splitter iterates through this list sequentially. It first attempts to split the text using the highest-priority separator (`\"\\n\\n\"`). If any resulting chunks are still larger than the configured `chunk_size`, it moves down to the next separator (`\"\\n\"`), and so on, until the chunks fit within the size limit while keeping semantically related text (like paragraphs or sentences) together as long as possible.",
+            "latency_sec": 40.185,
+            "prompt_tokens": 70,
+            "completion_tokens": 180
+        },
+        "rag": {
+            "answer": "According to the provided documentation, the default list of separators used by this splitter is `[\"\\n\\n\", \"\\n\", \" \", \"\"]`, and it tries to split on them in that order.",
+            "retrieval_sec": 0.357,
+            "generation_sec": 1.392,
+            "total_latency_sec": 1.749,
+            "prompt_tokens": 727,
+            "completion_tokens": 42,
+            "sources": [
+                "recursive_text_splitter.mdx",
+                "knowledge-base.mdx",
+                "recursive_text_splitter.mdx"
+            ],
+            "retrieved_chunks": [
+                "---\ntitle: \"Splitting recursively - Text splitter integration guide\"\n---\n\nThis [text splitter](/oss/integrations/splitters/) is the recommended one for generic text. It is parameterized by a list of characters. It tries to split on them in order until the chunks are small enough. The default list is `[\"\\n\\n\", \"\\n\", \" \", \"\"]`. This has the effect of trying to keep all paragraphs (and then sentences, and then words) together as long as possible, as those would generically seem to be the strongest semantically related pieces of text.\n\n1. How the text is split: by list of characters.\n2. How the chunk size is measured: by number of characters.\n\nBelow we show example usage.\n\n:::python\n```shell\npip install -qU langchain-text-splitters\n```\n:::\n:::js\n<CodeGroup>\n```bash npm\nnpm install @langchain/t",
+                "n too coarse for retrieval. Split pages further so relevant passages are not diluted by surrounding text. @[`RecursiveCharacterTextSplitter`] recursively splits on common separators (such as newlines) until each chunk is the target size. This is the recommended text splitter for generic text use cases.\n\n:::python\nSet `add_start_index=True` so each split keeps a `start_index` metadata field for its character offset in the original document.\n\n```python\nfrom langchain_text_splitters import RecursiveCharacterTextSplitter\n\ntext_splitter = RecursiveCharacterTextSplitter(\n    chunk_size=1000, chunk_overlap=200, add_start_index=True\n)\nall_splits = text_splitter.split_documents(docs)\n\nprint(len(all_splits))\n```\n:::\n:::js\n```typescript\nimport { RecursiveCharacterTextSplitter } from \"@langchain/texts",
+                "am Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and',\n 'of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.']\n```\n:::\n\n:::js\nTo obtain the string content directly, use `.splitText`.\n\nTo create LangChain @[Document] objects (e.g., for use in downstream tasks), use `.createDocuments`.\n\n```ts\nimport { RecursiveCharacterTextSplitter } from \"@langchain/textsplitters\";\n\nconst splitter = new RecursiveCharacterTextSplitter({ chunkSize: 100, chunkOverlap: 0 })\nconst texts = splitter.createDocuments([{ pageContent: \"...\" }])\n```\n```javascript\n[\n  { pageContent: \"...\", metadata: {} },\n]\n```\n:::\n\nLet's go through the parameters set above for `RecursiveCharacterTextSplitter`:\n\n:::python\n- `chunk_size`: The maximum size of a chunk,"
+            ],
+            "distances": [
+                0.5798071622848511,
+                0.7125908136367798,
+                0.7283855080604553
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.2047244094488189,
+                "semantic_similarity": 0.6056868433952332
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.43478260869565216,
+                "semantic_similarity": 0.833961546421051
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 4
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Both answers correctly identify the list and order of separators. Answer A is more concise and follows the prompt's focus on the 'exact list'. Answer B is also correct but includes a paragraph explaining how the splitter works, which was not requested by the prompt, making it slightly less relevant.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q114",
+        "category": "Direct_Factual",
+        "question": "Our engineering team needs to choose between generating raw Python strings or structured objects when preprocessing documents for a downstream vector indexing pipeline. According to the RecursiveCharacterTextSplitter documentation, which specific method should be called to obtain raw string chunks directly, and which method must be called to create LangChain Document objects?",
+        "ground_truth": "To obtain string content directly, call `.split_text`. To create LangChain Document objects, call `.create_documents`.",
+        "base": {
+            "answer": "According to the LangChain `RecursiveCharacterTextSplitter` documentation, the specific methods to use are:\n\n*   To obtain raw string chunks directly: Call **`split_text(text)`**\n*   To create structured LangChain `Document` objects: Call **`create_documents(texts)`** (or use **`split_documents(documents)`** if your input is already a list of `Document` objects).",
+            "latency_sec": 5.973,
+            "prompt_tokens": 72,
+            "completion_tokens": 89
+        },
+        "rag": {
+            "answer": "According to the documentation, to obtain the string content directly in Python, use `.split_text` (and `.splitText` in JavaScript). To create LangChain Document objects, use `.create_documents` (and `.createDocuments` in JavaScript).",
+            "retrieval_sec": 0.407,
+            "generation_sec": 4.808,
+            "total_latency_sec": 5.215,
+            "prompt_tokens": 763,
+            "completion_tokens": 51,
+            "sources": [
+                "recursive_text_splitter.mdx",
+                "recursive_text_splitter.mdx",
+                "knowledge-base.mdx"
+            ],
+            "retrieved_chunks": [
+                "am Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and',\n 'of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.']\n```\n:::\n\n:::js\nTo obtain the string content directly, use `.splitText`.\n\nTo create LangChain @[Document] objects (e.g., for use in downstream tasks), use `.createDocuments`.\n\n```ts\nimport { RecursiveCharacterTextSplitter } from \"@langchain/textsplitters\";\n\nconst splitter = new RecursiveCharacterTextSplitter({ chunkSize: 100, chunkOverlap: 0 })\nconst texts = splitter.createDocuments([{ pageContent: \"...\" }])\n```\n```javascript\n[\n  { pageContent: \"...\", metadata: {} },\n]\n```\n:::\n\nLet's go through the parameters set above for `RecursiveCharacterTextSplitter`:\n\n:::python\n- `chunk_size`: The maximum size of a chunk,",
+                "low we show example usage.\n\n:::python\n```shell\npip install -qU langchain-text-splitters\n```\n:::\n:::js\n<CodeGroup>\n```bash npm\nnpm install @langchain/textsplitters\n```\n\n```bash pnpm\npnpm install @langchain/textsplitters\n```\n\n```bash yarn\nyarn add @langchain/textsplitters\n```\n\n```bash bun\nbun add @langchain/textsplitters\n```\n</CodeGroup>\n:::\n\n:::python\nTo obtain the string content directly, use `.split_text`.\n\nTo create LangChain @[Document] objects (e.g., for use in downstream tasks), use `.create_documents`.\n\n```python\nfrom langchain_text_splitters import RecursiveCharacterTextSplitter\n\n# Load example document\nwith open(\"state_of_the_union.txt\") as f:\n    state_of_the_union = f.read()\n\ntext_splitter = RecursiveCharacterTextSplitter(\n    # Set a really small chunk size, just to show.\n    ch",
+                "n too coarse for retrieval. Split pages further so relevant passages are not diluted by surrounding text. @[`RecursiveCharacterTextSplitter`] recursively splits on common separators (such as newlines) until each chunk is the target size. This is the recommended text splitter for generic text use cases.\n\n:::python\nSet `add_start_index=True` so each split keeps a `start_index` metadata field for its character offset in the original document.\n\n```python\nfrom langchain_text_splitters import RecursiveCharacterTextSplitter\n\ntext_splitter = RecursiveCharacterTextSplitter(\n    chunk_size=1000, chunk_overlap=200, add_start_index=True\n)\nall_splits = text_splitter.split_documents(docs)\n\nprint(len(all_splits))\n```\n:::\n:::js\n```typescript\nimport { RecursiveCharacterTextSplitter } from \"@langchain/texts"
+            ],
+            "distances": [
+                0.7098017930984497,
+                0.7111913561820984,
+                0.7360599040985107
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.39999999999999997,
+                "semantic_similarity": 0.7680337429046631
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.5581395348837208,
+                "semantic_similarity": 0.8871041536331177
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 4,
+                    "relevance": 4
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer A is more direct and accurate to the specific prompt requirements. Answer B includes extra, unrequested information (split_documents), which deviates slightly from the specific question asked.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q115",
+        "category": "Direct_Factual",
+        "question": "When instantiating RecursiveCharacterTextSplitter, developers can customize separator boundaries and text evaluation rules using various constructor arguments. According to the parameter list in the guide, what is the purpose of the `is_separator_regex` parameter, and what is the function of the `length_function` argument?",
+        "ground_truth": "`is_separator_regex` determines whether the separator list should be interpreted as regular expressions, while `length_function` specifies the function used to determine chunk size (measuring chunk length).",
+        "base": {
+            "answer": "Based on standard documentation for LangChain's `RecursiveCharacterTextSplitter`, the parameters serve the following purposes:\n\n*   **`is_separator_regex`**: This parameter determines whether the separators provided in the `separators` list should be interpreted as regular expressions (`True`) or as standard, literal strings (`False`). Setting this to `True` allows you to split text using complex pattern matching rather than exact string matches.\n\n*   **`length_function`**: This argument specifies the function used to calculate the length of the text chunks (for example, `len` to count characters, or a tokenizer function like `tiktoken` to count tokens). The text splitter uses this function to determine when a chunk has reached the maximum allowed `chunk_size`.",
+            "latency_sec": 4.243,
+            "prompt_tokens": 74,
+            "completion_tokens": 157
+        },
+        "rag": {
+            "answer": "According to the provided documentation, the parameters serve the following purposes:\n\n- `is_separator_regex`: Determines whether the separator list (defaulting to `[\"\\n\\n\", \"\\n\", \" \", \"\"]`) should be interpreted as regex.\n- `length_function`: A function determining the chunk size.",
+            "retrieval_sec": 0.361,
+            "generation_sec": 9.611,
+            "total_latency_sec": 9.972,
+            "prompt_tokens": 710,
+            "completion_tokens": 66,
+            "sources": [
+                "recursive_text_splitter.mdx",
+                "recursive_text_splitter.mdx",
+                "recursive_text_splitter.mdx"
+            ],
+            "retrieved_chunks": [
+                "},\n]\n```\n:::\n\nLet's go through the parameters set above for `RecursiveCharacterTextSplitter`:\n\n:::python\n- `chunk_size`: The maximum size of a chunk, where size is determined by the `length_function`.\n- `chunk_overlap`: Target overlap between chunks. Overlapping chunks helps to mitigate loss of information when context is divided between chunks.\n- `length_function`: Function determining the chunk size.\n- `is_separator_regex`: Whether the separator list (defaulting to `[\"\\n\\n\", \"\\n\", \" \", \"\"]`) should be interpreted as regex.\n:::\n\n:::js\n- `chunkSize`: The maximum size of a chunk, where size is determined by the `lengthFunction`.\n- `chunkOverlap`: Target overlap between chunks. Overlapping chunks helps to mitigate loss of information when context is divided between chunks.\n:::\n\n## Splitting",
+                "---\ntitle: \"Splitting recursively - Text splitter integration guide\"\n---\n\nThis [text splitter](/oss/integrations/splitters/) is the recommended one for generic text. It is parameterized by a list of characters. It tries to split on them in order until the chunks are small enough. The default list is `[\"\\n\\n\", \"\\n\", \" \", \"\"]`. This has the effect of trying to keep all paragraphs (and then sentences, and then words) together as long as possible, as those would generically seem to be the strongest semantically related pieces of text.\n\n1. How the text is split: by list of characters.\n2. How the chunk size is measured: by number of characters.\n\nBelow we show example usage.\n\n:::python\n```shell\npip install -qU langchain-text-splitters\n```\n:::\n:::js\n<CodeGroup>\n```bash npm\nnpm install @langchain/t",
+                "Fullwidth comma\n        \"\\u3001\",  # Ideographic comma\n        \"\\uff0e\",  # Fullwidth full stop\n        \"\\u3002\",  # Ideographic full stop\n        \"\",\n    ],\n    # Existing args\n)\n```\n:::\n:::js\n```ts\nconst splitter = new RecursiveCharacterTextSplitter({\n  separators: [\n    \"\\n\\n\",\n    \"\\n\",\n    \" \",\n    \".\",\n    \",\",\n    \"\\u200b\",  // Zero-width space\n    \"\\uff0c\",  // Fullwidth comma\n    \"\\u3001\",  // Ideographic comma\n    \"\\uff0e\",  // Fullwidth full stop\n    \"\\u3002\",  // Ideographic stop\n    \"\",\n  ],\n});\n```\n:::"
+            ],
+            "distances": [
+                0.694786548614502,
+                0.8796267509460449,
+                0.90772545337677
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.3125,
+                "semantic_similarity": 0.6668403148651123
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.5517241379310344,
+                "semantic_similarity": 0.8160363435745239
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 4
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 4,
+                    "relevance": 5
+                },
+                "reasoning": "Both answers are factually correct. Answer A is slightly more concise and sticks strictly to the prompt's requirements. Answer B provides extra context (e.g., mention of tiktoken) which, while accurate and helpful, goes slightly beyond the specific scope requested by the ground truth, though it is still highly relevant.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q116",
+        "category": "Reasoning_Across_Facts",
+        "question": "During an architecture review of our ingestion pipeline, a developer asks why RecursiveCharacterTextSplitter is recommended over simple fixed-character splitting and how chunk overlap addresses downstream retrieval quality. Synthesizing the guide's explanation of chunking mechanics and parameter definitions, how does the default separator hierarchy preserve semantic context, and what explicit issue does `chunk_overlap` mitigate?",
+        "ground_truth": "The default separator hierarchy ([\"\\n\\n\", \"\\n\", \" \", \"\"]) preserves semantics by keeping larger related text units (paragraphs, then sentences, then words) intact as long as possible before falling back to smaller units. `chunk_overlap` specifically mitigates the loss of information and context when boundary splits divide related information between adjacent chunks.",
+        "base": {
+            "answer": "Based on standard text-splitting mechanics (such as those in LangChain's `RecursiveCharacterTextSplitter`), here is how the mechanics, separator hierarchy, and overlap parameters address your questions regarding downstream retrieval quality:\n\n### 1. Why `RecursiveCharacterTextSplitter` Over Simple Fixed-Character Splitting?\nSimple fixed-character splitting strictly cuts text at a predefined character length, regardless of context. This frequently results in semantic fragmentation—slicing mid-sentence, mid-word, or right in the middle of a complex data structure (like a code block or markdown table). \n\nIn contrast, `RecursiveCharacterTextSplitter` operates on a **default separator hierarchy** (typically `[\"\\n\\n\", \"\\n\", \" \", \"\"]`). It attempts to split the text using the highest-level semantic boundary available (paragraphs, denoted by `\\n\\n`). If a resulting chunk still exceeds the maximum size limit, it recursively moves down to the next semantic level (lines `\\n`, then words `\" \"`, and finally characters `\"\"` as a last resort). This hierarchical approach ensures that natural semantic units—like paragraphs and sentences—remain intact as long as possible.\n\n### 2. How `chunk_overlap` Mitigates Downstream Retrieval Issues\nEven with a semantic splitting hierarchy, cutting text into chunks inevitably risks splitting a cohesive thought or piece of information across a boundary. If a critical piece of context sits right at the edge of a chunk, a search query might fail to retrieve it because neither adjacent chunk contains the complete idea.\n\nThe explicit issue `chunk_overlap` mitigates is **context fragmentation and boundary loss**. \n\nBy defining a sliding window where consecutive chunks share a specified number of characters (or tokens):\n* **Information continuity is preserved:** Concepts spanning the end of Chunk $N$ and the beginning of Chunk $N+1$ are fully captured in at least one of the chunks.\n* **Retrieval recall is improved:** Downstream vector searches are less likely to miss relevant context due to an arbitrary cut-off point, ensuring the embedding space accurately reflects the flow of the original document.",
+            "latency_sec": 5.02,
+            "prompt_tokens": 85,
+            "completion_tokens": 440
+        },
+        "rag": {
+            "answer": "Based on the provided documentation:\n\n* **How the default separator hierarchy preserves semantic context:** The `RecursiveCharacterTextSplitter` is parameterized by a list of characters (defaulting to `[\"\\n\\n\", \"\\n\", \" \", \"\"]`) and tries to split on them in order until the chunks are small enough. This has the effect of trying to keep all paragraphs (and then sentences, and then words) together as long as possible, because those generically seem to be the strongest semantically related pieces of text.\n* **What explicit issue `chunk_overlap` mitigates:** `chunk_overlap` (or `chunkOverlap`) helps to mitigate the loss of information when context is divided between chunks.",
+            "retrieval_sec": 0.431,
+            "generation_sec": 3.902,
+            "total_latency_sec": 4.333,
+            "prompt_tokens": 730,
+            "completion_tokens": 146,
+            "sources": [
+                "knowledge-base.mdx",
+                "recursive_text_splitter.mdx",
+                "recursive_text_splitter.mdx"
+            ],
+            "retrieved_chunks": [
+                "n too coarse for retrieval. Split pages further so relevant passages are not diluted by surrounding text. @[`RecursiveCharacterTextSplitter`] recursively splits on common separators (such as newlines) until each chunk is the target size. This is the recommended text splitter for generic text use cases.\n\n:::python\nSet `add_start_index=True` so each split keeps a `start_index` metadata field for its character offset in the original document.\n\n```python\nfrom langchain_text_splitters import RecursiveCharacterTextSplitter\n\ntext_splitter = RecursiveCharacterTextSplitter(\n    chunk_size=1000, chunk_overlap=200, add_start_index=True\n)\nall_splits = text_splitter.split_documents(docs)\n\nprint(len(all_splits))\n```\n:::\n:::js\n```typescript\nimport { RecursiveCharacterTextSplitter } from \"@langchain/texts",
+                "---\ntitle: \"Splitting recursively - Text splitter integration guide\"\n---\n\nThis [text splitter](/oss/integrations/splitters/) is the recommended one for generic text. It is parameterized by a list of characters. It tries to split on them in order until the chunks are small enough. The default list is `[\"\\n\\n\", \"\\n\", \" \", \"\"]`. This has the effect of trying to keep all paragraphs (and then sentences, and then words) together as long as possible, as those would generically seem to be the strongest semantically related pieces of text.\n\n1. How the text is split: by list of characters.\n2. How the chunk size is measured: by number of characters.\n\nBelow we show example usage.\n\n:::python\n```shell\npip install -qU langchain-text-splitters\n```\n:::\n:::js\n<CodeGroup>\n```bash npm\nnpm install @langchain/t",
+                "},\n]\n```\n:::\n\nLet's go through the parameters set above for `RecursiveCharacterTextSplitter`:\n\n:::python\n- `chunk_size`: The maximum size of a chunk, where size is determined by the `length_function`.\n- `chunk_overlap`: Target overlap between chunks. Overlapping chunks helps to mitigate loss of information when context is divided between chunks.\n- `length_function`: Function determining the chunk size.\n- `is_separator_regex`: Whether the separator list (defaulting to `[\"\\n\\n\", \"\\n\", \" \", \"\"]`) should be interpreted as regex.\n:::\n\n:::js\n- `chunkSize`: The maximum size of a chunk, where size is determined by the `lengthFunction`.\n- `chunkOverlap`: Target overlap between chunks. Overlapping chunks helps to mitigate loss of information when context is divided between chunks.\n:::\n\n## Splitting"
+            ],
+            "distances": [
+                0.7852959632873535,
+                0.7900211811065674,
+                0.8275972008705139
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.1695906432748538,
+                "semantic_similarity": 0.6455422639846802
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.4335664335664336,
+                "semantic_similarity": 0.8131469488143921
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 4,
+                    "relevance": 5
+                },
+                "reasoning": "Answer A provides a comprehensive and accurate explanation, including additional context that helps explain the 'why' requested in the prompt. Answer B is also accurate and aligns with the ground truth, but it is significantly less detailed in its explanation of how the mechanics specifically impact retrieval quality.",
+                "presentation_order": [
+                    "base",
+                    "rag"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q117",
+        "category": "Reasoning_Across_Facts",
+        "question": "When processing East Asian text or multilingual documents with punctuation variations, standard whitespace separators often fail to split passages effectively. Based on the custom separator example provided in the documentation, how does the user extend the default separator list to support CJK (Chinese, Japanese, Korean) and fullwidth punctuation, and what specific punctuation characters are introduced?",
+        "ground_truth": "The user overrides the `separators` argument, appending standard sentence punctuation (\".\", \",\"), zero-width space (\"\\u200b\"), fullwidth comma (\"\\uff0c\"), ideographic comma (\"\\u3001\"), fullwidth full stop (\"\\uff0e\"), and ideographic full stop (\"\\u3002\") before the final empty string fallback.",
+        "base": {
+            "answer": "Based on standard technical documentation for text splitting (such as in LangChain or similar NLP processing libraries), standard whitespace separators typically include spaces (`\" \"`), newlines (`\"\\n\"`, `\"\\r\\n\"`), and tabs (`\"\\t\"`). \n\nWhen processing East Asian (CJK: Chinese, Japanese, Korean) and multilingual documents, text often lacks spaces between words, relying instead on punctuation marks to indicate natural pauses and sentence boundaries. To handle this, users extend the default separator list by injecting specific fullwidth and CJK-specific punctuation marks into the custom separator hierarchy.\n\n### How to Extend the Default Separators\n\nIn text splitters (like `RecursiveCharacterTextSplitter`), separators are evaluated in order from largest structural boundary to smallest (e.g., paragraphs $\\rightarrow$ sentences $\\rightarrow$ clauses $\\rightarrow$ characters). To support CJK and fullwidth punctuation, you prepend or insert these punctuation marks into the separator list so the splitter attempts to break text at these natural linguistic boundaries before resorting to arbitrary character-level splitting.\n\n### Specific Punctuation Characters Introduced\n\nTo effectively split CJK and multilingual texts with mixed punctuation, the following fullwidth and CJK-specific punctuation characters are typically introduced into the separator list:\n\n1. **Fullwidth Comma and Period (Ideographic Space and Punctuation):**\n   * `。\\n` (Ideographic Full Stop + newline)\n   * `．` (Fullwidth Full Stop)\n   * `，` (Fullwidth Comma)\n   * `、` (Ideographic Comma / Ideographic Enumeration Comma)\n\n2. **Fullwidth Exclamation and Question Marks:**\n   * `！` (Fullwidth Exclamation Mark)\n   * `？` (Fullwidth Question Mark)\n\n3. **CJK Quotation and Parenthetical Marks (often used as sentence or clause boundaries):**\n   * `；` (Fullwidth Semicolon)\n   * `：` (Fullwidth Colon)\n   * `＂` or `＂` / `＇` (Fullwidth Quotation marks, though less commonly used as direct splitters, sometimes included)\n   * Closing brackets/quotes like `）`, `」`, `』`, `】`, `』` are sometimes added to prevent splitting *inside* paired punctuation, or conversely, primary structural boundaries like `——` (Em dash) or `～` (Wave dash).\n\n### Example Implementation Pattern\n\nA custom separator configuration in Python typically looks like this:\n\n```python\nfrom langchain_text_splitters import RecursiveCharacterTextSplitter\n\n# Default separators usually look like: [\"\\n\\n\", \"\\n\", \" \", \"\"]\n# Extended for CJK and fullwidth punctuation:\ncjk_separators = [\n    \"\\n\\n\",\n    \"\\n\",\n    \"。\",  # CJK Full Stop\n    \"．\",  # Fullwidth Full Stop\n    \"！\",  # Fullwidth Exclamation\n    \"？\",  # Fullwidth Question Mark\n    \"；\",  # Fullwidth Semicolon\n    \"：\",  # Fullwidth Colon\n    \"，\",  # Fullwidth Comma\n    \"、\",  # Ideographic Comma\n    \" \",\n    \"\",\n]\n\ntext_splitter = RecursiveCharacterTextSplitter(\n    separators=cjk_separators,\n    chunk_size=500,\n    chunk_overlap=50,\n)\n```\n\nBy introducing these characters, the text splitter ensures that semantic units bounded by traditional CJK punctuation are preserved as cohesive chunks rather than being arbitrarily sliced mid-sentence due to the absence of standard ASCII spaces.",
+            "latency_sec": 3.236,
+            "prompt_tokens": 78,
+            "completion_tokens": 769
+        },
+        "rag": {
+            "answer": "Based on the provided documentation, to keep words together in writing systems without word boundaries (such as Chinese, Japanese, and Thai), the user overrides the list of separators to include additional punctuation. \n\nThe specific punctuation characters and elements introduced in the custom separator example are:\n* ASCII full-stop \"`.`\"\n* Unicode fullwidth full stop \"`．`\" (`\\uff0e`)\n* Ideographic full stop \"`。`\" (`\\u3002`)\n* Zero-width space (`\\u200b`)\n* ASCII comma \"`,`\"\n* Unicode fullwidth comma \"`，`\" (`\\uff0c`)\n* Unicode ideographic comma \"`、`\" (`\\u3001`)\n* A fallback `\"\"` (to allow the splitter to still split and apply overlap)",
+            "retrieval_sec": 0.392,
+            "generation_sec": 4.202,
+            "total_latency_sec": 4.594,
+            "prompt_tokens": 598,
+            "completion_tokens": 172,
+            "sources": [
+                "recursive_text_splitter.mdx",
+                "recursive_text_splitter.mdx",
+                "markdown_header_metadata_splitter.mdx"
+            ],
+            "retrieved_chunks": [
+                "kipedia.org/wiki/Halfwidth_and_Fullwidth_Forms_(Unicode_block)) full stop \"`．`\" (used in Chinese text), and [ideographic full stop](https://en.wikipedia.org/wiki/CJK_Symbols_and_Punctuation) \"`。`\" (used in Japanese and Chinese)\n* Add [Zero-width space](https://en.wikipedia.org/wiki/Zero-width_space) used in Thai, Myanmar, Kmer, and Japanese.\n* Add ASCII comma \"`,`\", Unicode fullwidth comma \"`，`\", and Unicode ideographic comma \"`、`\"\n\n:::python\n```python\ntext_splitter = RecursiveCharacterTextSplitter(\n    separators=[\n        \"\\n\\n\",\n        \"\\n\",\n        \" \",\n        \".\",\n        \",\",\n        \"\\u200b\",  # Zero-width space\n        \"\\uff0c\",  # Fullwidth comma\n        \"\\u3001\",  # Ideographic comma\n        \"\\uff0e\",  # Fullwidth full stop\n        \"\\u3002\",  # Ideographic full stop\n        \"\",",
+                "p`: Target overlap between chunks. Overlapping chunks helps to mitigate loss of information when context is divided between chunks.\n:::\n\n## Splitting text from languages without word boundaries\n\nSome writing systems do not have [word boundaries](https://en.wikipedia.org/wiki/Category:Writing_systems_without_word_boundaries), for example Chinese, Japanese, and Thai. Splitting text with the default separator list of `[\"\\n\\n\", \"\\n\", \" \", \"\"]` can cause words to be split between chunks. To keep words together, you can override the list of separators to include additional punctuation:\n\n* Add ASCII full-stop \"`.`\", [Unicode fullwidth](https://en.wikipedia.org/wiki/Halfwidth_and_Fullwidth_Forms_(Unicode_block)) full stop \"`．`\" (used in Chinese text), and [ideographic full stop](https://en.wikiped",
+                "ces, keep a fallback `\"\"` in `separators` so the splitter can still split and apply overlap."
+            ],
+            "distances": [
+                0.7549532651901245,
+                0.7653335332870483,
+                0.9439601898193359
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.10282776349614395,
+                "semantic_similarity": 0.608899712562561
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.4521739130434782,
+                "semantic_similarity": 0.7670134902000427
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 3,
+                    "completeness": 3,
+                    "relevance": 3
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer A accurately identifies the specific characters listed in the official LangChain documentation example, which was the context of the question. Answer B includes a variety of characters not found in the specific documentation example, essentially hallucinating a custom list rather than identifying the one provided in the documentation.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q118",
+        "category": "Multi_Step",
+        "question": "A developer needs to configure a minimal end-to-end Python script that loads an external file, segments it into small chunks using character length, and prints the first two segmented Document objects. Tracing the standard workflow demonstrated in the guide, what are the sequential code steps required, including the specific imports, the four parameters configured in the constructor, and the method used to generate the output texts?",
+        "ground_truth": "1. Import `RecursiveCharacterTextSplitter` from `langchain_text_splitters`. 2. Read the text file using `open()`. 3. Instantiate `RecursiveCharacterTextSplitter` configuring `chunk_size=100`, `chunk_overlap=20`, `length_function=len`, and `is_separator_regex=False`. 4. Execute `create_documents([text])` on the instance to produce the list of Document objects.",
+        "base": {
+            "answer": "To configure a minimal end-to-end Python script that loads an external file, segments it by character length, and prints the first two resulting `Document` objects using standard LangChain components, follow these sequential code steps:\n\n### 1. Specific Imports\nImport the document loader (e.g., `TextLoader`) to ingest the file and the text splitter (`CharacterTextSplitter`) to handle the chunking based on character length.\n\n```python\nfrom langchain_community.document_loaders import TextLoader\nfrom langchain_text_splitters import CharacterTextSplitter\n```\n\n### 2. Load the External File\nInitialize the loader with the path to your target file and load the content into a list of `Document` objects.\n\n```python\n# Replace 'example.txt' with the path to your actual file\nloader = TextLoader(\"example.txt\")\ndocuments = loader.load()\n```\n\n### 3. Configure the Text Splitter Constructor (with the 4 standard parameters)\nInitialize the `CharacterTextSplitter` with the four standard configuration parameters typically demonstrated in the guide:\n*   `separator`: The character used to split the text (usually `\"\\n\\n\"`).\n*   `chunk_size`: The maximum size of the chunks measured by the length function.\n*   `chunk_overlap`: The overlap between sequential chunks to maintain context.\n*   `length_function`: The function used to measure chunk size (commonly `len`).\n\n```python\ntext_splitter = CharacterTextSplitter(\n    separator=\"\\n\\n\", chunk_size=100, chunk_overlap=20, length_function=len\n)\n```\n\n### 4. Generate the Output Texts (Split the Documents)\nUse the `.split_documents()` method to process the loaded documents into smaller segmented `Document` objects.\n\n```python\nchunked_docs = text_splitter.split_documents(documents)\n```\n\n### 5. Print the First Two Segmented Document Objects\nSlice the resulting list to access and print the first two chunks.\n\n```python\nfor doc in chunked_docs[:2]:\n    print(doc.page_content)\n    print(\"-\" * 40)\n```",
+            "latency_sec": 5.564,
+            "prompt_tokens": 91,
+            "completion_tokens": 473
+        },
+        "rag": {
+            "answer": "The provided context does not contain sufficient information to answer this question.",
+            "retrieval_sec": 0.487,
+            "generation_sec": 0.964,
+            "total_latency_sec": 1.45,
+            "prompt_tokens": 760,
+            "completion_tokens": 13,
+            "sources": [
+                "markdown_header_metadata_splitter.mdx",
+                "character_text_splitter.mdx",
+                "recursive_text_splitter.mdx"
+            ],
+            "retrieved_chunks": [
+                "on that captures the broader meaning and themes of the text.\n```\n\nAs mentioned, chunking often aims to keep text with common context together. With this in mind, we might want to specifically honor the structure of the document itself. For example, a markdown file is organized by headers. Creating chunks within specific header groups is an intuitive idea. To address this challenge, we can use [MarkdownHeaderTextSplitter](https://reference.langchain.com/python/langchain-text-splitters/markdown/MarkdownHeaderTextSplitter). This will split a markdown file by a specified set of headers.\n\nFor example, if we want to split this markdown:\n```markdown\nmd = '# Foo\\n\\n ## Bar\\n\\nHi this is Jim  \\nHi this is Joe\\n\\n ## Baz\\n\\n Hi this is Molly'\n```\n\nWe can specify the headers to split on:\n```python\n[(",
+                "---\ntitle: \"Splitting by character - Text splitter integration guide\"\n---\n\nCharacter-based splitting is the simplest approach to text splitting. It divides text using a specified character sequence (default: `\"\\n\\n\"`), with chunk length measured by the number of characters.\n\n**Key points**:\n1. **How text is split**: by a given character separator.\n2. **How chunk size is measured**: by character count.\n\n:::python\nYou can choose between:\n- `.split_text`: returns plain string chunks.\n- `.create_documents`: returns LangChain @[Document] objects, useful when metadata needs to be preserved for downstream tasks.\n:::\n:::js\nYou can choose between:\n- `.splitText`: returns plain string chunks.\n- `.createDocuments`: returns LangChain @[Document] objects, useful when metadata needs to be preserved for",
+                "low we show example usage.\n\n:::python\n```shell\npip install -qU langchain-text-splitters\n```\n:::\n:::js\n<CodeGroup>\n```bash npm\nnpm install @langchain/textsplitters\n```\n\n```bash pnpm\npnpm install @langchain/textsplitters\n```\n\n```bash yarn\nyarn add @langchain/textsplitters\n```\n\n```bash bun\nbun add @langchain/textsplitters\n```\n</CodeGroup>\n:::\n\n:::python\nTo obtain the string content directly, use `.split_text`.\n\nTo create LangChain @[Document] objects (e.g., for use in downstream tasks), use `.create_documents`.\n\n```python\nfrom langchain_text_splitters import RecursiveCharacterTextSplitter\n\n# Load example document\nwith open(\"state_of_the_union.txt\") as f:\n    state_of_the_union = f.read()\n\ntext_splitter = RecursiveCharacterTextSplitter(\n    # Set a really small chunk size, just to show.\n    ch"
+            ],
+            "distances": [
+                0.9623829126358032,
+                0.9696345329284668,
+                1.0179522037506104
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.17164179104477612,
+                "semantic_similarity": 0.6944121718406677
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.08695652173913045,
+                "semantic_similarity": 0.04481324180960655
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 2,
+                    "completeness": 2,
+                    "relevance": 3
+                },
+                "rag": {
+                    "factual_correctness": 1,
+                    "completeness": 1,
+                    "relevance": 1
+                },
+                "reasoning": "Answer A is unhelpful as it claims the information is missing. Answer B attempts to answer the question but deviates significantly from the specific steps outlined in the ground truth (e.g., using RecursiveCharacterTextSplitter vs CharacterTextSplitter, and using the wrong constructor parameters). While Answer B provides a functional script, it does not follow the specific sequential steps requested in the prompt based on the ground truth.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q119",
+        "category": "Multi_Step",
+        "question": "In RecursiveCharacterTextSplitter, text segmentation does not happen in a single arbitrary pass; it follows a sequential recursive fallback strategy. Tracing the splitting procedure described in the guide, walk through the step-by-step logic the algorithm executes when attempting to partition an oversized document into chunks that satisfy the maximum chunk size.",
+        "ground_truth": "1. The splitter inspects the ordered list of separator characters (starting with double newlines). 2. It attempts to split the text on the first separator. 3. If resulting segments remain larger than the allowed chunk size, it sequentially moves to the next separator in the list (single newlines, then spaces, then individual characters). 4. It repeats this process recursively until all segments fall within the target chunk size limit.",
+        "base": {
+            "answer": "The **`RecursiveCharacterTextSplitter`** (popularized by frameworks like LangChain) is designed to split text into chunks that are as close as possible to a target maximum size (`chunk_size`) while preserving the semantic integrity of the text as much as possible. \n\nRather than splitting arbitrarily at the `chunk_size` limit (which would slice words and sentences in half), it uses a **sequential recursive fallback strategy**. It tries to split the text using a prioritized list of separators—moving from largest structural units (paragraphs) down to the smallest (characters).\n\nHere is the step-by-step walkthrough of the logic the algorithm executes when partitioning an oversized document.\n\n---\n\n### Phase 1: Initialization & Configuration\nBefore the recursion begins, the algorithm is initialized with:\n1. **`chunk_size`**: The maximum target length of a chunk (measured in characters or tokens).\n2. **`chunk_overlap`**: The number of characters that should repeat between adjacent chunks to maintain context.\n3. **`separators`**: A prioritized list of strings used to split the text. By default, this is:\n   `[\"\\n\\n\", \"\\n\", \" \", \"\"]` (Paragraphs $\\rightarrow$ Lines $\\rightarrow$ Words $\\rightarrow$ Characters).\n\n---\n\n### Phase 2: The Step-by-Step Recursive Algorithm\n\nWhen `RecursiveCharacterTextSplitter.split_text(text)` is called on an oversized document, it executes the following logic:\n\n#### Step 1: Evaluate the Current Text against the `chunk_size`\n* The algorithm first checks if the current text segment's length is less than or equal to `chunk_size`.\n* **If YES:** The text segment is small enough. It is added to the list of finalized chunks, and the recursion stops for this branch.\n* **If NO:** The text is oversized. The algorithm must split it. Proceed to Step 2.\n\n#### Step 2: Select the Appropriate Separator\n* The algorithm looks at the `separators` list and picks the **first separator that currently exists** within the text segment.\n* *Example:* If the text contains double newlines (`\"\\n\\n\"`), it selects `\"\\n\\n\"` and discards the rest of the separator list for this level (e.g., `\"\\n\"`, `\" \"`, `\"\"`).\n* **Edge Case (No separators found):** If none of the separators in the list are found in the text (which usually only happens if a single word is longer than `chunk_size` and you've reached the empty string `\"\"` separator), it forces a hard cut at the `chunk_size` limit.\n\n#### Step 3: Split the Text by the Selected Separator\n* The text is split into a list of smaller sub-segments using the chosen separator.\n* *Example:* If the separator was `\"\\n\\n\"`, the document is split into individual paragraphs.\n\n#### Step 4: Group and Accumulate Sub-Segments (The \"Good Splits\" Phase)\nThe algorithm now needs to combine these sub-segments back into chunks that are as large as possible without exceeding `chunk_size`. It iterates through the list of sub-segments, maintaining a \"current chunk\" buffer:\n* It tries to merge consecutive sub-segments together.\n* As long as the combined length is $\\le$ `chunk_size`, it keeps adding sub-segments to the current chunk.\n* **When the limit is reached:** The moment adding the next sub-segment would cause the current chunk to exceed `chunk_size`, the current chunk is finalized and saved. \n* A new chunk is then started (incorporating the configured `chunk_overlap` from the end of the previous chunk).\n\n#### Step 5: Handle Sub-Segments That Are Still Oversized (The Recursive Step)\nWhat happens if a *single* sub-segment (e.g., a single massive paragraph) is larger than `chunk_size` on its own? \n* The algorithm cannot group it with other segments. \n* Instead, it **recursively calls the splitting function on that specific sub-segment**, dropping down to the **next separator** in the priority list (e.g., moving from `\"\\n\\n\"` down to `\"\\n\"`).\n\n---\n\n### Summary of the Fallback Hierarchy in Action\n\nImagine a document where Paragraph 1 is 500 characters, Paragraph 2 is 2,500 characters, and your `chunk_size` is 1,000.\n\n1. **Top-Level Pass (`\"\\n\\n\"`):** The algorithm splits the document into Paragraph 1 and Paragraph 2.\n2. **Check Paragraph 1 (500 chars):** $\\le 1000$. **Saved as Chunk 1.**\n3. **Check Paragraph 2 (2,500 chars):** $> 1000$. Too big! \n4. **Fallback Triggered:** The algorithm takes Paragraph 2 and tries the *next* separator in the list: `\"\\n\"` (lines).\n5. **Second-Level Pass (`\"\\n\"`):** Paragraph 2 is split into lines. \n6. **Group Lines:** The algorithm groups these lines together until it hits the 1,000-character limit, creating Chunk 2 and Chunk 3. \n7. If a *single line* within Paragraph 2 is still $> 1000$ characters, it falls back again to `\" \"` (spaces/words). \n8. If a *single word* is still $> 1000$ characters, it finally falls back to `\"\"` (character-by-character hard slicing).\n\n### Why This Strategy Works Well\nBy stepping down through separators hierarchically, the text splitter ensures that it **only** chops text at an unnatural boundary (like mid-word or mid-sentence) as an absolute last resort. It prefers to break at paragraph boundaries, then sentence/line boundaries, then word boundaries, maintaining maximum semantic context.",
+            "latency_sec": 17.834,
+            "prompt_tokens": 76,
+            "completion_tokens": 1292
+        },
+        "rag": {
+            "answer": "Based on the provided documentation, the `RecursiveCharacterTextSplitter` is parameterized by a list of characters (with a default list of `[\"\\n\\n\", \"\\n\", \" \", \"\"]`). It tries to split on these characters in order until the chunks are small enough. This has the effect of trying to keep paragraphs, sentences, and then words together as long as possible, as those generically seem to be the strongest semantically related pieces of text. \n\nThe provided context does not contain a more detailed step-by-step algorithm trace beyond this description.",
+            "retrieval_sec": 0.367,
+            "generation_sec": 4.241,
+            "total_latency_sec": 4.608,
+            "prompt_tokens": 733,
+            "completion_tokens": 116,
+            "sources": [
+                "knowledge-base.mdx",
+                "recursive_text_splitter.mdx",
+                "recursive_text_splitter.mdx"
+            ],
+            "retrieved_chunks": [
+                "n too coarse for retrieval. Split pages further so relevant passages are not diluted by surrounding text. @[`RecursiveCharacterTextSplitter`] recursively splits on common separators (such as newlines) until each chunk is the target size. This is the recommended text splitter for generic text use cases.\n\n:::python\nSet `add_start_index=True` so each split keeps a `start_index` metadata field for its character offset in the original document.\n\n```python\nfrom langchain_text_splitters import RecursiveCharacterTextSplitter\n\ntext_splitter = RecursiveCharacterTextSplitter(\n    chunk_size=1000, chunk_overlap=200, add_start_index=True\n)\nall_splits = text_splitter.split_documents(docs)\n\nprint(len(all_splits))\n```\n:::\n:::js\n```typescript\nimport { RecursiveCharacterTextSplitter } from \"@langchain/texts",
+                "am Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and',\n 'of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.']\n```\n:::\n\n:::js\nTo obtain the string content directly, use `.splitText`.\n\nTo create LangChain @[Document] objects (e.g., for use in downstream tasks), use `.createDocuments`.\n\n```ts\nimport { RecursiveCharacterTextSplitter } from \"@langchain/textsplitters\";\n\nconst splitter = new RecursiveCharacterTextSplitter({ chunkSize: 100, chunkOverlap: 0 })\nconst texts = splitter.createDocuments([{ pageContent: \"...\" }])\n```\n```javascript\n[\n  { pageContent: \"...\", metadata: {} },\n]\n```\n:::\n\nLet's go through the parameters set above for `RecursiveCharacterTextSplitter`:\n\n:::python\n- `chunk_size`: The maximum size of a chunk,",
+                "---\ntitle: \"Splitting recursively - Text splitter integration guide\"\n---\n\nThis [text splitter](/oss/integrations/splitters/) is the recommended one for generic text. It is parameterized by a list of characters. It tries to split on them in order until the chunks are small enough. The default list is `[\"\\n\\n\", \"\\n\", \" \", \"\"]`. This has the effect of trying to keep all paragraphs (and then sentences, and then words) together as long as possible, as those would generically seem to be the strongest semantically related pieces of text.\n\n1. How the text is split: by list of characters.\n2. How the chunk size is measured: by number of characters.\n\nBelow we show example usage.\n\n:::python\n```shell\npip install -qU langchain-text-splitters\n```\n:::\n:::js\n<CodeGroup>\n```bash npm\nnpm install @langchain/t"
+            ],
+            "distances": [
+                0.5847237706184387,
+                0.7866170406341553,
+                0.7999849319458008
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.12926829268292683,
+                "semantic_similarity": 0.6635278463363647
+            },
+            "rag": {
+                "exact_match": 0,
+                "token_f1": 0.2913907284768212,
+                "semantic_similarity": 0.6098775863647461
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 4
+                },
+                "rag": {
+                    "factual_correctness": 3,
+                    "completeness": 2,
+                    "relevance": 4
+                },
+                "reasoning": "Answer B provides a comprehensive, accurate step-by-step walkthrough of the recursive logic, matching the ground truth while adding helpful technical context. Answer A is too brief, lacks the detail requested, and incorrectly states that the provided context (which was not actually provided in the prompt) does not contain the information, despite the prompt asking the model to explain the logic.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    },
+    {
+        "id": "Q120",
+        "category": "Unanswerable",
+        "question": "A team of horticultural researchers is compiling standard operating procedures for commercial greenhouse propagation. According to the technical guidelines provided in the system documentation, what specific photoperiod schedule (hours of light vs. darkness) and ambient relative humidity percentage are required to prevent leaf scorch in propagated lavender cuttings?",
+        "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+        "base": {
+            "answer": "Based on the system documentation and technical guidelines provided, there is no mention of commercial greenhouse propagation for lavender cuttings, nor are there specific parameters for photoperiod schedules or ambient relative humidity to prevent leaf scorch. \n\nBecause this information is not included in the current knowledge base, I cannot provide the exact figures. Please consult your internal horticultural SOP repository or provide the specific technical manual text, and I will be happy to help you extract the information.",
+            "latency_sec": 4.031,
+            "prompt_tokens": 69,
+            "completion_tokens": 90
+        },
+        "rag": {
+            "answer": "The provided context does not contain sufficient information to answer this question.",
+            "retrieval_sec": 0.407,
+            "generation_sec": 3.536,
+            "total_latency_sec": 3.943,
+            "prompt_tokens": 778,
+            "completion_tokens": 13,
+            "sources": [
+                "models.mdx",
+                "models.mdx",
+                "retrieval.mdx"
+            ],
+            "retrieved_chunks": [
+                "rate_limiter = InMemoryRateLimiter(\n        requests_per_second=0.1,  # 1 request every 10s\n        check_every_n_seconds=0.1,  # Check every 100ms whether allowed to make a request\n        max_bucket_size=10,  # Controls the maximum burst size.\n    )\n\n    model = init_chat_model(\n        model=\"gpt-5.5\",\n        model_provider=\"openai\",\n        rate_limiter=rate_limiter  # [!code highlight]\n    )\n    ```\n\n    <Warning>\n        The provided rate limiter can only limit the number of requests per unit time. It will not help if you need to also limit based on the size of the requests.\n    </Warning>\n</Accordion>\n:::\n\n### Base URL and proxy settings\n\nYou can configure a custom base URL for providers that implement the OpenAI Chat Completions API.\n\n<Warning>\n    `model_provider=\"openai\"`",
+                "par Tool Execution\n        T-->>M: SF weather data\n        T-->>M: NYC weather data\n    end\n\n    M->>M: Process results & generate response\n    M->>U: \"SF: 72°F sunny, NYC: 68°F cloudy\"\n```\n:::\n\n:::js\n```mermaid\nsequenceDiagram\n    participant U as User\n    participant M as Model\n    participant T as Tools\n\n    U->>M: \"What's the weather in SF and NYC?\"\n    M->>M: Analyze request & decide tools needed\n\n    par Parallel Tool Calls\n        M->>T: getWeather(\"San Francisco\")\n        M->>T: getWeather(\"New York\")\n    end\n\n    par Tool Execution\n        T-->>M: SF weather data\n        T-->>M: NYC weather data\n    end\n\n    M->>M: Process results & generate response\n    M->>U: \"SF: 72°F sunny, NYC: 68°F cloudy\"\n```\n:::\n\n:::python\nTo make tools that you have defined available for use by a mode",
+                "-----------------------------------------------|\n| **2-Step RAG**          | Retrieval always happens before generation. Simple and predictable         | ✅ High    | ❌ Low       | ⚡ Fast         | FAQs, documentation bots                           |\n| **Agentic RAG**         | An LLM-powered agent decides *when* and *how* to retrieve during reasoning | ❌ Low     | ✅ High      | ⏳ Variable     | Research assistants with access to multiple tools  |\n| **Hybrid**              | Combines characteristics of both approaches with validation steps          | ⚖️ Medium | ⚖️ Medium   | ⏳ Variable     | Domain-specific Q&A with quality validation        |\n\n<Info>\n**Latency**: Latency is generally more **predictable** in **2-Step RAG**, as the maximum number of LLM calls is known and capped. This predi"
+            ],
+            "distances": [
+                1.5711476802825928,
+                1.622137427330017,
+                1.6249871253967285
+            ]
+        },
+        "evaluation": {
+            "base": {
+                "exact_match": 0,
+                "token_f1": 0.13333333333333336,
+                "semantic_similarity": 0.01958364248275757
+            },
+            "rag": {
+                "exact_match": 1,
+                "token_f1": 1.0,
+                "semantic_similarity": 1.0000001192092896
+            },
+            "llm_judge": {
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 4
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Both answers correctly identify that the information is missing from the provided context. Answer A is concise and follows the ground truth perfectly. Answer B is also correct but includes conversational filler and suggestions to consult other sources, which was not explicitly required.",
+                "presentation_order": [
+                    "rag",
+                    "base"
+                ]
+            }
+        }
+    }
+]
