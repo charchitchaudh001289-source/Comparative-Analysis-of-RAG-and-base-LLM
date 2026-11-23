@@ -34,7 +34,7 @@ from sentence_transformers import SentenceTransformer, util
 # Used to communicate with Gemini
 from google import genai
 from google.genai import types
-from google.genai.errors import ServerError
+from google.genai.errors import ServerError, ClientError
 
 
 # ------------------------------------------------------------
@@ -43,12 +43,12 @@ from google.genai.errors import ServerError
 
 # Input file containing the Base LLM and RAG LLM answers
 INPUT_PATH = Path(
-    r"C:\Users\Nathan\Videos\AI Project\RAG_vs_Base_LLM\raw_results.json"
+    r"/Users/smritigurung/Downloads/Gaming /Comparative-Analysis-of-RAG-and-base-LLM/RAG_vs_Base_LLM/02_RAG_Pipeline/sg_queryR1.json"
 )
 
 # Output file containing evaluation scores
 OUTPUT_PATH = Path(
-    r"C:\Users\Nathan\Videos\AI Project\RAG_vs_Base_LLM\evaluation_results1.json"
+    r"/Users/smritigurung/Downloads/Gaming /Comparative-Analysis-of-RAG-and-base-LLM/RAG_vs_Base_LLM/02_RAG_Pipeline/EvaResult.json"
 )
 
 # Sentence Transformer model for semantic similarity
@@ -198,14 +198,11 @@ def semantic_similarity(prediction, ground_truth):
 
 def generate_judge_response(prompt):
 
-    # Maximum number of attempts, including the first attempt
     max_retries = 5
 
     for attempt in range(max_retries):
 
         try:
-
-            # Send the prompt to Gemini
             response = client.models.generate_content(
                 model=JUDGE_MODEL,
                 contents=prompt,
@@ -216,39 +213,70 @@ def generate_judge_response(prompt):
 
             return response
 
-        except ServerError as error:
+        except (ClientError, ServerError) as error:
 
-            # Only retry temporary 503 errors
             error_code = getattr(error, "code", None)
 
-            if error_code != 503 or attempt == max_retries - 1:
+            # Retry only rate limits (429) and temporary server errors (503)
+            if error_code not in (429, 503):
                 raise
 
-            # Wait 2, 4, 8, and then 16 seconds
-            wait_time = 2 ** (attempt + 1)
+            # Stop after the final attempt
+            if attempt == max_retries - 1:
+                raise
 
-            print(
-                f"Gemini temporarily unavailable (503). "
-                f"Retrying in {wait_time} seconds..."
-            )
+            if error_code == 429:
+                wait_time = 65
+                print(
+                    f"Gemini rate limit reached (429). "
+                    f"Waiting {wait_time} seconds..."
+                )
+
+            else:
+                wait_time = 2 ** (attempt + 1)
+                print(
+                    f"Gemini temporarily unavailable (503). "
+                    f"Retrying in {wait_time} seconds..."
+                )
 
             time.sleep(wait_time)
+
 
 
 # ------------------------------------------------------------
 # 10. LLM JUDGE
 # ------------------------------------------------------------
 
-def judge_answers(question, ground_truth, base_answer, rag_answer):
+def judge_answers(
+    question,
+    ground_truth,
+    base_answer,
+    rag_answer,
+    presentation_order="random"
+):
 
-    # Randomize the order of answers to reduce position bias.
-    # The judge sees Answer A and Answer B, not Base and RAG.
+   
+    # Control answer order for position-bias testing
     answers = [
         ("base", base_answer),
         ("rag", rag_answer)
     ]
 
-    random.shuffle(answers)
+    if presentation_order == "random":
+        random.shuffle(answers)
+
+    elif presentation_order == "base_first":
+        # Base is Answer A, RAG is Answer B
+        pass
+
+    elif presentation_order == "rag_first":
+        # RAG is Answer A, Base is Answer B
+        answers.reverse()
+
+    else:
+        raise ValueError(
+            "presentation_order must be 'random', 'base_first', or 'rag_first'"
+        )
 
     answer_a = answers[0][1]
     answer_b = answers[1][1]
