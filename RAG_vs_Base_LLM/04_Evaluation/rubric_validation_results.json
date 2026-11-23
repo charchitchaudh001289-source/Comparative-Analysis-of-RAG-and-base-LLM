@@ -1,0 +1,116 @@
+[
+    {
+        "test_id": "TC01_Architecture_Ratings",
+        "source_question_id": "Q101",
+        "question": "According to the architecture comparison table in LangChain's retrieval guide, what are the explicit ratings for 2-Step RAG across developer control, flexibility, and latency, and what canonical production use cases are cited?",
+        "scores": {
+            "correct": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "partially_correct": {
+                "factual_correctness": 4,
+                "completeness": 2,
+                "relevance": 3
+            },
+            "incorrect": {
+                "factual_correctness": 1,
+                "completeness": 1,
+                "relevance": 2
+            },
+            "correct_with_fluff": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 4
+            }
+        },
+        "reasonings": {
+            "correct_vs_partial": "Answer A provides all required information accurately according to the ground truth. Answer B misses the flexibility rating and fails to specifically name the canonical use cases, instead providing a generic summary.",
+            "incorrect_vs_fluff": "Answer A provides incorrect information that contradicts the ground truth. Answer B accurately reflects the ground truth provided. While Answer B includes some extraneous introductory information about LangChain, it perfectly captures the specific data requested from the architecture table."
+        },
+        "validation_checks": {
+            "correct_gt_partial_completeness": true,
+            "partial_gt_incorrect_correctness": true,
+            "correct_gt_fluff_relevance": true,
+            "fluff_preserves_correctness": true
+        },
+        "passed_all_checks": true
+    },
+    {
+        "test_id": "TC02_Default_Separators",
+        "source_question_id": "Q113",
+        "question": "What is the exact default list of separators used by RecursiveCharacterTextSplitter, and in what order does it attempt to split the input text?",
+        "scores": {
+            "correct": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "partially_correct": {
+                "factual_correctness": 3,
+                "completeness": 2,
+                "relevance": 3
+            },
+            "incorrect": {
+                "factual_correctness": 1,
+                "completeness": 1,
+                "relevance": 1
+            },
+            "correct_with_fluff": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 4
+            }
+        },
+        "reasonings": {
+            "correct_vs_partial": "Answer A is perfectly accurate and complete based on the ground truth. Answer B omits the space separator and the empty string separator, failing to provide the full list requested.",
+            "incorrect_vs_fluff": "Answer A provides incorrect information about the default separators. Answer B correctly identifies the list and order as specified in the ground truth, though it includes some irrelevant context about RAG pipelines."
+        },
+        "validation_checks": {
+            "correct_gt_partial_completeness": true,
+            "partial_gt_incorrect_correctness": true,
+            "correct_gt_fluff_relevance": true,
+            "fluff_preserves_correctness": true
+        },
+        "passed_all_checks": true
+    },
+    {
+        "test_id": "TC03_Splitter_Methods",
+        "source_question_id": "Q114",
+        "question": "According to the RecursiveCharacterTextSplitter documentation, which specific method should be called to obtain raw string chunks directly, and which method must be called to create LangChain Document objects?",
+        "scores": {
+            "correct": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "partially_correct": {
+                "factual_correctness": 5,
+                "completeness": 2,
+                "relevance": 3
+            },
+            "incorrect": {
+                "factual_correctness": 1,
+                "completeness": 1,
+                "relevance": 1
+            },
+            "correct_with_fluff": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 4
+            }
+        },
+        "reasonings": {
+            "correct_vs_partial": "Answer A accurately identifies both methods requested in the question. Answer B only identifies one of the two methods, making it incomplete.",
+            "incorrect_vs_fluff": "Answer A provides incorrect method names. Answer B correctly identifies the two methods required by the ground truth. While Answer B includes a sentence of context about document loaders that wasn't requested, the core information is accurate and complete."
+        },
+        "validation_checks": {
+            "correct_gt_partial_completeness": true,
+            "partial_gt_incorrect_correctness": true,
+            "correct_gt_fluff_relevance": true,
+            "fluff_preserves_correctness": true
+        },
+        "passed_all_checks": true
+    }
+]

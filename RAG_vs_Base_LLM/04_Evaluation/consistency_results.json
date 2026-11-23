@@ -1,0 +1,597 @@
+[
+    {
+        "id": "Q101",
+        "category": "Direct_Factual",
+        "question": "We are architecting an internal documentation search bot where system throughput, fast response times, and predictable compute costs are primary requirements. According to the architecture comparison table in LangChain's retrieval guide, what are the explicit ratings for 2-Step RAG across developer control, flexibility, and latency? Additionally, what canonical production use cases are cited as best suited for this pattern?",
+        "presentation_order": [
+            "base",
+            "rag"
+        ],
+        "runs": [
+            {
+                "run": 1,
+                "base": {
+                    "factual_correctness": 1,
+                    "completeness": 2,
+                    "relevance": 3
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer B correctly identified all the ratings and use cases specified in the ground truth. Answer A provided incorrect ratings for Developer Control and Latency, failing the factual correctness criterion."
+            },
+            {
+                "run": 2,
+                "base": {
+                    "factual_correctness": 1,
+                    "completeness": 2,
+                    "relevance": 3
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer B accurately reflects the ratings provided in the LangChain retrieval guide as per the ground truth (High/Low/Fast). Answer A provided incorrect ratings for control and latency."
+            },
+            {
+                "run": 3,
+                "base": {
+                    "factual_correctness": 1,
+                    "completeness": 2,
+                    "relevance": 3
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer B aligns perfectly with the provided ground truth for both the ratings and the cited use cases. Answer A provides incorrect ratings for Developer Control and Latency, failing to match the documentation specified in the ground truth."
+            }
+        ],
+        "consistency_stats": {
+            "base": {
+                "factual_correctness": {
+                    "scores": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "mean": 1,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "completeness": {
+                    "scores": [
+                        2,
+                        2,
+                        2
+                    ],
+                    "mean": 2,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "relevance": {
+                    "scores": [
+                        3,
+                        3,
+                        3
+                    ],
+                    "mean": 3,
+                    "std_dev": 0.0,
+                    "range": 0
+                }
+            },
+            "rag": {
+                "factual_correctness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "completeness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "relevance": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                }
+            }
+        }
+    },
+    {
+        "id": "Q104",
+        "category": "Reasoning_Across_Facts",
+        "question": "Our enterprise already maintains extensive proprietary product manuals inside relational SQL tables, CRM databases, and document management systems. Does LangChain require our engineering team to migrate and rebuild this data into a new vector store? Synthesize the two architectural patterns described in the guide for integrating an existing knowledge base without re-indexing from scratch.",
+        "presentation_order": [
+            "base",
+            "rag"
+        ],
+        "runs": [
+            {
+                "run": 1,
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 4,
+                    "relevance": 5
+                },
+                "reasoning": "Answer A provides a much deeper synthesis of the requested architectural patterns. While Answer B is technically correct and adheres to the brevity of the ground truth, Answer A explains the technical 'how' of the integration patterns within the LangChain ecosystem, which is highly valuable for an engineering team asking the question."
+            },
+            {
+                "run": 2,
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 4,
+                    "relevance": 5
+                },
+                "reasoning": "Answer A provides a much more detailed and practical explanation of the architectural patterns than the ground truth while remaining accurate and relevant. Answer B follows the ground truth almost verbatim; it is correct and complete but lacks the helpful context provided in Answer A."
+            },
+            {
+                "run": 3,
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 4,
+                    "relevance": 5
+                },
+                "reasoning": "Answer A provides a much more comprehensive and technically accurate explanation of the requested architectural patterns within the context of LangChain. Answer B follows the ground truth precisely but lacks the descriptive depth needed to explain how those patterns actually work in an enterprise engineering context."
+            }
+        ],
+        "consistency_stats": {
+            "base": {
+                "factual_correctness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "completeness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "relevance": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                }
+            },
+            "rag": {
+                "factual_correctness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "completeness": {
+                    "scores": [
+                        4,
+                        4,
+                        4
+                    ],
+                    "mean": 4,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "relevance": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                }
+            }
+        }
+    },
+    {
+        "id": "Q106",
+        "category": "Multi_Step",
+        "question": "We are documenting our ingestion pipeline architecture for team onboarding. Tracing the sequential workflow in LangChain's retrieval pipeline diagram, outline the step-by-step path that unstructured source data (such as Google Drive, Slack, or Notion) follows from ingestion until it is stored in a searchable index. In your explanation, identify the explicit structural purpose of splitting the ingested documents before embedding generation.",
+        "presentation_order": [
+            "base",
+            "rag"
+        ],
+        "runs": [
+            {
+                "run": 1,
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "rag": {
+                    "factual_correctness": 3,
+                    "completeness": 2,
+                    "relevance": 2
+                },
+                "reasoning": "Answer A provides a comprehensive and accurate explanation of the pipeline and clearly explains the purpose of chunking, going beyond the basic requirement with helpful technical context. Answer B fails to explain the purpose of splitting, claiming the information is unavailable, despite it being a common-knowledge requirement in the context of LangChain architectures."
+            },
+            {
+                "run": 2,
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 2,
+                    "relevance": 3
+                },
+                "reasoning": "Answer A provides a thorough, correct, and professional explanation of the pipeline and clearly articulates the purpose of chunking. Answer B correctly identifies the sequential path but fails to answer the second part of the question entirely, claiming it lacks the information, even though the information is general knowledge within the domain requested by the prompt."
+            },
+            {
+                "run": 3,
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 2,
+                    "relevance": 2
+                },
+                "reasoning": "Answer A provides a comprehensive and accurate explanation of the pipeline and the purpose of splitting, exceeding the requirements of the ground truth with helpful technical context. Answer B correctly identifies the pipeline sequence but fails to explain the purpose of splitting, claiming it does not have enough information, despite this being general knowledge in the domain and part of the prompt's requirements."
+            }
+        ],
+        "consistency_stats": {
+            "base": {
+                "factual_correctness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "completeness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "relevance": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                }
+            },
+            "rag": {
+                "factual_correctness": {
+                    "scores": [
+                        3,
+                        5,
+                        5
+                    ],
+                    "mean": 4.3333,
+                    "std_dev": 1.1547,
+                    "range": 2
+                },
+                "completeness": {
+                    "scores": [
+                        2,
+                        2,
+                        2
+                    ],
+                    "mean": 2,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "relevance": {
+                    "scores": [
+                        2,
+                        3,
+                        2
+                    ],
+                    "mean": 2.3333,
+                    "std_dev": 0.5774,
+                    "range": 1
+                }
+            }
+        }
+    },
+    {
+        "id": "Q108",
+        "category": "Unanswerable",
+        "question": "When scaling the RAG retrieval pipeline to handle continuous user traffic, what specific cache eviction algorithm (such as LRU, LFU, or FIFO) does the internal document loader cache apply by default, and what is its maximum heap memory allocation limit?",
+        "presentation_order": [
+            "base",
+            "rag"
+        ],
+        "runs": [
+            {
+                "run": 1,
+                "base": {
+                    "factual_correctness": 2,
+                    "completeness": 3,
+                    "relevance": 2
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "The ground truth states that the information is not available. Answer B correctly acknowledges this. Answer A provides general speculation about caching algorithms and memory limits, which is not supported by the ground truth and answers a question that cannot be answered given the constraints."
+            },
+            {
+                "run": 2,
+                "base": {
+                    "factual_correctness": 2,
+                    "completeness": 2,
+                    "relevance": 2
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Answer A provides a lot of external, speculative information about RAG architectures that was not requested and is not present in the ground truth. Answer B correctly identifies that the information is missing from the context and adheres strictly to the ground truth provided."
+            },
+            {
+                "run": 3,
+                "base": {
+                    "factual_correctness": 2,
+                    "completeness": 3,
+                    "relevance": 2
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "The ground truth states that the information is not available. Answer B correctly acknowledges this. Answer A provides generic information about RAG architectures and caching strategies that is not specific to the question asked, effectively speculating on information the ground truth identifies as missing."
+            }
+        ],
+        "consistency_stats": {
+            "base": {
+                "factual_correctness": {
+                    "scores": [
+                        2,
+                        2,
+                        2
+                    ],
+                    "mean": 2,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "completeness": {
+                    "scores": [
+                        3,
+                        2,
+                        3
+                    ],
+                    "mean": 2.6667,
+                    "std_dev": 0.5774,
+                    "range": 1
+                },
+                "relevance": {
+                    "scores": [
+                        2,
+                        2,
+                        2
+                    ],
+                    "mean": 2,
+                    "std_dev": 0.0,
+                    "range": 0
+                }
+            },
+            "rag": {
+                "factual_correctness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "completeness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "relevance": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                }
+            }
+        }
+    },
+    {
+        "id": "Q113",
+        "category": "Direct_Factual",
+        "question": "When configuring a text splitter in LangChain for generic prose, developers often rely on RecursiveCharacterTextSplitter to maintain semantic cohesion. According to the integration guide, what is the exact default list of separators used by this splitter, and in what order does it attempt to split the input text?",
+        "presentation_order": [
+            "base",
+            "rag"
+        ],
+        "runs": [
+            {
+                "run": 1,
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 4
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Both answers accurately provide the list of separators and the order of operations as per the ground truth. Answer B is slightly better as it is more concise and avoids including extra commentary not requested by the prompt."
+            },
+            {
+                "run": 2,
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 4
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Both answers accurately provide the list of separators and the order of operations as per the ground truth. Answer B is slightly more concise and adheres strictly to the question, whereas Answer A includes extra explanation of the mechanism that was not explicitly requested, though it remains accurate."
+            },
+            {
+                "run": 3,
+                "base": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 4
+                },
+                "rag": {
+                    "factual_correctness": 5,
+                    "completeness": 5,
+                    "relevance": 5
+                },
+                "reasoning": "Both answers accurately provide the list of separators and the order of operations as per the ground truth. Answer B is slightly more concise and adheres strictly to the question, whereas Answer A includes extra explanation of the mechanism that was not specifically requested, though it remains accurate."
+            }
+        ],
+        "consistency_stats": {
+            "base": {
+                "factual_correctness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "completeness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "relevance": {
+                    "scores": [
+                        4,
+                        4,
+                        4
+                    ],
+                    "mean": 4,
+                    "std_dev": 0.0,
+                    "range": 0
+                }
+            },
+            "rag": {
+                "factual_correctness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "completeness": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                },
+                "relevance": {
+                    "scores": [
+                        5,
+                        5,
+                        5
+                    ],
+                    "mean": 5,
+                    "std_dev": 0.0,
+                    "range": 0
+                }
+            }
+        }
+    }
+]
