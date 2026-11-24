@@ -1,0 +1,247 @@
+[
+    {
+        "question_id": "Q101",
+        "base_first": {
+            "base": {
+                "factual_correctness": 1,
+                "completeness": 2,
+                "relevance": 2
+            },
+            "rag": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "reasoning": "Answer B is completely accurate according to the ground truth provided. Answer A provides incorrect ratings for both Developer Control and Latency, failing to align with the source material.",
+            "presentation_order": [
+                "base",
+                "rag"
+            ]
+        },
+        "rag_first": {
+            "base": {
+                "factual_correctness": 1,
+                "completeness": 2,
+                "relevance": 2
+            },
+            "rag": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "reasoning": "Answer A matches the ground truth perfectly in both ratings and use cases. Answer B provides incorrect ratings (claiming Low control and Medium latency) that contradict the ground truth provided for the 2-Step RAG pattern.",
+            "presentation_order": [
+                "rag",
+                "base"
+            ]
+        },
+        "score_differences": {
+            "base": {
+                "factual_correctness": 0,
+                "completeness": 0,
+                "relevance": 0
+            },
+            "rag": {
+                "factual_correctness": 0,
+                "completeness": 0,
+                "relevance": 0
+            }
+        }
+    },
+    {
+        "question_id": "Q102",
+        "base_first": {
+            "base": {
+                "factual_correctness": 4,
+                "completeness": 3,
+                "relevance": 4
+            },
+            "rag": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "reasoning": "Answer B aligns perfectly with the specific wording and concepts provided in the ground truth. Answer A includes relevant extra context about private/domain-specific data which, while factually sound for RAG, was not the specific limitation cited in the provided ground truth documentation, thereby missing one of the two key constraints requested.",
+            "presentation_order": [
+                "base",
+                "rag"
+            ]
+        },
+        "rag_first": {
+            "base": {
+                "factual_correctness": 3,
+                "completeness": 3,
+                "relevance": 3
+            },
+            "rag": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "reasoning": "Answer A directly mirrors the language used in the LangChain conceptual overview and the ground truth provided. Answer B, while technically accurate in a broader context, deviates from the specific definitions identified in the LangChain documentation referenced by the prompt (specifically substituting 'finite context' for 'private data access'), and includes significantly more boilerplate information not requested.",
+            "presentation_order": [
+                "rag",
+                "base"
+            ]
+        },
+        "score_differences": {
+            "base": {
+                "factual_correctness": 1,
+                "completeness": 0,
+                "relevance": 1
+            },
+            "rag": {
+                "factual_correctness": 0,
+                "completeness": 0,
+                "relevance": 0
+            }
+        }
+    },
+    {
+        "question_id": "Q103",
+        "base_first": {
+            "base": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "rag": {
+                "factual_correctness": 1,
+                "completeness": 1,
+                "relevance": 1
+            },
+            "reasoning": "Answer A correctly identifies the @tool decorator and the tools parameter. Although the prompt implied the information was available in a specific walkthrough document (which was not provided), Answer A correctly identifies the standard LangChain implementation which matches the ground truth provided. Answer B incorrectly claims the information is missing.",
+            "presentation_order": [
+                "base",
+                "rag"
+            ]
+        },
+        "rag_first": {
+            "base": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "rag": {
+                "factual_correctness": 1,
+                "completeness": 1,
+                "relevance": 1
+            },
+            "reasoning": "Answer A fails to answer the question despite it being answerable based on standard framework knowledge. Answer B correctly identifies the '@tool' decorator and the 'tools' parameter, aligning perfectly with the ground truth provided.",
+            "presentation_order": [
+                "rag",
+                "base"
+            ]
+        },
+        "score_differences": {
+            "base": {
+                "factual_correctness": 0,
+                "completeness": 0,
+                "relevance": 0
+            },
+            "rag": {
+                "factual_correctness": 0,
+                "completeness": 0,
+                "relevance": 0
+            }
+        }
+    },
+    {
+        "question_id": "Q104",
+        "base_first": {
+            "base": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 4
+            },
+            "rag": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "reasoning": "Both answers correctly identify that migration is not required. Answer B is more concise and follows the ground truth phrasing more closely. Answer A provides additional technical implementation details (Text-to-SQL and Custom Retrievers) that, while accurate and helpful for a real-world enterprise context, technically expand upon the specific architectural patterns mentioned in the ground truth.",
+            "presentation_order": [
+                "base",
+                "rag"
+            ]
+        },
+        "rag_first": {
+            "base": {
+                "factual_correctness": 5,
+                "completeness": 4,
+                "relevance": 3
+            },
+            "rag": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "reasoning": "Answer A is concise and directly addresses the prompt using the terminology provided in the ground truth. Answer B is highly detailed and accurate, but it reinterprets the requested architectural patterns into 'Text-to-SQL' and 'Virtual Retrievers' rather than using the 'Agentic RAG' and '2-Step RAG' terminology specified in the ground truth instructions. While Answer B is very helpful for an engineer, it deviates from the specific synthesis requested.",
+            "presentation_order": [
+                "rag",
+                "base"
+            ]
+        },
+        "score_differences": {
+            "base": {
+                "factual_correctness": 0,
+                "completeness": 1,
+                "relevance": 1
+            },
+            "rag": {
+                "factual_correctness": 0,
+                "completeness": 0,
+                "relevance": 0
+            }
+        }
+    },
+    {
+        "question_id": "Q105",
+        "base_first": {
+            "base": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 4
+            },
+            "rag": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "reasoning": "Answer B adheres strictly to the provided ground truth and is concise. Answer A provides a high-quality, professional explanation that incorporates the ground truth concepts but expands significantly beyond the requested information (adding details about embedding bottlenecks, token generation length, etc., which were not explicitly in the ground truth). Both are accurate, but Answer B is the most faithful to the specific constraints of the prompt.",
+            "presentation_order": [
+                "base",
+                "rag"
+            ]
+        },
+        "rag_first": {
+            "base": {
+                "factual_correctness": 4,
+                "completeness": 5,
+                "relevance": 3
+            },
+            "rag": {
+                "factual_correctness": 5,
+                "completeness": 5,
+                "relevance": 5
+            },
+            "reasoning": "Answer A stays strictly within the bounds of the ground truth, providing a concise and accurate response. Answer B provides a much more detailed explanation, but it includes information not found in the ground truth (e.g., specific assumptions about query uniformity and detailed breakdowns of token generation length) which, while logically sound in a real-world engineering context, exceeds the scope of the provided ground truth.",
+            "presentation_order": [
+                "rag",
+                "base"
+            ]
+        },
+        "score_differences": {
+            "base": {
+                "factual_correctness": 1,
+                "completeness": 0,
+                "relevance": 1
+            },
+            "rag": {
+                "factual_correctness": 0,
+                "completeness": 0,
+                "relevance": 0
+            }
+        }
+    }
+]
