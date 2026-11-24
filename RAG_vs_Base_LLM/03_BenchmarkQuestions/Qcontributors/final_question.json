@@ -1,5 +1,12 @@
 [
-  
+   {
+    "id": "Q001",
+    "category": "Direct_Factual",
+    "source_doc": "time_weighted_retriever.mdx",
+    "question": "You are deploying a semantic search service for an engineering knowledge base and decide to evaluate the TimeWeightedVectorStoreRetriever in LangChain. Your lead engineer wants to disable the temporal decay effect completely during an A/B test without swapping out the retriever class itself. According to the integration documentation, what specific values can this.decayRate be set to in order to render hoursPassed irrelevant and reduce retrieval to a standard vector lookup?",
+    "ground_truth": "Setting a decay rate of exactly 0 or 1 makes hoursPassed irrelevant and makes this retriever equivalent to a standard vector lookup.",
+    "evidence_passage": "Note that setting a decay rate of exactly 0 or 1 makes `hoursPassed` irrelevant and makes this retriever equivalent to a standard vector lookup."
+  },
   {
     "id": "Q002",
     "category": "Reasoning_Across_Facts",
