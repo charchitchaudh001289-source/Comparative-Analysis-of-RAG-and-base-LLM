@@ -1,0 +1,1128 @@
+[
+  {
+    "id": "Q001",
+    "category": "Direct_Factual",
+    "source_doc": "time_weighted_retriever.mdx",
+    "question": "You are deploying a semantic search service for an engineering knowledge base and decide to evaluate the TimeWeightedVectorStoreRetriever in LangChain. Your lead engineer wants to disable the temporal decay effect completely during an A/B test without swapping out the retriever class itself. According to the integration documentation, what specific values can this.decayRate be set to in order to render hoursPassed irrelevant and reduce retrieval to a standard vector lookup?",
+    "ground_truth": "Setting a decay rate of exactly 0 or 1 makes hoursPassed irrelevant and makes this retriever equivalent to a standard vector lookup.",
+    "evidence_passage": "Note that setting a decay rate of exactly 0 or 1 makes `hoursPassed` irrelevant and makes this retriever equivalent to a standard vector lookup."
+  },
+  {
+    "id": "Q002",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "time_weighted_retriever.mdx",
+    "question": "An engineer on your team is building an interactive customer support assistant using a TimeWeightedVectorStoreRetriever. They notice that onboarding guides published six months ago are consistently scoring higher and outranking troubleshooting articles created yesterday with identical semantic similarity. How does the retriever calculate recency through the hoursPassed variable, and why would an older document remain \"fresh\" in this ranking system?",
+    "ground_truth": "In the TimeWeightedVectorStoreRetriever, hoursPassed measures the elapsed time since an object was last accessed, rather than when it was originally created. Because frequently accessed objects reset or minimize this duration, older documents that are retrieved often remain \"fresh\" and score higher than newly created documents that have not been accessed.",
+    "evidence_passage": "Notably, `hoursPassed` above refers to the time since the object in the retriever was last accessed, not since it was created. This means that frequently accessed objects remain \"fresh\" and score higher."
+  },
+  {
+    "id": "Q003",
+    "category": "Multi_Step",
+    "source_doc": "time_weighted_retriever.mdx",
+    "question": "A developer is integrating TimeWeightedVectorStoreRetriever into an existing LangChain pipeline. They first instantiate the backing vector store with embedding functions, configure the retriever instance with a custom decay rate, and then attempt to call vectorStore.addDocuments(...) directly with their document batch. Why will this ingestion procedure fail to populate temporal metadata correctly, and what exact step must be changed in the ingestion flow to ensure the time-weighting mechanism functions properly?",
+    "ground_truth": "Documents must not be ingested through the vector store directly because the retriever requires specific metadata to track access history. To ensure proper tracking, the developer must call addDocuments on the TimeWeightedVectorStoreRetriever instance itself rather than on the underlying vector store.",
+    "evidence_passage": "It is important to note that due to required metadata, all documents must be added to the backing vector store using the addDocuments method on the **retriever**, not the vector store itself."
+  },
+  {
+    "id": "Q004",
+    "category": "Unanswerable",
+    "source_doc": "time_weighted_retriever.mdx",
+    "question": "You are configuring a TimeWeightedVectorStoreRetriever in production and need to set its decay rate explicitly. The documentation states that this.decayRate is a configurable decimal between 0 and 1, but your configuration manager requires an explicit fallback. What is the default numeric value assigned to decayRate if none is supplied during initialization?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
+  },
+  
+  {
+    "id": "Q005",
+    "category": "Direct_Factual",
+    "source_doc": "quickstart.mdx",
+    "question": "An engineering team is setting up an automated documentation pipeline across their developer workstations using the OpenWiki CLI. While verifying prerequisite runtimes across their development machines, they need to ensure their local JavaScript runtime meets the baseline compatibility specifications. According to the Quickstart documentation, what is the minimum required version of Node.js needed to install and run OpenWiki?",
+    "ground_truth": "OpenWiki requires Node.js 22.22.0 or later.",
+    "evidence_passage": "OpenWiki requires [Node.js 22.22.0 or later](https://nodejs.org)."
+  },
+  {
+    "id": "Q006",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "quickstart.mdx",
+    "question": "A team lead is standardizing the agent context files across a repository that already contains an established CLAUDE.md file for coding assistants. When the team runs the OpenWiki initialization and review workflow, they want to understand how the CLI avoids completely overriding existing assistant instructions while still exposing the generated knowledge. Synthesizing the documented interactions between AGENTS.md and CLAUDE.md, how does OpenWiki integrate its documentation directives into existing project files without deleting pre-existing Claude configurations?",
+    "ground_truth": "OpenWiki creates or refreshes AGENTS.md at the repository root with instructions to consult the wiki, and if CLAUDE.md already exists, it refreshes a managed block within it that imports @AGENTS.md, preserving existing configurations while linking the new documentation directives.",
+    "evidence_passage": "It creates or refreshes `AGENTS.md` at the repository root with a block that instructs coding agents to consult the wiki for codebase context. When `CLAUDE.md` already exists, OpenWiki refreshes a managed block that imports `@AGENTS.md`."
+  },
+  {
+    "id": "Q007",
+    "category": "Multi_Step",
+    "source_doc": "quickstart.mdx",
+    "question": "A developer initiates openwiki --init in a large monorepo checkout, but their laptop battery dies mid-execution, terminating the initial generation process. Later, the developer wishes to update project scope priorities to focus strictly on public APIs, restart the run, and check the resulting documentation graphically in a local web interface. Tracing the documented lifecycle and recovery mechanisms, what sequence of files and commands handles resuming the run, protecting custom instruction briefs from being overwritten, and launching the graphical view?",
+    "ground_truth": "The interrupted run resumes from openwiki/.run.json on the checkout; custom scope instructions are preserved or edited in openwiki/INSTRUCTIONS.md without being overwritten by --init or --update; and the browser-based interactive node graph is launched using openwiki visualize.",
+    "evidence_passage": "Interrupted runs on a persistent checkout resume from `openwiki/.run.json`.\n\nRepository-specific wiki instructions live in `openwiki/INSTRUCTIONS.md`. OpenWiki reads this file for scope and priorities. To change it, edit the file, or ask OpenWiki in chat to change the brief (for example, `openwiki \"Update openwiki/INSTRUCTIONS.md to focus on the public API\"`). Normal `--init` and `--update` runs do not rewrite it.\n\nTo explore the wiki in a browser, run:\n\n```bash\nopenwiki visualize\n```"
+  },
+  {
+    "id": "Q008",
+    "category": "Unanswerable",
+    "source_doc": "quickstart.mdx",
+    "question": "A DevOps engineer is configuring a scheduled CI pipeline to keep repository documentation current using openwiki --update. Under their organizational compliance policy, automated CI tasks must set an explicit maximum token budget and enforce a request timeout in seconds on every CLI execution. According to this Quickstart guide, what specific command-line flag or environment variable configures the network request timeout in seconds for openwiki --update?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
+  },
+
+  {
+    "id": "Q009",
+    "category": "Direct_Factual",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "You are building a document ingestion pipeline in Python and need to install the standalone LangChain package that provides the MarkdownHeaderTextSplitter class. According to the basic usage documentation, what exact package name is installed via pip, and what is the exact Python data type of the individual elements returned when calling split_text?",
+    "ground_truth": "The package installed via pip is langchain-text-splitters, and the elements returned by split_text are of type langchain_core.documents.base.Document.",
+    "evidence_passage": "```python\npip install -qU langchain-text-splitters\n```\n\n```python\ntype(md_header_splits[0])\n```\n\n```text\nlangchain_core.documents.base.Document\n```"
+  },
+  {
+    "id": "Q010",
+    "category": "Direct_Factual",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "An engineer on your team is testing MarkdownHeaderTextSplitter on technical documentation and notices that all the Markdown header lines specified in headers_to_split_on have been removed from the page_content of the resulting chunks. What is the default behavior of MarkdownHeaderTextSplitter regarding headers, and what specific parameter and boolean value must be passed during initialization to retain them in the chunk content?",
+    "ground_truth": "By default, MarkdownHeaderTextSplitter strips headers being split on from the output chunk's content. This can be disabled by setting strip_headers = False.",
+    "evidence_passage": "By default, `MarkdownHeaderTextSplitter` strips headers being split on from the output chunk's content. This can be disabled by setting `strip_headers = False`."
+  },
+  {
+    "id": "Q011",
+    "category": "Direct_Factual",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "Your team is building a Markdown processor that requires strict preservation of original document formatting, including exact white spaces and new lines, which the standard MarkdownHeaderTextSplitter strips out by default. According to the documentation note, which alternative text splitter class should you check out to preserve original Markdown formatting?",
+    "ground_truth": "To preserve the original formatting of Markdown documents, you should use ExperimentalMarkdownSyntaxTextSplitter.",
+    "evidence_passage": "**The default `MarkdownHeaderTextSplitter` strips white spaces and new lines. To preserve the original formatting of your Markdown documents, check out [`ExperimentalMarkdownSyntaxTextSplitter`](https://reference.langchain.com/python/langchain-text-splitters/markdown/ExperimentalMarkdownSyntaxTextSplitter).**"
+  },
+  {
+    "id": "Q012",
+    "category": "Direct_Factual",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "While configuring a line-by-line citation system for Markdown files, a developer wants MarkdownHeaderTextSplitter to stop aggregating lines under common headers and instead emit every individual line as its own Document object while still attaching the hierarchy of headers to each object's metadata. What exact parameter and value must be specified when initializing MarkdownHeaderTextSplitter to achieve this?",
+    "ground_truth": "You must specify return_each_line=True when initializing MarkdownHeaderTextSplitter.",
+    "evidence_passage": "By default, `MarkdownHeaderTextSplitter` aggregates lines based on the headers specified in `headers_to_split_on`. We can disable this by specifying `return_each_line`:\n\n```python\nmarkdown_splitter = MarkdownHeaderTextSplitter(\n    headers_to_split_on,\n    return_each_line=True,\n)\n```"
+  },
+  {
+    "id": "Q013",
+    "category": "Direct_Factual",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "In the documentation's sample text illustrating how to constrain chunk size on a passage about the history of Markdown, who is credited with creating the Markdown language in 2004, and which two individuals are named as part of the group that launched a standardization effort in 2012?",
+    "ground_truth": "John Gruber created Markdown in 2004, and Jeff Atwood and John MacFarlane were part of the group that launched the standardization effort in 2012.",
+    "evidence_passage": "John Gruber created Markdown in 2004 as a markup language that is appealing to human readers in its source code form.[9] ... From 2012, a group of people, including Jeff Atwood and John MacFarlane, launched what Atwood characterised as a standardisation effort."
+  },
+  {
+    "id": "Q014",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "A developer splits a Markdown file using MarkdownHeaderTextSplitter configured with headers_to_split_on = [(\"#\", \"Header 1\"), (\"##\", \"Header 2\")] and strip_headers=False. The document contains a level-2 section '## Rise and divergence' followed later by a level-4 sub-heading '#### Standardization'. When this output is passed into RecursiveCharacterTextSplitter, how is the '#### Standardization' heading treated in terms of both page_content and metadata in the resulting Document chunk?",
+    "ground_truth": "Because '####' is not included in headers_to_split_on, '#### Standardization' is not extracted as a new metadata key; instead, the literal text '#### Standardization' remains inside the chunk's page_content while the chunk inherits the metadata of its parent sections: {'Header 1': 'Intro', 'Header 2': 'Rise and divergence'}.",
+    "evidence_passage": "```python\nheaders_to_split_on = [\n    (\"#\", \"Header 1\"),\n    (\"##\", \"Header 2\"),\n]\n```\n\n```text\nDocument(metadata={'Header 1': 'Intro', 'Header 2': 'Rise and divergence'}, page_content='#### Standardization  \\nFrom 2012, a group of people, including Jeff Atwood and John MacFarlane, launched what Atwood characterised as a standardisation effort.')\n```"
+  },
+  {
+    "id": "Q015",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "An engineer is comparing three configurations of MarkdownHeaderTextSplitter on the document '# Foo\\n\\n    ## Bar\\n\\nHi this is Jim\\n\\nHi this is Joe\\n\\n ### Boo \\n\\n Hi this is Lance \\n\\n ## Baz\\n\\n Hi this is Molly': (1) default settings, (2) strip_headers=False, and (3) return_each_line=True. How does the number of resulting Document objects and the content of the chunks under '## Bar' (before '### Boo') differ across these three configurations?",
+    "ground_truth": "Under default settings and strip_headers=False, 3 Document objects are returned in total, with 'Hi this is Jim' and 'Hi this is Joe' aggregated into a single Document (where strip_headers=False also prepends '# Foo  \\n## Bar  \\n' to the page_content). Under return_each_line=True, 4 Document objects are returned in total because 'Hi this is Jim' and 'Hi this is Joe' are split into two separate Document objects that both share the metadata {'Header 1': 'Foo', 'Header 2': 'Bar'}.",
+    "evidence_passage": "```text\n[Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}, page_content='Hi this is Jim  \\nHi this is Joe'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}, page_content='Hi this is Lance'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Baz'}, page_content='Hi this is Molly')]\n```\n\n```text\n[Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}, page_content='# Foo  \\n## Bar  \\nHi this is Jim  \\nHi this is Joe'), ...\n```\n\n```text\n[Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}, page_content='Hi this is Jim'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}, page_content='Hi this is Joe'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}, page_content='Hi this is Lance'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Baz'}, page_content='Hi this is Molly')]\n```"
+  },
+  {
+    "id": "Q016",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "You are debugging a RAG pipeline where MarkdownHeaderTextSplitter is followed by RecursiveCharacterTextSplitter(chunk_size=250, chunk_overlap=30). Your QA lead notices that there is zero overlapping text between the last chunk of the '# H1' section and the first chunk of the '## H2' section, and also notices that short sections have no overlap at all. Based on the troubleshooting guidelines, why is chunk_overlap not appearing in these two cases?",
+    "ground_truth": "Chunk overlap only appears when a single section exceeds chunk_size and is split into multiple chunks, and overlap never crosses section or document boundaries (such as from # H1 to ## H2).",
+    "evidence_passage": "- Overlap appears only when a **single section** exceeds `chunk_size` and is split into multiple chunks.\n- Overlap **does not cross** section/document boundaries (e.g., `# H1` → `## H2`)."
+  },
+  {
+    "id": "Q017",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "In the example that combines MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on, strip_headers=False) with RecursiveCharacterTextSplitter(chunk_size=250, chunk_overlap=30) on the Markdown history document, the '## History' section is split into two separate Document objects. How do the metadata and the inclusion of the '# Intro  \\n## History' header lines differ between the first and second Document chunks generated for that section?",
+    "ground_truth": "Both Document chunks retain the exact same metadata dictionary ({'Header 1': 'Intro', 'Header 2': 'History'}), but only the first chunk includes the header lines '# Intro  \\n## History  \\n' in its page_content, while the second chunk contains only the remaining body text ('Markdown is widely used in blogging...').",
+    "evidence_passage": "```text\n[Document(metadata={'Header 1': 'Intro', 'Header 2': 'History'}, page_content='# Intro  \\n## History  \\nMarkdown[9] is a lightweight markup language for creating formatted text using a plain-text editor. John Gruber created Markdown in 2004 as a markup language that is appealing to human readers in its source code form.[9]'),\n Document(metadata={'Header 1': 'Intro', 'Header 2': 'History'}, page_content='Markdown is widely used in blogging, instant messaging, online forums, collaborative software, documentation pages, and readme files.'),\n```"
+  },
+  {
+    "id": "Q018",
+    "category": "Reasoning_Across_Facts",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "A developer runs MarkdownHeaderTextSplitter with strip_headers=False and then passes the resulting documents into a character-level text splitter to enforce a strict chunk_size. They notice that in several sections, the header line itself is getting separated from the body text and emitted as a tiny standalone first chunk. According to the troubleshooting section, why does this occur and what configuration change resolves it?",
+    "ground_truth": "Because strip_headers is set to False, the header line is kept in the chunk's text and can be split off into a tiny first chunk when constraining chunk size; setting strip_headers to True removes the header line from the body content so it cannot become a standalone chunk.",
+    "evidence_passage": "- If the header becomes a tiny first chunk, consider setting `strip_headers` to `True` so the header line doesn't become a standalone chunk."
+  },
+  {
+    "id": "Q019",
+    "category": "Multi_Step",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "You need to build a two-stage Markdown chunking pipeline that first groups text by level-1 ('#') and level-2 ('##') headers while keeping the headers in the text, and then constrains each group to a maximum size of 250 characters with a 30-character overlap while preserving per-section header metadata. Tracing the documented workflow, what exact sequence of splitter classes, initialization parameters, and splitting methods must be called?",
+    "ground_truth": "First, initialize MarkdownHeaderTextSplitter with headers_to_split_on=[(\"#\", \"Header 1\"), (\"##\", \"Header 2\")] and strip_headers=False, and call its split_text(markdown_document) method. Next, initialize RecursiveCharacterTextSplitter with chunk_size=250 and chunk_overlap=30, and call its split_documents(md_header_splits) method on the output of the first splitter.",
+    "evidence_passage": "```python\nheaders_to_split_on = [\n    (\"#\", \"Header 1\"),\n    (\"##\", \"Header 2\"),\n]\n\n# MD splits\nmarkdown_splitter = MarkdownHeaderTextSplitter(\n    headers_to_split_on=headers_to_split_on, strip_headers=False\n)\nmd_header_splits = markdown_splitter.split_text(markdown_document)\n\n# Char-level splits\nfrom langchain_text_splitters import RecursiveCharacterTextSplitter\n\nchunk_size = 250\nchunk_overlap = 30\ntext_splitter = RecursiveCharacterTextSplitter(\n    chunk_size=chunk_size, chunk_overlap=chunk_overlap\n)\n\n# Split\nsplits = text_splitter.split_documents(md_header_splits)\n```"
+  },
+  {
+    "id": "Q020",
+    "category": "Multi_Step",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "A data engineer splits a Markdown string using markdown_splitter.split_text(markdown_document) and then loops over the resulting Document objects, passing each object's page_content string into text_splitter.split_text(...) on a RecursiveCharacterTextSplitter. Why does this approach break the intended metadata and overlap behavior, and what exact method call should replace split_text in the second stage?",
+    "ground_truth": "Calling split_text instead of split_documents fails to preserve per-section header metadata on the resulting chunks and prevents proper handling of section documents. The engineer must pass the list of Document objects directly to split_documents(docs) so that overlap is applied within each section and per-section metadata (headers) is preserved on the chunks.",
+    "evidence_passage": "- After header-based splitting (e.g., `MarkdownHeaderTextSplitter`), use **`split_documents(docs)`** (not `split_text`) so that overlap is applied **within each section** and per-section metadata (headers) is preserved on chunks."
+  },
+  {
+    "id": "Q021",
+    "category": "Multi_Step",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "Consider the nested Markdown string: '# Foo\\n\\n    ## Bar\\n\\nHi this is Jim\\n\\nHi this is Joe\\n\\n ### Boo \\n\\n Hi this is Lance \\n\\n ## Baz\\n\\n Hi this is Molly'. When MarkdownHeaderTextSplitter processes this string with headers_to_split_on set to track '#', '##', and '###' as 'Header 1', 'Header 2', and 'Header 3', how does the metadata dictionary evolve across the three resulting Document chunks from start to finish?",
+    "ground_truth": "In the first chunk ('Hi this is Jim  \\nHi this is Joe'), the metadata is {'Header 1': 'Foo', 'Header 2': 'Bar'}. In the second chunk ('Hi this is Lance'), the nested level-3 header is added, updating the metadata to {'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}. In the third chunk ('Hi this is Molly'), encountering the new level-2 header '## Baz' replaces 'Header 2' and drops 'Header 3', resulting in {'Header 1': 'Foo', 'Header 2': 'Baz'}.",
+    "evidence_passage": "```text\n[Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}, page_content='Hi this is Jim  \\nHi this is Joe'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}, page_content='Hi this is Lance'),\n Document(metadata={'Header 1': 'Foo', 'Header 2': 'Baz'}, page_content='Hi this is Molly')]\n```"
+  },
+  {
+    "id": "Q022",
+    "category": "Multi_Step",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "You are processing a Markdown file that contains long, continuous strings of unformatted text without any newlines or spaces inside several header sections. You split the document by headers using MarkdownHeaderTextSplitter and then pass the output to a character-level splitter via split_documents(docs), but notice that the long continuous strings are neither splitting nor applying chunk_overlap. What adjustment must be made to the character-level splitter's configuration to fix this?",
+    "ground_truth": "You must keep a fallback empty string (\"\") in the separators parameter of the splitter so that it can still split the continuous text and apply overlap when newlines and spaces are absent.",
+    "evidence_passage": "- If your text lacks newlines/spaces, keep a fallback `\"\"` in `separators` so the splitter can still split and apply overlap."
+  },
+  {
+    "id": "Q023",
+    "category": "Multi_Step",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "According to the conceptual overview and Pinecone notes in the documentation, what is the end-to-end rationale for using MarkdownHeaderTextSplitter prior to embedding and vector storage in a chat or Q&A application?",
+    "ground_truth": "When a full paragraph or document is embedded, the embedding process considers both the overall context and the relationships between sentences and phrases to create a more comprehensive vector representation. Because chunking aims to keep text with common context together, splitting a Markdown file by its header groups honors the document's structure and groups content sharing a common header context together before embedding.",
+    "evidence_passage": "When a full paragraph or document is embedded, the embedding process considers both the overall context and the relationships between the sentences and phrases within the text. This can result in a more comprehensive vector representation that captures the broader meaning and themes of the text.\n\nAs mentioned, chunking often aims to keep text with common context together. With this in mind, we might want to specifically honor the structure of the document itself. For example, a markdown file is organized by headers. Creating chunks within specific header groups is an intuitive idea. To address this challenge, we can use [MarkdownHeaderTextSplitter](https://reference.langchain.com/python/langchain-text-splitters/markdown/MarkdownHeaderTextSplitter)."
+  },
+  {
+    "id": "Q024",
+    "category": "Unanswerable",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "You are migrating a legacy Markdown ingestion pipeline to use ExperimentalMarkdownSyntaxTextSplitter so that whitespace and newlines are preserved. You need to pass a custom dictionary of regex patterns to override how code blocks and horizontal rules are parsed by this experimental class. According to the documentation, what parameter name does ExperimentalMarkdownSyntaxTextSplitter accept for custom regex syntax rules?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
+  },
+  {
+    "id": "Q025",
+    "category": "Unanswerable",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "An engineer is initializing RecursiveCharacterTextSplitter without passing any arguments—i.e., RecursiveCharacterTextSplitter()—before calling split_documents(md_header_splits). According to the provided documentation, what are the default numeric values for chunk_size and chunk_overlap when they are omitted during initialization?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
+  },
+  {
+    "id": "Q026",
+    "category": "Unanswerable",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "Your team's Markdown documentation uses Setext-style underlined headers (using '===' for H1 and '---' for H2) instead of ATX-style hash headers ('#' and '##'). According to the documentation, how should headers_to_split_on be configured in MarkdownHeaderTextSplitter to parse Setext-style underlined headers?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
+  },
+  {
+    "id": "Q027",
+    "category": "Unanswerable",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "When using RecursiveCharacterTextSplitter to constrain chunk sizes on the output of MarkdownHeaderTextSplitter, you want to measure chunk length by token count using a tiktoken encoder rather than character count. According to the provided documentation, what method or parameter is used to configure a token-based length function on RecursiveCharacterTextSplitter?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
+  },
+  {
+    "id": "Q028",
+    "category": "Unanswerable",
+    "source_doc": "markdown_header_metadata_splitter.mdx",
+    "question": "A developer is processing Markdown files that include YAML frontmatter blocks (delimited by '---' at the top of the file, such as title and description fields). According to the documentation, how does MarkdownHeaderTextSplitter handle YAML frontmatter blocks by default, and what parameter controls whether frontmatter keys are merged into the Document metadata?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "evidence_passage": ""
+  },
+  {
+    "id": "Q051",
+    "category": "direct_factual",
+    "question": "I am configuring a standalone chat model with LangChain's init_chat_model function and I want to make my application resilient to temporary failures such as network timeouts or rate limits. According to the documentation, what is the default value of the max_retries parameter, and what kind of waiting strategy is used between the retry attempts that the system makes?",
+    "ground_truth": "The default value of max_retries is 6, and retries use exponential backoff with jitter."
+  },
+  {
+    "id": "Q052",
+    "category": "direct_factual",
+    "question": "When my application calls a chat model through LangChain and the provider returns an error, the library decides automatically whether the request should be sent again. Which categories of failures does the max_retries setting retry automatically, and which kinds of client errors, such as an unauthorized or not found response, are deliberately not retried by the system?",
+    "ground_truth": "Network errors, rate limits (429) and server errors (5xx) are retried automatically. Client errors such as 401 (unauthorized) or 404 are not retried."
+  },
+  {
+    "id": "Q053",
+    "category": "direct_factual",
+    "question": "The LangChain models documentation explains that models can be used in more than one way, and that the same model interface works in both contexts so developers can start simple and scale up later. What are the two ways in which models can be utilized in LangChain, and how does each of those two usage patterns differ from the other?",
+    "ground_truth": "Models can be used with agents, where the model is specified dynamically when creating an agent, or standalone, where the model is called directly outside the agent loop for tasks such as text generation, classification or extraction."
+  },
+  {
+    "id": "Q054",
+    "category": "direct_factual",
+    "question": "I am processing a large list of inputs with a LangChain chat model, and by default the batch method only gives me the final output for the whole batch after everything completes. Which alternative method lets me receive the output for each individual input as soon as it finishes generating, and what should I expect about the ordering of results?",
+    "ground_truth": "The batch_as_completed() method yields the output for each individual input as it finishes. Results may arrive out of order."
+  },
+  {
+    "id": "Q055",
+    "category": "direct_factual",
+    "question": "In the LangChain documentation about messages, a message is described as the fundamental unit of context for models, carrying both content and the metadata needed to represent the state of a conversation. What are the three main parts that a LangChain message object is said to contain, and what does each of them represent?",
+    "ground_truth": "A message contains a role (identifies the message type such as system or user), content (the actual content such as text, images, audio or documents), and metadata (optional fields such as response information, message IDs and token usage)."
+  },
+  {
+    "id": "Q056",
+    "category": "direct_factual",
+    "question": "When a model makes a tool call and my code executes the tool, I have to send the result back to the model in a ToolMessage so the conversation can continue properly. According to the messages documentation, which identifier on the ToolMessage must be set so that it correctly links the result to the original request the model made?",
+    "ground_truth": "The tool_call_id must be set and it must match the ID of the original tool call made by the model."
+  },
+  {
+    "id": "Q057",
+    "category": "direct_factual",
+    "question": "The knowledge base tutorial in LangChain introduces a Document abstraction that represents a unit of text together with associated metadata, which is used when building a semantic search engine over a PDF. What are the three attributes that a LangChain Document object has, and which of the three is described as optional?",
+    "ground_truth": "A Document has page_content (a string with the content), metadata (a dict of arbitrary metadata) and id (an optional string identifier). The id is the optional one."
+  },
+  {
+    "id": "Q058",
+    "category": "direct_factual",
+    "question": "In the semantic search tutorial, the RecursiveCharacterTextSplitter is created with chunk_size, chunk_overlap and one extra option that makes every resulting split remember where it started inside the original document. What chunk size and overlap values does the tutorial use, and what is the name of that extra option? Please answer using only the information found in the documentation.",
+    "ground_truth": "The tutorial uses chunk_size=1000 and chunk_overlap=200, and the extra option is add_start_index=True, which stores a start_index metadata field with the character offset in the original document."
+  },
+  {
+    "id": "Q059",
+    "category": "direct_factual",
+    "question": "The RecursiveCharacterTextSplitter is described in LangChain as the recommended splitter for generic text, and it tries a list of separators in order until the chunks become small enough. What is the default list of separator characters it uses, and how is the size of each chunk measured by this splitter?",
+    "ground_truth": "The default separators are [\"\\n\\n\", \"\\n\", \" \", \"\"], and chunk size is measured by the number of characters."
+  },
+  {
+    "id": "Q060",
+    "category": "direct_factual",
+    "question": "The CharacterTextSplitter is described as the simplest approach to text splitting in LangChain, because it divides text using one specified character sequence rather than a list. What is the default separator that it uses to split the text, and how does the splitter measure the length of each chunk it produces?",
+    "ground_truth": "The default separator is \"\\n\\n\", and chunk length is measured by the number of characters."
+  },
+  {
+    "id": "Q061",
+    "category": "direct_factual",
+    "question": "The Time-Weighted Retriever in LangChain combines semantic similarity with recency when scoring documents. The scoring formula uses a value called hoursPassed, and the documentation specifically notes what this value is measured from. Since when is hoursPassed measured, and why does this mean frequently accessed documents stay fresh and keep scoring higher?",
+    "ground_truth": "hoursPassed is measured from the time the object in the retriever was last accessed, not from when it was created, so frequently accessed objects remain fresh and score higher."
+  },
+  {
+    "id": "Q062",
+    "category": "direct_factual",
+    "question": "When using the MarkdownHeaderTextSplitter in LangChain with a list of headers to split on, the output chunks normally do not contain the header lines themselves in their content. What is the default behavior of the splitter regarding header text in the chunk content, and which parameter can be set to change that behavior?",
+    "ground_truth": "By default the splitter strips the headers it splits on from the chunk content. Setting strip_headers=False keeps them in the content."
+  },
+  {
+    "id": "Q063",
+    "category": "direct_factual",
+    "question": "The Retrieval page in the LangChain documentation opens by explaining why retrieval is needed, since large language models have two key limitations that retrieval is intended to address at query time. What are those two limitations of large language models, and what does retrieval do about them according to the page?",
+    "ground_truth": "LLMs have finite context (they cannot ingest entire corpora at once) and static knowledge (training data is frozen at a point in time). Retrieval fetches relevant external knowledge at query time, which is the foundation of RAG."
+  },
+  {
+    "id": "Q064",
+    "category": "direct_factual",
+    "question": "The context engineering guide says that an agent is usually unreliable because the language model call inside it took the wrong action, and that this can happen for exactly two reasons. What are those two reasons, and which of the two does the guide say is the more common cause of unreliable agents?",
+    "ground_truth": "The two reasons are that the underlying LLM is not capable enough, or that the right context was not passed to the LLM. The second reason, missing or wrong context, is the more common cause."
+  },
+  {
+    "id": "Q065",
+    "category": "direct_factual",
+    "question": "The OpenWiki quickstart guide describes installing a command line tool that writes and maintains a Markdown wiki for a codebase so that coding agents have durable context. What minimum version of Node.js does it require, and what exact npm command does it give for installing the tool globally on your machine?",
+    "ground_truth": "It requires Node.js 22.22.0 or later, and the install command is npm install -g openwiki."
+  },
+  {
+    "id": "Q066",
+    "category": "multi_fact",
+    "question": "LangChain's retrieval documentation describes three RAG architectures that differ in how much control they give the developer, how flexible they are, and how predictable their latency is. Name the three architectures and summarize how 2-Step RAG compares with Agentic RAG in terms of control, flexibility and latency for a team choosing between them.",
+    "ground_truth": "The architectures are 2-Step RAG, Agentic RAG and Hybrid. 2-Step RAG has high control, low flexibility and fast, predictable latency, while Agentic RAG has low control, high flexibility and variable latency."
+  },
+  {
+    "id": "Q067",
+    "category": "multi_fact",
+    "question": "In LangChain's agent context engineering guide, context is divided into three types, each describing what a developer controls and whether the context is transient or persistent. List the three context types, say what each one controls, and state which of them are transient and which are persistent according to the table in the guide.",
+    "ground_truth": "Model Context controls what goes into model calls (instructions, message history, tools, response format) and is transient. Tool Context controls what tools can access and produce and is persistent. Life-cycle Context controls what happens between model and tool calls (summarization, guardrails, logging) and is persistent."
+  },
+  {
+    "id": "Q068",
+    "category": "multi_fact",
+    "question": "The context engineering guide lists three data sources that an agent can read from and write to during its run, and each one has a different scope and an alternative name. Name the three sources, give the other name used for each, and explain whether each one is scoped to a single conversation or persists across conversations.",
+    "ground_truth": "Runtime Context (static configuration) is conversation-scoped. State (short-term memory) is conversation-scoped. Store (long-term memory) is cross-conversation."
+  },
+  {
+    "id": "Q069",
+    "category": "multi_fact",
+    "question": "LangChain's models documentation lists exception types that major integration packages raise for common model failures, and each one carries an is_retryable attribute that retry middleware respects by default. Explain which of the errors for authentication, rate limits, timeouts and context overflow are retryable and which are not, giving the exception names where possible.",
+    "ground_truth": "ModelRateLimitError and ModelTimeoutError are retryable (as are ModelAPIError and ModelConnectionError). ModelAuthenticationError and ContextOverflowError are not retryable (nor are ModelPermissionDeniedError, ModelInvalidRequestError and ModelNotFoundError)."
+  },
+  {
+    "id": "Q070",
+    "category": "multi_fact",
+    "question": "The LangChain models documentation says that prompt caching can be engaged at three different levels to reduce latency and cost when the same tokens are processed repeatedly. Describe each of those three levels, and give the example providers that the documentation names for the implicit provider caching level in particular.",
+    "ground_truth": "The three levels are implicit provider caching (automatic savings with no configuration, e.g. OpenAI and Gemini), provider-level explicit controls (manually indicating cache points), and LangChain middleware (optimizing caching of stable system prompt and tool content for agents)."
+  },
+  {
+    "id": "Q071",
+    "category": "multi_fact",
+    "question": "The vector store section of the LangChain semantic search tutorial says that, once documents are added, the store can be queried in several different ways. List the different ways the documentation says a query can be made, including whether it is synchronous or asynchronous, the form of the query, whether scores are returned, and the search strategy.",
+    "ground_truth": "Queries can be synchronous or asynchronous, by string query or by vector, with or without similarity scores, and by similarity or by maximum marginal relevance (to balance similarity with diversity)."
+  },
+  {
+    "id": "Q072",
+    "category": "multi_fact",
+    "question": "In the Markdown header splitting guide, a small example splits a document containing a Header 1 called Foo, Header 2 sections called Bar and Baz, and some lines of text beneath them. Describe how the resulting chunks are grouped and what metadata each of the chunks receives, including the text under Bar and under Baz.",
+    "ground_truth": "Content under the same headers is grouped together. The text 'Hi this is Jim' and 'Hi this is Joe' becomes one chunk with metadata Header 1: Foo and Header 2: Bar, and 'Hi this is Molly' becomes a chunk with metadata Header 1: Foo and Header 2: Baz."
+  },
+  {
+    "id": "Q073",
+    "category": "multi_fact",
+    "question": "LangChain's CharacterTextSplitter and RecursiveCharacterTextSplitter both split text and both measure chunk size in characters, but they differ in how they choose where to cut. Compare the two splitters by describing how each one selects its separators, and name the shared methods they offer for getting either strings or Document objects.",
+    "ground_truth": "CharacterTextSplitter splits on a single given separator (default \"\\n\\n\"), whereas RecursiveCharacterTextSplitter tries a list of separators in order (\"\\n\\n\", \"\\n\", \" \", \"\") until chunks are small enough. Both offer .split_text for plain strings and .create_documents for Document objects."
+  },
+  {
+    "id": "Q074",
+    "category": "multi_fact",
+    "question": "The Time-Weighted Retriever documentation gives a configurable decay rate between zero and one, and explains how different values change the behavior of the retriever. Explain what a lower decay rate versus a higher decay rate does to document scoring, and what happens when the decay rate is set to exactly zero or exactly one.",
+    "ground_truth": "A lower decay rate means documents are remembered longer, while a higher decay rate weights recently accessed documents more strongly. At exactly 0 or 1, hoursPassed becomes irrelevant and the retriever behaves like a standard vector lookup."
+  },
+  {
+    "id": "Q075",
+    "category": "multi_fact",
+    "question": "The OpenWiki quickstart says that running the init command for the first time starts an interactive onboarding flow, and that configuration is stored in a file on the user's machine. What items does the first interactive run prompt the user for, and where does OpenWiki save the configuration and secrets that were entered?",
+    "ground_truth": "It prompts for an inference provider and model, the provider API key (or equivalent credentials), an optional LangSmith API key for tracing, and LangSmith projects to enrich the wiki from runtime traces. Configuration and secrets are saved to ~/.openwiki/.env."
+  },
+  {
+    "id": "Q076",
+    "category": "multi_fact",
+    "question": "In the messages documentation a model response can include token usage metadata, and the example output shows several fields describing how many tokens were used by the call. List the main token count fields shown in the usage_metadata example, and give the values that were reported for input tokens, output tokens and total tokens.",
+    "ground_truth": "The fields are input_tokens (8), output_tokens (304) and total_tokens (312), with extra details such as input_token_details (audio, cache_read) and output_token_details (audio, reasoning: 256)."
+  },
+  {
+    "id": "Q077",
+    "category": "multi_fact",
+    "question": "The LangChain retrieval page explains that a typical retrieval pipeline is made of modular building blocks that can be swapped without rewriting the application's logic. Name the building blocks that the page describes, and for each of them give a short explanation of the role it plays in the pipeline.",
+    "ground_truth": "Document loaders ingest data from external sources into standardized Document objects; text splitters break large documents into smaller retrievable chunks that fit the context window; embedding models turn text into vectors so similar meanings are close together; vector stores are specialized databases for storing and searching embeddings; retrievers are interfaces that return documents for an unstructured query."
+  },
+  {
+    "id": "Q078",
+    "category": "multi_reasoning",
+    "question": "A developer is running a long job that calls a chat model through LangChain on a flaky network, and requests sometimes fail with rate limit errors and sometimes with an invalid API key error. Using the documentation about max_retries, explain which of these two failures the library would keep retrying and which would fail immediately, and why.",
+    "ground_truth": "Rate limit errors (429) are retried automatically with exponential backoff and jitter up to max_retries (default 6), while an invalid API key is a client error (401, ModelAuthenticationError) that is not retried, so it fails immediately."
+  },
+  {
+    "id": "Q079",
+    "category": "multi_reasoning",
+    "question": "A team building a documentation chatbot needs predictable cost and latency, and every question must always be answered using retrieved documents. Based on the LangChain retrieval page, explain which RAG architecture fits this requirement best, and describe why the Agentic RAG approach would be a worse match for that requirement.",
+    "ground_truth": "2-Step RAG fits best because retrieval always runs before generation, giving high control, fast and predictable latency (the number of LLM calls is capped), and it suits FAQs and documentation bots. Agentic RAG lets the agent decide when and how to retrieve, giving low control and variable latency."
+  },
+  {
+    "id": "Q080",
+    "category": "multi_reasoning",
+    "question": "How does using MarkdownHeaderTextSplitter help maintain context during the retrieval phase of a RAG pipeline? Explain what information is attached to each chunk, why chunks that are grouped under shared headers keep related text together, and how this benefits a retriever that is searching for relevant passages. Please answer using only the information found in the documentation.",
+    "ground_truth": "It splits on document headers and attaches the header hierarchy as metadata to each chunk, so text stays grouped with its section and the retriever keeps structural context during similarity search."
+  },
+  {
+    "id": "Q081",
+    "category": "multi_reasoning",
+    "question": "A developer notices that the chunks from MarkdownHeaderTextSplitter can be very large, and wants to limit the chunk size while still keeping the header metadata. Using the documentation, explain how the developer could combine the header splitter with another splitter, and say which splitter the documentation uses for that purpose.",
+    "ground_truth": "First split by headers with MarkdownHeaderTextSplitter, then apply another splitter such as RecursiveCharacterTextSplitter to each markdown group to control chunk size; the header metadata stays attached to the resulting chunks."
+  },
+  {
+    "id": "Q082",
+    "category": "multi_reasoning",
+    "question": "A developer wants to build a simple agentic RAG assistant in LangChain that can read web pages, but is worried about the agent fetching arbitrary and unsafe URLs. Using the retrieval page's examples, explain what the agent needs in order to perform retrieval and how the example restricts which URLs it may fetch.",
+    "ground_truth": "The agent only needs one or more tools that can fetch external knowledge, such as a fetch_url or fetch_documentation tool passed to create_agent. The example restricts access with an ALLOWED_DOMAINS list and returns an error if a URL does not start with an allowed domain."
+  },
+  {
+    "id": "Q083",
+    "category": "multi_reasoning",
+    "question": "Suppose a developer stores documents in a TimeWeightedVectorStoreRetriever but adds them directly to the backing vector store instead of through the retriever. Using the documentation, explain what the correct way to add documents is, and why adding them directly to the vector store would cause a problem with scoring. Please answer using only the information found in the documentation.",
+    "ground_truth": "Documents must be added with the addDocuments method on the retriever, not the vector store, because the retriever needs required metadata (such as last-accessed information) to compute recency-based scores."
+  },
+  {
+    "id": "Q084",
+    "category": "multi_reasoning",
+    "question": "A developer wants an agent to switch between a cheap model for simple questions and an expensive model for harder ones at runtime, and also wants structured output from whichever model gets chosen. Using the models documentation, explain how to implement dynamic model selection and what restriction exists regarding pre-bound models.",
+    "ground_truth": "Create middleware with the @wrap_model_call decorator that modifies the model in the request based on state and context. Pre-bound models (those where bind_tools was already called) are not supported with structured output, so the models passed to the middleware must not be pre-bound."
+  },
+  {
+    "id": "Q085",
+    "category": "multi_reasoning",
+    "question": "A developer is working through the semantic search tutorial and has a PDF loaded as a list of Document objects, one per page. Describe in order the steps the tutorial takes to turn those pages into something searchable, including splitting, indexing and finally wrapping the store so it can be plugged into a RAG workflow.",
+    "ground_truth": "Load the PDF into Document objects, split them with RecursiveCharacterTextSplitter (chunk_size 1000, overlap 200, add_start_index=True), generate embeddings and add the splits to a vector store with add_documents, query by similarity, and then wrap the store as a retriever for use in RAG."
+  },
+  {
+    "id": "Q086",
+    "category": "multi_reasoning",
+    "question": "An engineer says that an agent keeps failing even though the chosen language model is very capable. Using the context engineering guide, explain what the guide would suggest is the most likely cause of the failure, what context engineering means, and why the guide calls it so important. Please answer using only the information found in the documentation.",
+    "ground_truth": "The most likely cause is that the right context was not passed to the LLM. Context engineering is providing the right information and tools in the right format so the LLM can accomplish a task, and the guide calls it the number one job of AI engineers and the main blocker to reliable agents."
+  },
+  {
+    "id": "Q087",
+    "category": "multi_reasoning",
+    "question": "A developer wants to understand how LangChain middleware relates to context engineering in agents. Using the guide, explain what the typical agent loop looks like, where middleware can hook in, and what two kinds of things middleware lets a developer do while the agent is running. Please answer using only the information found in the documentation.",
+    "ground_truth": "The agent loop has two steps, a model call and tool execution, repeating until the LLM decides to finish. Middleware hooks into any step of the agent lifecycle and lets developers update context and jump to a different step in the lifecycle."
+  },
+  {
+    "id": "Q088",
+    "category": "multi_reasoning",
+    "question": "A developer wants a coding agent to automatically learn about a repository's architecture instead of rediscovering it every time. Using the OpenWiki quickstart, explain which command generates the repository wiki, which file is created at the repository root to instruct agents to use the wiki, and how documentation is refreshed after code changes.",
+    "ground_truth": "Run openwiki --init from the repository root to generate the wiki in the openwiki/ folder. OpenWiki creates or refreshes AGENTS.md at the repository root instructing agents to consult the wiki, and openwiki --update refreshes the documentation after code changes."
+  },
+  {
+    "id": "Q089",
+    "category": "multi_reasoning",
+    "question": "An application passes the same long system prompt and tool definitions to a model on every request and the developer wants lower cost and latency. Using the models documentation, explain what prompt caching is for, which mechanism applies automatically with no configuration, and where the developer could verify that cache was actually used.",
+    "ground_truth": "Prompt caching reduces latency and cost on repeat processing of the same tokens. Implicit provider caching (for example OpenAI and Gemini) works automatically with no configuration, and cache usage is reflected in the usage metadata of the model response."
+  },
+  {
+    "id": "Q090",
+    "category": "multi_reasoning",
+    "question": "A developer wants to know why LangChain describes RAG as going one step beyond plain retrieval. Using the retrieval page, explain what retrieval alone gives an LLM, how RAG extends it, and what the page says happens in the full pipeline from a user query to the final answer. Please answer using only the information found in the documentation.",
+    "ground_truth": "Retrieval gives an LLM relevant context at runtime; RAG integrates retrieval with generation to produce grounded, context-aware answers. In the pipeline, the user query is embedded, the vector store and retriever return relevant chunks, and the LLM uses that retrieved information to produce the answer."
+  },
+  {
+    "id": "Q091",
+    "category": "unanswerable",
+    "question": "I am planning a long weekend trip to Italy next spring with my family, and we love old buildings and ancient history. Can you tell me which year the Colosseum in Rome was officially completed, which emperor opened it with a hundred days of games, and roughly how many spectators it could hold?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q092",
+    "category": "unanswerable",
+    "question": "My daughter is learning about the solar system at school and keeps asking me difficult questions that I cannot answer. Could you explain which planet in our solar system has the most moons, approximately how many moons it has been confirmed to have, and which planet is the hottest even though it is not the closest to the sun?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q093",
+    "category": "unanswerable",
+    "question": "I want to bake a loaf of sourdough bread at home for the first time this weekend, and I have never worked with a starter before. How long should I feed the starter before it is ready to use, what ratio of flour to water is typical, and what temperature should my oven be set to?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q094",
+    "category": "unanswerable",
+    "question": "I have recently started watching professional football and I am confused by some of the rules of the game. Can you explain how the offside rule works, how many players are allowed on the pitch for each team, and which country won the very first men's World Cup held in the year 1930?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q095",
+    "category": "unanswerable",
+    "question": "I am writing a short school essay about famous painters and I need some background facts for it, please. Who painted the Mona Lisa, in which city is the painting currently displayed, roughly during which period of history was it created, and what painting technique is it especially known for?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q096",
+    "category": "unanswerable",
+    "question": "My grandfather has been telling me stories about the ocean, and now I am curious about marine life in general. What is the largest animal that has ever lived on Earth, how long can it grow, how much does it weigh, and what does it mainly eat in order to survive?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q097",
+    "category": "unanswerable",
+    "question": "I have been trying to improve my fitness and I want to start running regularly, but I do not know where to begin. How many kilometres is a standard marathon, what is a sensible weekly schedule for a beginner, and how should I warm up properly before each run to avoid injuries?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q098",
+    "category": "unanswerable",
+    "question": "I am visiting Japan for the first time and I want to be respectful of the local culture during my stay. What is the traditional etiquette for bowing when greeting someone, why should I remove my shoes when entering a home, and what is the proper way to use chopsticks during a meal?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q099",
+    "category": "unanswerable",
+    "question": "For a trivia night with my friends I need to prepare some geography questions in advance. What is the longest river in the world, which continent has the most countries, what is the capital city of Australia, and which desert is considered to be the largest hot desert on the planet?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q100",
+    "category": "unanswerable",
+    "question": "My houseplants keep dying even though I water them every single day, and I would like to understand what I am doing wrong with them. How often should a typical succulent be watered, how much sunlight does it need, and what are the common signs that a plant has been overwatered?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question."
+  },
+  {
+    "id": "Q101",
+    "category": "Direct_Factual",
+    "question": "We are architecting an internal documentation search bot where system throughput, fast response times, and predictable compute costs are primary requirements. According to the architecture comparison table in LangChain's retrieval guide, what are the explicit ratings for 2-Step RAG across developer control, flexibility, and latency? Additionally, what canonical production use cases are cited as best suited for this pattern?",
+    "ground_truth": "Developer Control: High. Flexibility: Low. Latency: Fast. Representative use cases: FAQs and documentation bots.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "| Architecture | Description | Control | Flexibility | Latency | Example Use Case |\n| 2-Step RAG | Retrieval always happens before generation. Simple and predictable |High |Low |Fast | FAQs, documentation bots |"
+    ]
+  },
+  {
+    "id": "Q102",
+    "category": "Direct_Factual",
+    "question": "During a technical design review, an engineering lead asks why our application cannot rely solely on the foundation model's pre-trained parametric knowledge without external augmentation. According to LangChain's conceptual overview on retrieval, what are the two fundamental limitations inherent to Large Language Models, and at what specific moment in the workflow does retrieval address these gaps?",
+    "ground_truth": "The two key limitations are: (1) Finite context (models cannot ingest entire corpora at once) and (2) Static knowledge (their training data is frozen at a point in time). Retrieval addresses these limitations by fetching relevant external knowledge dynamically at query time.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "Large Language Models (LLMs) are powerful, but they have two key limitations: Finite context: they can't ingest entire corpora at once. Static knowledge: their training data is frozen at a point in time. Retrieval addresses these problems by fetching relevant external knowledge at query time."
+    ]
+  },
+  {
+    "id": "Q103",
+    "category": "Direct_Factual",
+    "question": "In the Agentic RAG implementation walkthrough, the documentation defines a tool named fetch_documentation that retrieves external technical content. What specific decorator is applied to declare this Python function as a usable agent tool, and what exact parameter is passed to create_agent to grant the model execution access to it?",
+    "ground_truth": "The function is decorated with the @tool decorator (from langchain.tools). It is registered with the agent by passing the list containing it into the `tools` parameter of create_agent (e.g., `tools=[fetch_documentation]`).",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "@tool\ndef fetch_documentation(url: str) -> str:\n    \"\"\"Fetch and convert documentation from a URL\"\"\"",
+      "agent = create_agent(\n    model=model,\n    tools=tools,\n    system_prompt=system_prompt,\n    name=\"Agentic RAG\",\n)"
+    ]
+  },
+  {
+    "id": "Q104",
+    "category": "Reasoning_Across_Facts",
+    "question": "Our enterprise already maintains extensive proprietary product manuals inside relational SQL tables, CRM databases, and document management systems. Does LangChain require our engineering team to migrate and rebuild this data into a new vector store? Synthesize the two architectural patterns described in the guide for integrating an existing knowledge base without re-indexing from scratch.",
+    "ground_truth": "No, teams do not need to rebuild an existing knowledge base. They can integrate it via two distinct pathways: (1) Connect the existing database as a tool for an autonomous agent in Agentic RAG, or (2) Query the database directly and supply the retrieved records as context to the LLM in a 2-Step RAG pipeline.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "If you already have a knowledge base (for example a SQL database, a document database, a CRM, or an internal documentation system), you do not need to rebuild it. You can: Connect it as a tool for an agent in Agentic RAG. Query it and supply the retrieved content as context to the LLM (2-Step RAG)."
+    ]
+  },
+  {
+    "id": "Q105",
+    "category": "Reasoning_Across_Facts",
+    "question": "A team evaluating SLAs questions why response times in 2-Step RAG are considered predictable while latency in Agentic RAG remains variable. Based on the documentation's latency analysis and execution models, explain the fundamental reason 2-Step RAG achieves predictable latency, what core assumption underpins that predictability, and what external infrastructure dependencies can still cause latency variance in production.",
+    "ground_truth": "2-Step RAG latency is predictable because the execution order is fixed and the maximum number of LLM inference calls is strictly known and capped. This predictability assumes LLM inference time is the dominant factor. However, real-world latency can still vary depending on the performance of external retrieval steps, such as third-party API response times, network delays, or database query execution speeds.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "Latency: Latency is generally more predictable in 2-Step RAG, as the maximum number of LLM calls is known and capped. This predictability assumes that LLM inference time is the dominant factor. However, real-world latency may also be affected by the performance of retrieval steps, such as API response times, network delays, or database queries, which can vary based on the tools and infrastructure in use."
+    ]
+  },
+  {
+    "id": "Q106",
+    "category": "Multi_Step",
+    "question": "We are documenting our ingestion pipeline architecture for team onboarding. Tracing the sequential workflow in LangChain's retrieval pipeline diagram, outline the step-by-step path that unstructured source data (such as Google Drive, Slack, or Notion) follows from ingestion until it is stored in a searchable index. In your explanation, identify the explicit structural purpose of splitting the ingested documents before embedding generation.",
+    "ground_truth": "Sequential path: Sources (Google Drive, Slack, Notion) -> Document Loaders -> Documents -> Split into chunks -> Turn into embeddings -> Vector Store. Purpose of splitting: Large documents are broken down so that chunks are individually retrievable and small enough to fit within an LLM's finite context window.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "S([\"Sources<br>(Google Drive, Slack, Notion, etc.)\"]) --> L[Document Loaders]\nL --> A([Documents])\nA --> B[Split into chunks]\nB --> C[Turn into embeddings]\nC --> D[(Vector Store)]",
+      "Break large docs into smaller chunks that will be retrievable individually and fit within a model's context window."
+    ]
+  },
+  {
+    "id": "Q107",
+    "category": "Multi_Step",
+    "question": "In an Agentic RAG setup, retrieval is governed dynamically by model reasoning rather than a static pre-retrieval pipeline. Tracing the decision branches in the agent flowchart, describe the conditional logic loop the agent follows upon receiving user input, including the decision points determining whether to invoke a search tool, whether to return an answer, and under what condition it loops back to the LLM.",
+    "ground_truth": "Execution loop: (1) The user question is received by the Agent (LLM). (2) Decision 1: 'Need external info?' If No, it transitions directly to generate the final answer. If Yes, it proceeds to 'Search using tool(s)'. (3) Decision 2: 'Enough to answer?' If Yes, it transitions to generate the final answer and returns it to the user. If No, it loops back to the Agent (LLM) reasoning stage to conduct further evaluation or tool calls.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "A[User Input / Question] --> B[\"Agent (LLM)\"]\nB --> C{Need external info?}\nC -- Yes --> D[\"Search using tool(s)\"]\nD --> H{Enough to answer?}\nH -- No --> B\nH -- Yes --> I[Generate final answer]\nC -- No --> I\nI --> J[Return to user]"
+    ]
+  },
+  {
+    "id": "Q108",
+    "category": "Unanswerable",
+    "question": "When scaling the RAG retrieval pipeline to handle continuous user traffic, what specific cache eviction algorithm (such as LRU, LFU, or FIFO) does the internal document loader cache apply by default, and what is its maximum heap memory allocation limit?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "source_docs": [],
+    "evidence_passages": []
+  },
+  {
+    "id": "Q109",
+    "category": "Direct_Factual",
+    "question": "In LangChain's pipeline component specifications, various modules handle ingestion, vector transformation, and storage. What is the formal definition given for a 'Retriever' interface, and what input type does it accept to return relevant Document objects?",
+    "ground_truth": "A retriever is defined as an interface that returns documents given an unstructured query.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "A retriever is an interface that returns documents given an unstructured query."
+    ]
+  },
+  {
+    "id": "Q110",
+    "category": "Direct_Factual",
+    "question": "When evaluating the trade-offs in the RAG architectures summary table, developers need to choose between rigid pipelines and dynamic models. What are the specific ratings for the Hybrid architecture regarding developer control, runtime flexibility, and latency, and what typical use case is presented?",
+    "ground_truth": "Control: Medium . Flexibility: Medium. Latency: Variable. Example use case: Domain-specific Q&A with quality validation.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "| Hybrid | Combines characteristics of both approaches with validation steps |  Medium |  Medium |  Variable | Domain-specific Q&A with quality validation |"
+    ]
+  },
+  {
+    "id": "Q111",
+    "category": "Reasoning_Across_Facts",
+    "question": "A development team is designing an autonomous technical assistant that uses `fetch_documentation` to consult official guides. Based on the implementation code and instructions in `retrieval.md`, how does the agent enforce domain security constraints before executing an HTTP request, and what fallback behavior is specified if a network retrieval failure occurs?",
+    "ground_truth": "Security is enforced by checking if the URL starts with an entry in `ALLOWED_DOMAINS` ('https://docs.langchain.com/'), raising an error string if unauthorized. If a documentation fetch fails due to a network error, the agent is instructed by system prompt to inform the user and proceed using its best expert understanding.",
+    "source_docs": ["retrieval.md"],
+    "evidence_passages": [
+      "ALLOWED_DOMAINS = [\"https://docs.langchain.com/\"]\n\n@tool\ndef fetch_documentation(url: str) -> str:\n    if not any(url.startswith(domain) for domain in ALLOWED_DOMAINS):\n        return (\n            \"Error: URL not allowed. \"\n            f\"Must start with one of: {', '.join(ALLOWED_DOMAINS)}\"\n        )",
+      "4. If a documentation fetch fails, tell the user and proceed with your best expert understanding."
+    ]
+  },
+  {
+    "id": "Q112",
+    "category": "Unanswerable",
+    "question": "When constructing the knowledge base vector store using the retrieval architecture pipeline, what default mathematical distance metric (such as cosine similarity, squared Euclidean distance, or dot product) is applied by the underlying index, and what similarity threshold is set to filter noise?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "source_docs": [],
+    "evidence_passages": []
+  },
+  {
+    "id": "Q113",
+    "category": "Direct_Factual",
+    "question": "When configuring a text splitter in LangChain for generic prose, developers often rely on RecursiveCharacterTextSplitter to maintain semantic cohesion. According to the integration guide, what is the exact default list of separators used by this splitter, and in what order does it attempt to split the input text?",
+    "ground_truth": "The default separator list is [\"\\n\\n\", \"\\n\", \" \", \"\"], splitting in order of double newlines, single newlines, spaces, and empty strings.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "The default list is [\"\\n\\n\", \"\\n\", \" \", \"\"]. This has the effect of trying to keep all paragraphs (and then sentences, and then words) together as long as possible"
+    ]
+  },
+  {
+    "id": "Q114",
+    "category": "Direct_Factual",
+    "question": "Our engineering team needs to choose between generating raw Python strings or structured objects when preprocessing documents for a downstream vector indexing pipeline. According to the RecursiveCharacterTextSplitter documentation, which specific method should be called to obtain raw string chunks directly, and which method must be called to create LangChain Document objects?",
+    "ground_truth": "To obtain string content directly, call `.split_text`. To create LangChain Document objects, call `.create_documents`.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "To obtain the string content directly, use .split_text.\n\nTo create LangChain @[Document] objects (e.g., for use in downstream tasks), use .create_documents."
+    ]
+  },
+  {
+    "id": "Q115",
+    "category": "Direct_Factual",
+    "question": "When instantiating RecursiveCharacterTextSplitter, developers can customize separator boundaries and text evaluation rules using various constructor arguments. According to the parameter list in the guide, what is the purpose of the `is_separator_regex` parameter, and what is the function of the `length_function` argument?",
+    "ground_truth": "`is_separator_regex` determines whether the separator list should be interpreted as regular expressions, while `length_function` specifies the function used to determine chunk size (measuring chunk length).",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "- length_function: Function determining the chunk size.\n- is_separator_regex: Whether the separator list (defaulting to [\"\\n\\n\", \"\\n\", \" \", \"\"]) should be interpreted as regex."
+    ]
+  },
+  {
+    "id": "Q116",
+    "category": "Reasoning_Across_Facts",
+    "question": "During an architecture review of our ingestion pipeline, a developer asks why RecursiveCharacterTextSplitter is recommended over simple fixed-character splitting and how chunk overlap addresses downstream retrieval quality. Synthesizing the guide's explanation of chunking mechanics and parameter definitions, how does the default separator hierarchy preserve semantic context, and what explicit issue does `chunk_overlap` mitigate?",
+    "ground_truth": "The default separator hierarchy ([\"\\n\\n\", \"\\n\", \" \", \"\"]) preserves semantics by keeping larger related text units (paragraphs, then sentences, then words) intact as long as possible before falling back to smaller units. `chunk_overlap` specifically mitigates the loss of information and context when boundary splits divide related information between adjacent chunks.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "This has the effect of trying to keep all paragraphs (and then sentences, and then words) together as long as possible, as those would generically seem to be the strongest semantically related pieces of text.",
+      "- chunk_overlap: Target overlap between chunks. Overlapping chunks helps to mitigate loss of information when context is divided between chunks."
+    ]
+  },
+  {
+    "id": "Q117",
+    "category": "Reasoning_Across_Facts",
+    "question": "When processing East Asian text or multilingual documents with punctuation variations, standard whitespace separators often fail to split passages effectively. Based on the custom separator example provided in the documentation, how does the user extend the default separator list to support CJK (Chinese, Japanese, Korean) and fullwidth punctuation, and what specific punctuation characters are introduced?",
+    "ground_truth": "The user overrides the `separators` argument, appending standard sentence punctuation (\".\", \",\"), zero-width space (\"\\u200b\"), fullwidth comma (\"\\uff0c\"), ideographic comma (\"\\u3001\"), fullwidth full stop (\"\\uff0e\"), and ideographic full stop (\"\\u3002\") before the final empty string fallback.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "separators=[\n        \"\\n\\n\",\n        \"\\n\",\n        \" \",\n        \".\",\n        \",\",\n        \"\\u200b\",  # Zero-width space\n        \"\\uff0c\",  # Fullwidth comma\n        \"\\u3001\",  # Ideographic comma\n        \"\\uff0e\",  # Fullwidth full stop\n        \"\\u3002\",  # Ideographic full stop\n        \"\",\n    ]"
+    ]
+  },
+  {
+    "id": "Q118",
+    "category": "Multi_Step",
+    "question": "A developer needs to configure a minimal end-to-end Python script that loads an external file, segments it into small chunks using character length, and prints the first two segmented Document objects. Tracing the standard workflow demonstrated in the guide, what are the sequential code steps required, including the specific imports, the four parameters configured in the constructor, and the method used to generate the output texts?",
+    "ground_truth": "1. Import `RecursiveCharacterTextSplitter` from `langchain_text_splitters`. 2. Read the text file using `open()`. 3. Instantiate `RecursiveCharacterTextSplitter` configuring `chunk_size=100`, `chunk_overlap=20`, `length_function=len`, and `is_separator_regex=False`. 4. Execute `create_documents([text])` on the instance to produce the list of Document objects.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "from langchain_text_splitters import RecursiveCharacterTextSplitter\n\n# Load example document\nwith open(\"state_of_the_union.txt\") as f:\n    state_of_the_union = f.read()\n\ntext_splitter = RecursiveCharacterTextSplitter(\n    # Set a really small chunk size, just to show.\n    chunk_size=100,\n    chunk_overlap=20,\n    length_function=len,\n    is_separator_regex=False,\n)\ntexts = text_splitter.create_documents([state_of_the_union])"
+    ]
+  },
+  {
+    "id": "Q119",
+    "category": "Multi_Step",
+    "question": "In RecursiveCharacterTextSplitter, text segmentation does not happen in a single arbitrary pass; it follows a sequential recursive fallback strategy. Tracing the splitting procedure described in the guide, walk through the step-by-step logic the algorithm executes when attempting to partition an oversized document into chunks that satisfy the maximum chunk size.",
+    "ground_truth": "1. The splitter inspects the ordered list of separator characters (starting with double newlines). 2. It attempts to split the text on the first separator. 3. If resulting segments remain larger than the allowed chunk size, it sequentially moves to the next separator in the list (single newlines, then spaces, then individual characters). 4. It repeats this process recursively until all segments fall within the target chunk size limit.",
+    "source_docs": ["recursive_text_splitter.md"],
+    "evidence_passages": [
+      "It is parameterized by a list of characters. It tries to split on them in order until the chunks are small enough.",
+      "1. How the text is split: by list of characters.\n2. How the chunk size is measured: by number of characters."
+    ]
+  },
+  {
+    "id": "Q120",
+    "category": "Unanswerable",
+    "question": "A team of horticultural researchers is compiling standard operating procedures for commercial greenhouse propagation. According to the technical guidelines provided in the system documentation, what specific photoperiod schedule (hours of light vs. darkness) and ambient relative humidity percentage are required to prevent leaf scorch in propagated lavender cuttings?",
+    "ground_truth": "The provided context does not contain sufficient information to answer this question.",
+    "source_docs": [],
+    "evidence_passages": []
+  },
+  {
+    "id": "Q151",
+    "category": "Direct_Factual",
+    "source_doc": "messages.mdx",
+    "question": "When a chatbot sends or receives a message, it needs a clear way to store the information about that message. What are the three main parts of a LangChain message? Please name only those three parts. This is for a chatbot test where every system will get the same question. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer so it is easy to check whether both chatbots answered correctly.",
+    "ground_truth": "Role, content, and optional metadata.",
+    "evidence_passage": "Messages are objects that contain:"
+  },
+  {
+    "id": "Q152",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "messages.mdx",
+    "question": "Imagine a chatbot that receives instructions from its developer, reads a user's question, asks an outside tool for information, and then gives an answer. Explain what SystemMessage, HumanMessage, AIMessage, and ToolMessage each do. How do these four message types work together during the conversation, and why is it important to keep their roles separate? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "SystemMessage gives instructions, HumanMessage carries user input, AIMessage records model output and tool calls, and ToolMessage carries the results of tool execution.",
+    "evidence_passage": "## Message types\n- <Icon icon=\"settings\" size={16} /> [System message](#system-message) - Tells the model how to behave and provide context for interactions\n- <Icon icon=\"user\" size={16} /> [Human message](#human-message) - Represents user input and interactions with the model\n- <Icon icon=\"robot\" size={16} /> [AI message](#ai-message) - Responses generated by the model, including text content, tool calls, and metadata\n- <Icon icon=\"tool\" size={16} /> [Tool message](#tool-message) - Represents the outputs of [tool calls](/oss/langchain/models#tool-calling)"
+  },
+  {
+    "id": "Q153",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "Imagine you are building a simple chatbot from the beginning. Explain the steps for starting a chat model, creating a system message with instructions, creating a human message with the user's question, putting those messages together, and sending them to the model. What kind of message should the model return at the end? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Initialize a chat model, construct SystemMessage and HumanMessage objects, put them in a list, call model.invoke(messages), and receive an AIMessage.",
+    "evidence_passage": "The simplest way to use messages is to create message objects and pass them to a model when [invoking](/oss/langchain/models#invocation)."
+  },
+  {
+    "id": "Q154",
+    "category": "Direct_Factual",
+    "source_doc": "models.mdx",
+    "question": "A developer wants to start using a chat model in a Python LangChain application without writing a separate setup process for each provider. What is the name of the helper function used to initialize a standalone chat model? Give its exact name. This is for a chatbot test where every system will get the same question. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer so it is easy to check whether both chatbots answered correctly.",
+    "ground_truth": "init_chat_model.",
+    "evidence_passage": ":::python\nThe easiest way to get started with a standalone model in LangChain is to use @[`init_chat_model`] to initialize one from a chat model provider of your choice (examples below):"
+  },
+  {
+    "id": "Q155",
+    "category": "Unanswerable",
+    "source_doc": "messages.mdx",
+    "question": "A researcher wants to know exactly how much electricity, measured in kilowatt-hours, was used when the example chat model answered a message. What was the measured electricity use for that particular model call? Give the exact number and unit if that information is known. This question is part of a test of whether a chatbot can tell the difference between known information and missing information. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q156",
+    "category": "Direct_Factual",
+    "source_doc": "models.mdx",
+    "question": "A program needs a model to return information in a fixed, predictable format so another part of the program can read the result. What is the name of the model capability used to make the output follow a defined format? Give the capability name. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer so it is easy to check whether both chatbots answered correctly.",
+    "ground_truth": "Structured output.",
+    "evidence_passage": "* <Icon icon=\"hammer\" size={16} /> [Tool calling](#tool-calling) - calling external tools (like databases queries or API calls) and use results in their responses.\n* <Icon icon=\"layout-grid\" size={16} /> [Structured output](#structured-output) - where the model's response is constrained to follow a defined format.\n* <Icon icon=\"photo\" size={16} /> [Multimodality](#multimodal) - process and return data other than text, such as images, audio, and video.\n* <Icon icon=\"brain\" size={16} /> [Reasoning](#reasoning) - models perform multi-step reasoning to arrive at a conclusion."
+  },
+  {
+    "id": "Q157",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "Imagine one application that uses a chat model directly to summarize text and another application where an agent decides whether to call tools before answering. Explain how using a model by itself differs from using a model inside an agent. What does the model do in each case, and how does a shared interface help developers build both kinds of applications? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Standalone models handle direct tasks such as generation or extraction; agents use models for decision-making and tool use; both share a common model interface.",
+    "evidence_passage": "Models can be utilized in two ways:"
+  },
+  {
+    "id": "Q158",
+    "category": "Multi_Step",
+    "source_doc": "models.mdx",
+    "question": "A chatbot project has three jobs: answering a single question, showing a long answer little by little, and testing many prompts. Explain step by step how you would decide which model method to use for each job. Describe how the inputs are sent, how the results are received, and how the application should handle each kind of response. Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Identify whether the task needs a single complete result, incremental chunks, or multiple inputs, then choose invoke, stream, or batch respectively and process the returned results.",
+    "evidence_passage": "### Key methods\n<Card title=\"Invoke\" href=\"#invoke\" icon=\"send\" arrow=\"true\" horizontal>\n    The model takes messages as input and outputs messages after generating a complete response.\n</Card>\n<Card title=\"Stream\" href=\"#stream\" icon=\"broadcast\" arrow=\"true\" horizontal>\n    Invoke the model, but stream the output as it is generated in real-time.\n</Card>\n<Card title=\"Batch\" href=\"#batch\" icon=\"grip-vertical\" arrow=\"true\" horizontal>\n    Send multiple requests to a model in a batch for more efficient processing.\n</Card>"
+  },
+  {
+    "id": "Q159",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "messages.mdx",
+    "question": "Suppose a user asks a chatbot for today's weather. The chatbot decides to use a weather tool, the tool returns a result, and the chatbot uses that result to answer. Explain the difference between a tool call inside an AIMessage and the ToolMessage that comes afterward. Why do they need to be connected using the same tool call ID? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "AIMessage can specify a tool call; ToolMessage returns the execution result and references the matching call ID.",
+    "evidence_passage": "For models that support [tool calling](/oss/langchain/models#tool-calling), AI messages can contain tool calls. Tool messages are used to pass the results of a single tool execution back to the model."
+  },
+  {
+    "id": "Q160",
+    "category": "Unanswerable",
+    "source_doc": "messages.mdx",
+    "question": "In the example where a system message tells the chatbot to act as a helpful coding assistant, what is the full real name of the person who originally wrote that example instruction? Please provide the person's full name if it can be established. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q161",
+    "category": "Unanswerable",
+    "source_doc": "messages.mdx",
+    "question": "A team wants to compare the speed of every chat model provider used in the examples. What was the measured average response time, in milliseconds, for each provider during those example runs? Please give the exact results for every provider. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q162",
+    "category": "Multi_Step",
+    "source_doc": "models.mdx",
+    "question": "Imagine you are starting a new Python application that needs to ask a chat model a question. Explain the steps for choosing a model provider, setting up the model using the initialization helper, preparing the question or messages, calling the model, and reading the result. What must be ready before the application can make a successful model request? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Choose a provider, initialize a chat model using init_chat_model (Python) or initChatModel (JavaScript), then invoke it with the prompt or messages.",
+    "evidence_passage": "### Initialize a model\n:::python\nThe easiest way to get started with a standalone model in LangChain is to use @[`init_chat_model`] to initialize one from a chat model provider of your choice (examples below):"
+  },
+  {
+    "id": "Q163",
+    "category": "Direct_Factual",
+    "source_doc": "models.mdx",
+    "question": "A chatbot must sometimes request information from an outside database or API instead of answering from its own generated text. What is the name of the model capability that lets it request the use of external tools? Give the capability name. This is for a chatbot test where every system will get the same question. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer .",
+    "ground_truth": "Tool calling.",
+    "evidence_passage": "* <Icon icon=\"hammer\" size={16} /> [Tool calling](#tool-calling) - calling external tools (like databases queries or API calls) and use results in their responses.\n* <Icon icon=\"layout-grid\" size={16} /> [Structured output](#structured-output) - where the model's response is constrained to follow a defined format.\n* <Icon icon=\"photo\" size={16} /> [Multimodality](#multimodal) - process and return data other than text, such as images, audio, and video.\n* <Icon icon=\"brain\" size={16} /> [Reasoning](#reasoning) - models perform multi-step reasoning to arrive at a conclusion."
+  },
+  {
+    "id": "Q164",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "A user wants a chatbot to read a PDF and describe what it contains. Explain step by step how to create a message that includes the user's written instruction and the PDF. Describe the different ways the PDF can be supplied, what extra information is needed when using encoded file data, and why the model provider's file requirements matter. Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Build a user message containing a text instruction and a file block; provide a PDF URL, base64 data with application/pdf, or a provider-managed file ID; check provider requirements.",
+    "evidence_passage": "```python PDF document input\n    # From URL\n    message = {\n        \"role\": \"user\",\n        \"content\": [\n            {\"type\": \"text\", \"text\": \"Describe the content of this document.\"},\n            {\"type\": \"file\", \"url\": \"https://example.com/path/to/document.pdf\"},\n        ]\n    }"
+  },
+  {
+    "id": "Q165",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "messages.mdx",
+    "question": "A user sends a chatbot a question together with a picture, and another user sends a question together with an audio file. Explain how LangChain message content can hold both normal text and other kinds of information. What forms can the content field take, and how do content blocks help organize the different kinds of data? Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Message content supports a string, provider-native block lists, or standard content block lists; blocks can combine text with image, audio, video, or file content.",
+    "evidence_passage": "You can think of a message's content as the payload of data that gets sent to the model. Messages have a `content` attribute that is loosely-typed, supporting strings and lists of untyped objects (e.g., dictionaries). This allows support for provider-native structures directly in LangChain chat models, such as [multimodal](#multimodal) content and other data."
+  },
+  {
+    "id": "Q166",
+    "category": "Direct_Factual",
+    "source_doc": "messages.mdx",
+    "question": "Imagine you are setting up a chatbot and want to tell it how it should behave before a user starts asking questions. Which LangChain message type is used to give those starting instructions? Please give the name of that message type. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples.",
+    "ground_truth": "SystemMessage.",
+    "evidence_passage": "A @[`SystemMessage`] represent an initial set of instructions that primes the model's behavior. You can use a system message to set the tone, define the model's role, and establish guidelines for responses."
+  },
+  {
+    "id": "Q167",
+    "category": "Multi_Step",
+    "source_doc": "models.mdx",
+    "question": "A research project sends many questions to a chat model and wants to record how many tokens were used. Explain the steps for calling the model, checking whether token counts are included in the response, recording the input and output counts, and combining usage information from several calls. What limitation should the researcher remember when collecting these numbers? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Invoke the model while recording usage metadata and use the documented usage callback mechanisms to aggregate token counts across calls where supported.",
+    "evidence_passage": "### Token usage\nA number of model providers return token usage information as part of the invocation response. When available, this information will be included on the @[`AIMessage`] objects produced by the corresponding model. For more details, see the [messages](/oss/langchain/messages) guide."
+  },
+  {
+    "id": "Q168",
+    "category": "Unanswerable",
+    "source_doc": "models.mdx",
+    "question": "A developer wants to identify the exact physical computer used for a local-model example so they can reproduce the same hardware setup. What is the full hardware serial number of that computer? Please provide the exact serial number, not a general description of the machine. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q169",
+    "category": "Direct_Factual",
+    "source_doc": "models.mdx",
+    "question": "A researcher has many different prompts and wants to process several model requests efficiently rather than handling each one individually. Which main LangChain method is intended for processing multiple inputs? Give the method name. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples.",
+    "ground_truth": "batch.",
+    "evidence_passage": "### Batch\nBatching a collection of independent requests to a model can significantly improve performance and reduce costs, as the processing can be done in parallel:"
+  },
+  {
+    "id": "Q170",
+    "category": "Direct_Factual",
+    "source_doc": "models.mdx",
+    "question": "A developer sends one question to a chat model and wants to receive one complete response after the model finishes. Which main LangChain method is used for this kind of model call? Give the exact method name. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
+    "ground_truth": "invoke.",
+    "evidence_passage": "### Invoke\nThe most straightforward way to call a model is to use @[`invoke()`][BaseChatModel.invoke] with a single message or a list of messages."
+  },
+  {
+    "id": "Q171",
+    "category": "Direct_Factual",
+    "source_doc": "messages.mdx",
+    "question": "A user types a question into a chatbot, and the application needs to represent that user's input as a message. What is the name of the LangChain message type that represents user input? Give just the message type. Find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
+    "ground_truth": "HumanMessage.",
+    "evidence_passage": "A @[`HumanMessage`] represents user input and interactions. They can contain text, images, audio, files, and any other amount of multimodal [content](#message-content)."
+  },
+  {
+    "id": "Q172",
+    "category": "Direct_Factual",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot finishes answering a user's question, and the application needs to store the answer as a message. What is the name of the LangChain message type used for the model's response? Give just the message type. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
+    "ground_truth": "AIMessage.",
+    "evidence_passage": "An @[`AIMessage`] represents the output of a model invocation. They can include multimodal data, tool calls, and provider-specific metadata that you can later access."
+  },
+  {
+    "id": "Q173",
+    "category": "Direct_Factual",
+    "source_doc": "messages.mdx",
+    "question": "A developer wants to check how many input and output tokens were used when a chat model answered a question. Which field of an AIMessage can contain the token counts? Please give the exact field name. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
+    "ground_truth": "usage_metadata.",
+    "evidence_passage": "An @[`AIMessage`] can hold token counts and other usage metadata in its @[`usage_metadata`][UsageMetadata] field:"
+  },
+  {
+    "id": "Q174",
+    "category": "Direct_Factual",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot asks a tool to do something and later receives the tool's result. The application needs to connect that result to the original tool request. Which ToolMessage field stores the ID of the tool call that the result belongs to? Give the field name. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
+    "ground_truth": "tool_call_id.",
+    "evidence_passage": "<Accordion title=\"Attributes\">\n    <ParamField path=\"content\" type=\"string\" required>\n        The stringified output of the tool call.\n    </ParamField>\n    <ParamField path=\"tool_call_id\" type=\"string\" required>\n        The ID of the tool call that this message is responding to. Must match the ID of the tool call in the @[`AIMessage`].\n    </ParamField>\n    <ParamField path=\"name\" type=\"string\" required>\n        The name of the tool that was called.\n    </ParamField>\n    <ParamField path=\"artifact\" type=\"dict\">\n        Additional data not sent to the model but can be accessed programmatically.\n    </ParamField>\n</Accordion>"
+  },
+  {
+    "id": "Q175",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "messages.mdx",
+    "question": "You are making two chatbots. The first answers one simple question at a time, while the second remembers earlier messages, follows special instructions, and may receive pictures or files. Explain when a plain text prompt is enough and when a list of messages is better. What are the main differences, and why would you choose one method over the other? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Use text prompts for simple standalone requests without history; use message prompts for multi-turn conversations, system instructions, or multimodal content.",
+    "evidence_passage": "**Use text prompts when:**\n* You have a single, standalone request\n* You don't need conversation history\n* You want minimal code complexity"
+  },
+  {
+    "id": "Q176",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot stores the words a user sends, information about who sent them, and extra details about the model's response. Explain the difference between a message's role, content, and metadata. What kind of information belongs in each part, and how do these parts help the application understand and manage a conversation? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Content is the payload such as text or images; role identifies the sender/type; metadata carries optional identifiers, response details, or token usage.",
+    "evidence_passage": "Messages are objects that contain:"
+  },
+  {
+    "id": "Q177",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "messages.mdx",
+    "question": "Two chat model providers return similar answers, but the information inside their messages is arranged differently. Explain the difference between provider-specific content blocks and LangChain's standard content blocks. How does using a common format help developers work with different providers while still keeping access to the original message content? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Provider-native blocks preserve provider-specific structure; standardized content_blocks present a consistent type-safe view across providers.",
+    "evidence_passage": "LangChain provides a standard representation for message content that works across providers."
+  },
+  {
+    "id": "Q178",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "messages.mdx",
+    "question": "A developer already has an application that reads the content field of messages. Later, they want to use standard content blocks to make messages easier to work with across different model providers. Explain how the newer content blocks relate to the older content field. Why is it useful that the older way of reading message content still works? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "The content_blocks interface standardizes interpretation while retaining the existing content field for backward compatibility.",
+    "evidence_passage": "<Info>\n    Content blocks were introduced as a new property on messages in LangChain v1 to standardize content formats across providers while maintaining backward compatibility with existing code."
+  },
+  {
+    "id": "Q179",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "A user asks a chatbot one question, gets an answer, and then asks a follow-up question that depends on the first answer. Explain step by step how the application can keep the earlier messages, add the new question, and send the conversation back to the model. Why does the order of the messages matter? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Keep earlier HumanMessage and AIMessage turns in an ordered list, append each new user message, invoke the model with the accumulated history, and append its response.",
+    "evidence_passage": "[Chat models](/oss/langchain/models) accept a sequence of message objects as input and return an @[`AIMessage`] as output. Interactions are often stateless, so that a simple conversational loop involves invoking a model with a growing list of messages."
+  },
+  {
+    "id": "Q180",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot needs information from a weather tool before it can answer a user's question. Explain the full process, starting when the model asks to use the tool and ending when the model answers using the tool's result. Include how the tool result is stored, how it is matched to the original request, and what messages are sent to the model afterward. Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Create or receive an AIMessage with a tool call, execute the tool, construct a ToolMessage with the result and matching tool_call_id, and invoke the model with the complete message sequence.",
+    "evidence_passage": "# After a model makes a tool call\n# (Here, we demonstrate manually creating the messages for brevity)\nai_message = AIMessage(\n    content=[],\n    tool_calls=[{\n        \"name\": \"get_weather\",\n        \"args\": {\"location\": \"San Francisco\"},\n        \"id\": \"call_123\"\n    }]\n)"
+  },
+  {
+    "id": "Q181",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "You want a chatbot to show its answer little by little while it is being generated instead of waiting until the whole answer is ready. Explain the steps for using streaming, reading each new piece of text, showing it to the user, and joining the pieces into one complete message. What is different from getting one finished response? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Iterate over model.stream, read each chunk's text as it arrives, and combine chunks into a full message (addition in Python or concat in JavaScript).",
+    "evidence_passage": "During streaming, you'll receive @[`AIMessageChunk`] objects that can be combined into a full message object:"
+  },
+  {
+    "id": "Q182",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "A user wants a chatbot to describe a picture and has either a link to the picture or its encoded image data. Explain step by step how to build a user message containing both the written request and the image. What information is needed for each way of providing the image, and what should be checked before sending it to a model? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Build a user message with a text block and an image block; supply an image URL or base64 data with a MIME type, and verify the chosen provider supports the format.",
+    "evidence_passage": ":::python\n<CodeGroup>\n    ```python Image input\n    # From URL\n    message = {\n        \"role\": \"user\",\n        \"content\": [\n            {\"type\": \"text\", \"text\": \"Describe the content of this image.\"},\n            {\"type\": \"image\", \"url\": \"https://example.com/path/to/image.jpg\"},\n        ]\n    }"
+  },
+  {
+    "id": "Q183",
+    "category": "Multi_Step",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot needs to save a conversation so the user can leave and come back later. Explain the steps for turning message objects into data that can be stored, saving that data, and turning it back into message objects when the user returns. What safety problem should the developer think about when loading saved data? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Serialize message instances to plain objects, store them, and deserialize trusted saved data into message instances when restoring the conversation; avoid loading untrusted data.",
+    "evidence_passage": "You can serialize messages to plain objects for storage and deserialize back to message instances. This is useful for persisting conversation history and resuming sessions."
+  },
+  {
+    "id": "Q184",
+    "category": "Unanswerable",
+    "source_doc": "messages.mdx",
+    "question": "A chatbot asks a weather tool for information about San Francisco and receives a weather result. What was the exact amount of money charged, in US dollars, for processing that particular tool result? Please give the exact cost rather than a general price estimate. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q185",
+    "category": "Unanswerable",
+    "source_doc": "messages.mdx",
+    "question": "An example shows a picture being supplied to a chatbot using an image URL. On what exact calendar date was that example image first uploaded to its original hosting server? Please provide the day, month, and year of the upload. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q186",
+    "category": "Direct_Factual",
+    "source_doc": "models.mdx",
+    "question": "A chatbot should show the beginning of an answer before the model has finished generating the rest. Which main LangChain method lets the application receive the response in pieces as they are produced? Give the method name. Think about the situation described and find the one exact term or fact that answers it. You do not need to list other features, explain a full process, or add extra examples. Please give one clear answer.",
+    "ground_truth": "stream.",
+    "evidence_passage": "### Stream\nMost models can stream their output content while it is being generated. By displaying output progressively, streaming significantly improves user experience, particularly for longer responses."
+  },
+  {
+    "id": "Q187",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A developer is choosing a model for an assistant that must follow instructions, answer difficult questions, and sometimes use outside tools. Explain how the model's abilities can affect how well the assistant works. Which different abilities should the developer think about, and why might a model that is good at ordinary text generation still be unsuitable for some agent tasks? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Agent reliability depends on the chosen model's ability to follow instructions, reason, handle context, and support capabilities such as tool calling or structured output.",
+    "evidence_passage": "The quality and capabilities of the model you choose directly impact your agent's baseline reliability and performance. Different models excel at different tasks - some are better at following complex instructions, others at structured reasoning, and some support larger context windows for handling more information."
+  },
+  {
+    "id": "Q188",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A team is building a chatbot that must answer one question, show long answers as they are generated, and process many test questions. Compare the invoke, stream, and batch methods. Explain what each method is designed to do, how its results are received, and which method you would choose for each of these three situations. Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "invoke returns one completed response; stream yields incremental chunks; batch handles multiple inputs efficiently.",
+    "evidence_passage": "### Key methods\n<Card title=\"Invoke\" href=\"#invoke\" icon=\"send\" arrow=\"true\" horizontal>\n    The model takes messages as input and outputs messages after generating a complete response.\n</Card>\n<Card title=\"Stream\" href=\"#stream\" icon=\"broadcast\" arrow=\"true\" horizontal>\n    Invoke the model, but stream the output as it is generated in real-time.\n</Card>\n<Card title=\"Batch\" href=\"#batch\" icon=\"grip-vertical\" arrow=\"true\" horizontal>\n    Send multiple requests to a model in a batch for more efficient processing.\n</Card>"
+  },
+  {
+    "id": "Q189",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A developer wants to change from one chat model provider to another without rewriting the whole application. Explain how a shared model interface makes that easier. Why must the developer still check the settings and features supported by the new model, and what problems could happen if they assume every provider works in exactly the same way? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "The standard interface simplifies switching providers, but individual providers and models support different capabilities and parameters.",
+    "evidence_passage": "LangChain's standard model interfaces give you access to many different provider integrations, which makes it easy to experiment with and switch between models to find the best fit for your use case."
+  },
+  {
+    "id": "Q190",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A chatbot needs to get current information from a database and then return a result that another program can read as structured data. Explain the difference between tool calling and structured output. What does each feature help the model do, how are they used for different purposes, and why might one application need both? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Tool calling requests external operations and uses their results; structured output constrains the response to a defined schema or format.",
+    "evidence_passage": "In addition to text generation, many models support:"
+  },
+  {
+    "id": "Q191",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A developer is choosing a model for an app that accepts pictures, audio, and long conversations. Explain how model capabilities and limits affect that choice. What can model profiles tell the developer, why should they check whether the model supports each kind of input, and why is it risky to assume that all models accept the same content? Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Model profiles describe capabilities and limits; multimodal support varies by model and provider, so the developer must verify accepted media and constraints.",
+    "evidence_passage": "### Model profiles\n<Info>\n    Model profiles require `langchain>=1.1`.\n</Info>"
+  },
+  {
+    "id": "Q192",
+    "category": "Multi_Fact_Reasoning",
+    "source_doc": "models.mdx",
+    "question": "A research team is testing two chat models using many questions. They want to compare token use and avoid sending too many requests at once. Explain how token usage information helps the team understand model use, how rate limiting affects the testing process, and why both matter when trying to make a fair and reliable comparison. Think about how the different ideas fit together in a real chatbot, not just what each word means by itself. Explain the link between them in simple language, and give a short practical example if it helps. Make it clear why each part matters and what could be different if the chatbot used another approach. Keep the explanation focused on the situation in the question.",
+    "ground_truth": "Token usage helps measure model consumption across calls; rate limiting controls request frequency to respect provider limits and avoid failures.",
+    "evidence_passage": "### Token usage\nA number of model providers return token usage information as part of the invocation response. When available, this information will be included on the @[`AIMessage`] objects produced by the corresponding model. For more details, see the [messages](/oss/langchain/messages) guide."
+  },
+  {
+    "id": "Q193",
+    "category": "Multi_Step",
+    "source_doc": "models.mdx",
+    "question": "A chatbot needs to call an outside tool to get information that is not already in the conversation. Explain the steps for making the tool available to the model, sending the user's request, checking whether the model asked to use the tool, running the requested operation, and giving the result back so the chatbot can finish its answer. Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Define a tool, bind it to a tool-capable model, invoke the model, inspect the generated tool calls, execute the requested operation, and pass its result back in the conversation.",
+    "evidence_passage": "## Tool calling\nModels can request to call tools that perform tasks such as fetching data from a database, searching the web, or running code. Tools are pairings of:"
+  },
+  {
+    "id": "Q194",
+    "category": "Multi_Step",
+    "source_doc": "models.mdx",
+    "question": "A program asks a chatbot to pull specific pieces of information from a paragraph, and the program needs the answer in a predictable structure rather than normal sentences. Explain the steps for deciding what fields the answer should contain, setting up structured output, calling the model, and using the returned data. Why does the expected structure matter? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Define the desired response structure, configure the model's structured-output interface with the schema, invoke the model, and consume the structured result.",
+    "evidence_passage": "## Structured output\nModels can be requested to provide their response in a format matching a given schema. This is useful for ensuring the output can be easily parsed and used in subsequent processing. LangChain supports multiple schema types and methods for enforcing structured output."
+  },
+  {
+    "id": "Q195",
+    "category": "Multi_Step",
+    "source_doc": "models.mdx",
+    "question": "A chatbot sometimes gets connection errors, timeouts, or a message saying the request is too large. Explain step by step how the application should identify the kind of problem, decide whether trying again makes sense, use retry settings for temporary failures, and control how quickly it sends requests. Why should every kind of failure not be treated the same way? Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Identify the failure type, distinguish transient connection or timeout errors from non-retryable context overflow, configure appropriate retries and rate limiting, and handle failures.",
+    "evidence_passage": ":::python\n### Model exceptions"
+  },
+  {
+    "id": "Q196",
+    "category": "Multi_Step",
+    "source_doc": "models.mdx",
+    "question": "A chatbot can use a smaller model for easy conversations and a stronger model for harder ones. Explain the steps for preparing the available models, deciding what information will be used to choose between them, selecting a model while the application is running, and sending the request to that model. Give an example of a simple signal the application could use. Explain it in the order someone would actually do it, starting with the first action and ending with the final result. For every important step, say what is done and why that step is needed before moving to the next one. Use plain language, and make the answer easy for someone who is learning to follow. Do not skip the key steps or add unrelated tasks.",
+    "ground_truth": "Define the candidate models, implement a dynamic selection policy such as one based on message count, and route the current request to the selected model.",
+    "evidence_passage": "### Dynamic model selection\nDynamic models are selected at <Tooltip tip=\"The execution environment of your agent, containing immutable configuration and contextual data that persists throughout the agent's execution (e.g., user IDs, session details, or application-specific configuration).\">runtime</Tooltip> based on the current <Tooltip tip=\"The data that flows through your agent's execution, including messages, custom fields, and any information that needs to be tracked and potentially modified during processing (e.g., user preferences or tool usage stats).\">state</Tooltip> and context. This enables sophisticated routing logic and cost optimization."
+  },
+  {
+    "id": "Q197",
+    "category": "Unanswerable",
+    "source_doc": "models.mdx",
+    "question": "A researcher wants to compare the environmental impact of all the chat models discussed in a model integration examples. What exact amount of electrical energy did each model's GPU consume during the tests, measured in kilowatt-hours? Please give the measured value for every model rather than estimating it. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q198",
+    "category": "Unanswerable",
+    "source_doc": "models.mdx",
+    "question": "A researcher wants to know the exact number of hours the authors spent testing the chat model examples before publishing them. How many hours did they spend on these tests in total? Please give the measured total rather than an estimate. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q199",
+    "category": "Unanswerable",
+    "source_doc": "models.mdx",
+    "question": "A finance team wants to calculate the exact amount of money the example authors paid for every model call they made. What were the live input-token and output-token prices charged to those authors during all of their example runs? Give the exact historical prices and charges, not current public estimates. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
+  },
+  {
+    "id": "Q200",
+    "category": "Unanswerable",
+    "source_doc": "models.mdx",
+    "question": "A student wants to compare every model mentioned in the examples using the original authors' private test results. What exact numerical accuracy score did each model achieve on that private benchmark? Please give each model's score and explain which one had the highest measured accuracy. If you know the exact answer, give it clearly and say what it is based on. If you cannot verify the detail, say that you do not have enough information instead of making up a number, date, name, or other specific detail. Please do not guess.",
+    "ground_truth": "This information is not provided in the source material; the correct response is to say it cannot be determined from the available information.",
+    "evidence_passage": null
+  }
+]
+
